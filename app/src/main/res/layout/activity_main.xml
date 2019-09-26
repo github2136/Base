@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="view"
+            type="com.github2136.base.MainActivity" />
+
+        <variable
+            name="vm"
+            type="com.github2136.base.vm.MainVM" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btnClick1"
+            style="@style/BtnMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{view::onClick}"
+            android:text="List" />
+
+        <Button
+            android:id="@+id/btnClick2"
+            style="@style/BtnMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{view::onClick}"
+            android:text="LoadMore" />
+
+
+    </LinearLayout>
+</layout>

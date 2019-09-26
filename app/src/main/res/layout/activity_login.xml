@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="view"
+            type="com.github2136.base.LoginActivity" />
+
+        <variable
+            name="vm"
+            type="com.github2136.base.vm.LoginVM" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".LoginActivity">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={vm.userName}" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={vm.passWord}" />
+
+        <Button
+            style="@style/BtnMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{view::onClick}"
+            android:text="登录" />
+    </LinearLayout>
+</layout>
