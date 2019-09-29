@@ -1,7 +1,8 @@
 package com.github2136.basemvvm
 
-import android.app.ProgressDialog
+
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.os.Message
 import android.text.TextUtils
@@ -29,8 +30,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
     protected val mHandler by lazy { Handler(this) }
     protected lateinit var mToast: Toast
     protected val mDialog: ProgressDialog by lazy {
-        val dialog = ProgressDialog(activity)
-        dialog.setCancelable(false)
+        val dialog = ProgressDialog.getInstance(false)
         dialog
     }
 
@@ -48,7 +48,11 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         bind = DataBindingUtil.inflate(inflater, getViewResId(), container, false)
         bind.lifecycleOwner = this
         return bind.root
@@ -61,7 +65,13 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
 
         getVM(type[0] as Class<V>)
 
-        vm.ldDialog.observe(this, Observer { str -> showDialog(str) })
+        vm.ldDialog.observe(this, Observer { str ->
+            if (str != null) {
+                showProgressDialog(str)
+            } else {
+                dismissProgressDialog()
+            }
+        })
         initObserve()
         initData(savedInstanceState)
     }
@@ -111,16 +121,26 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
         }
     }
 
-    open fun showDialog(msg: String?) {
-        if (!TextUtils.isEmpty(msg)) {
-            mDialog.setMessage(msg)
-            if (isAdded && !isDetached) {
-                mDialog.show()
-            }
+    open fun showProgressDialog(@StringRes resId: Int) {
+        showProgressDialog(resources.getString(resId))
+    }
+
+    open fun showProgressDialog(msg: String? = null) {
+        if (msg == null) {
+            mDialog.setMessage(vm.loadingStr)
         } else {
-            if (mDialog.isShowing) {
-                mDialog.dismiss()
+            mDialog.setMessage(msg)
+        }
+        if (isAdded && !isDetached) {
+            activity?.apply {
+                mDialog.show(supportFragmentManager, "progressDialog")
             }
+        }
+    }
+
+    open fun dismissProgressDialog() {
+        if (mDialog.isShowing()) {
+            mDialog.dismiss()
         }
     }
 

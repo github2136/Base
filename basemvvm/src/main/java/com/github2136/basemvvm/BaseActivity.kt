@@ -7,6 +7,7 @@ import android.text.TextUtils
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
@@ -38,7 +39,13 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
         val type = (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments
         getVM(type[0] as Class<V>)
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT)
-        vm.ldDialog.observe(this, Observer { str -> showDialog(str) })
+        vm.ldDialog.observe(this, Observer { str ->
+            if (str != null) {
+                showProgressDialog(str)
+            } else {
+                dismissProgressDialog()
+            }
+        })
         initObserve()
         initData(savedInstanceState)
     }
@@ -53,6 +60,12 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
         this.vm = ViewModelProvider.AndroidViewModelFactory.getInstance(application).create(clazz)
         vm.init(this.toString())
 
+    }
+
+    protected fun setToolbar(tbTitle: Toolbar) {
+        setSupportActionBar(tbTitle)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        tbTitle.setNavigationOnClickListener { finish() }
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -100,12 +113,16 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
         }
     }
 
-    open fun showDialog(resId: Int?) {
-
+    open fun showProgressDialog(@StringRes resId: Int) {
+        showProgressDialog(resources.getString(resId))
     }
 
-    open fun showDialog(msg: String) {
-        mDialog.setMessage(msg)
+    open fun showProgressDialog(msg: String? = null) {
+        if (msg == null) {
+            mDialog.setMessage(vm.loadingStr)
+        } else {
+            mDialog.setMessage(msg)
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             if (!isDestroyed || !isFinishing) {
                 mDialog.show(supportFragmentManager, "progressDialog")
@@ -117,7 +134,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
         }
     }
 
-    open fun dismissDialog() {
+    open fun dismissProgressDialog() {
         if (mDialog.isShowing()) {
             mDialog.dismiss()
         }
