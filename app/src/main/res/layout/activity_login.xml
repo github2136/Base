@@ -19,6 +19,11 @@
         android:orientation="vertical"
         tools:context=".LoginActivity">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{vm.weather}" />
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

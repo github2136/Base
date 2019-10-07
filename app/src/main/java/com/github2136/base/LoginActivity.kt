@@ -19,16 +19,18 @@ class LoginActivity : BaseActivity<LoginVM, ActivityLoginBinding>() {
         bind.vm = vm
         vm.userName.value = "admin"
         vm.passWord.value = "admin"
+
+        vm.getWeather()
     }
 
     fun onClick(view: View) {
-        showDialog("asdf${Random().nextInt()}")
+        showProgressDialog("asdf${Random().nextInt()}")
         vm.login()
     }
 
     override fun initObserve() {
         vm.userInfo.observe(this, Observer {
-            dismissDialog()
+            dismissProgressDialog()
             if (it is String) {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
             } else if (it is User) {

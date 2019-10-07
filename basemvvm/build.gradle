@@ -33,7 +33,10 @@ dependencies {
     api 'androidx.legacy:legacy-support-v4:1.0.0'
 
     api 'com.orhanobut:logger:2.2.0'
+
     api 'com.squareup.okhttp3:okhttp:4.0.1'
+    api 'com.squareup.retrofit2:retrofit:2.6.1'
+    api 'com.squareup.retrofit2:converter-gson:2.6.1'
 
     api 'com.google.android.material:material:1.1.0-alpha09'
 

@@ -11,6 +11,7 @@ import com.github2136.util.SPUtil
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Retrofit
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -23,6 +24,12 @@ import java.util.*
  * Created by yb on 2018/11/2.
  */
 open class BaseModel(app: Application, tag: String) {
+    protected val retrofit by lazy {
+        Retrofit
+            .Builder()
+            .baseUrl("http://www.weather.com.cn/")
+            .build()
+    }
     protected val client: OkHttpClient by lazy {
         OkHttpClient().newBuilder()
             .addNetworkInterceptor(OkHttpInterceptor())
