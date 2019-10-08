@@ -11,6 +11,8 @@ import java.io.IOException
  * Created by yb on 2019/10/7
  */
 class HttpModel private constructor(app: Application) : BaseModel(app) {
+    override val baseUrl: String = "http://www.weather.com.cn/"
+
     val api by lazy { retrofit.create(HttpService::class.java) }
 
     companion object {

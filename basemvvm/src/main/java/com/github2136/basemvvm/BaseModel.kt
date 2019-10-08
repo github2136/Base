@@ -14,17 +14,26 @@ import retrofit2.converter.gson.GsonConverterFactory
  * Created by yb on 2018/11/2.
  */
 open class BaseModel(app: Application) {
+    open val baseUrl = ""
     protected val retrofit by lazy {
         Retrofit
             .Builder()
             .client(client)
-            .baseUrl("http://www.weather.com.cn/")
+            .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create(mJsonUtil.getGson()))
             .build()
     }
     protected val client: OkHttpClient by lazy {
         OkHttpClient().newBuilder()
             .addNetworkInterceptor(OkHttpInterceptor())
+            //使用拦截器添加通用参数
+            .addInterceptor { chain ->
+                val original = chain.request()
+                val requestBuild = original.newBuilder()
+                    .addHeader("deviceType", "0")
+                val request = requestBuild.build()
+                return@addInterceptor chain.proceed(request)
+            }
             .build()
     }
 
