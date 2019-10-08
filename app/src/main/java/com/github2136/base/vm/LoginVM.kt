@@ -5,9 +5,9 @@ import androidx.core.content.edit
 import androidx.lifecycle.MutableLiveData
 import com.github2136.base.HttpModel
 import com.github2136.base.entity.User
+import com.github2136.base.entity.Weather
 import com.github2136.base.executor
 import com.github2136.basemvvm.BaseVM
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,26 +16,25 @@ import retrofit2.Response
  * Created by YB on 2019/8/28
  */
 class LoginVM(application: Application) : BaseVM(application) {
-    lateinit var httpModel: HttpModel
+    val httpModel: HttpModel by lazy { HttpModel.getInstance(application) }
+
     val userName = MutableLiveData<String>()
     val passWord = MutableLiveData<String>()
     val userInfo = MutableLiveData<Any>()
     val weather = MutableLiveData<String>()
 
-    override fun init(tag: String) {
-        super.init(tag)
-        httpModel = HttpModel(getApplication(), mTag)
-    }
-
     fun getWeather() {
         val call = httpModel.api.getWeather("101010100")
-        call.enqueue(object : Callback<ResponseBody> {
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+        addCall(call)
+        call.enqueue(object : Callback<Weather> {
+            override fun onFailure(call: Call<Weather>, t: Throwable) {
 
             }
 
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-
+            override fun onResponse(call: Call<Weather>, response: Response<Weather>) {
+                if (response.isSuccessful) {
+                    weather.postValue(response.body().toString())
+                }
             }
         })
     }
@@ -53,9 +52,5 @@ class LoginVM(application: Application) : BaseVM(application) {
                 userInfo.postValue("账号或密码错误")
             }
         }
-    }
-
-    override fun cancelRequest() {
-
     }
 }

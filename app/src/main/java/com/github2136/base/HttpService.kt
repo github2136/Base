@@ -1,6 +1,6 @@
 package com.github2136.base
 
-import okhttp3.ResponseBody
+import com.github2136.base.entity.Weather
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -10,5 +10,5 @@ import retrofit2.http.Path
  */
 interface HttpService {
     @GET("adat/sk/{cityId}.html")
-    fun getWeather(@Path("cityId") cityId: String): Call<ResponseBody>
+    fun getWeather(@Path("cityId") cityId: String): Call<Weather>
 }

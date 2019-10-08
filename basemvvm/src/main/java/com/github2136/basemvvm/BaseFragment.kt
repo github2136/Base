@@ -79,7 +79,6 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
     private fun getVM(clazz: Class<V>) {
         activity?.let {
             this.vm = ViewModelProvider.AndroidViewModelFactory.getInstance(it.application).create(clazz)
-            vm.init(this.toString())
         }
     }
 

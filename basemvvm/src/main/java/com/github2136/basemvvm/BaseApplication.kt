@@ -21,7 +21,7 @@ class BaseApplication : Application() {
 //        logcat打印
         val prettyFormatStrategy = PrettyFormatStrategy
                 .newBuilder()
-                .tag("NATURAL")
+                .tag("MVVM-TAG")
         Logger.addLogAdapter(AndroidLogAdapter(prettyFormatStrategy.build()))
 
         //log日志本地保存

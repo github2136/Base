@@ -3,8 +3,7 @@ package com.github2136.basemvvm
 import com.orhanobut.logger.Logger
 import okhttp3.Interceptor
 import okhttp3.Response
-import okio.Buffer
-import okio.ByteString
+import okio.*
 import java.nio.charset.Charset
 
 /**
@@ -26,9 +25,15 @@ class OkHttpInterceptor : Interceptor {
             val contentType = contentType()
             if (contentType?.subtype.equals("json", true) || contentType?.type.equals("text")) {
                 val contentLength = contentLength()
-                val source = source()
+                val source: BufferedSource
+                source = if ("gzip" == responseHeads["Content-Encoding"]) {
+                    val gzipSource = GzipSource(source().peek())
+                    gzipSource.buffer()
+                } else {
+                    source().peek()
+                }
                 source.request(java.lang.Long.MAX_VALUE) // Buffer the entire body.+  Charset charset = UTF8;
-                val buffer = source.buffer()
+                val buffer = source.buffer
 
                 var charset: Charset? = Charset.forName("UTF-8")
 
@@ -49,14 +54,16 @@ class OkHttpInterceptor : Interceptor {
         }
 
         Logger.t("HTTP")
-                .d("""
+            .d(
+                """
             |$method $requestUrl
             |Header
             |${requestHeads}Request Body:${requestBody.utf8()}
             |
             |Code $code
             |Response Body $body
-            """.trimMargin())
+            """.trimMargin()
+            )
 //        |${if (responseHeads.size() > 0) {
 //            "Header\n$responseHeads"
 //        } else {

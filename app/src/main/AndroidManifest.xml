@@ -3,6 +3,7 @@
     package="com.github2136.base">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name="com.github2136.basemvvm.BaseApplication"

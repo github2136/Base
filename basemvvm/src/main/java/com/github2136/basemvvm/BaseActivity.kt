@@ -58,8 +58,6 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
 
     private fun getVM(clazz: Class<V>) {
         this.vm = ViewModelProvider.AndroidViewModelFactory.getInstance(application).create(clazz)
-        vm.init(this.toString())
-
     }
 
     protected fun setToolbar(tbTitle: Toolbar) {
