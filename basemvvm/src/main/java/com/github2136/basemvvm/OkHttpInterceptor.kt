@@ -23,7 +23,7 @@ class OkHttpInterceptor : Interceptor {
         var body = ""
         responseBody?.apply {
             val contentType = contentType()
-            if (contentType?.subtype.equals("json", true) || contentType?.type.equals("text")) {
+            if (contentType == null || contentType.subtype == "json" || contentType.type == "text") {
                 val contentLength = contentLength()
                 val source: BufferedSource
                 source = if ("gzip" == responseHeads["Content-Encoding"]) {
@@ -47,11 +47,11 @@ class OkHttpInterceptor : Interceptor {
         }
 
         var requestBody: ByteString = ByteString.EMPTY
-        if (!request.body?.contentType().toString().startsWith("multipart/form-data;boundary=")) {
+//        if (!request.body?.contentType().toString().startsWith("multipart/form-data")) {
             val requestBuffer = Buffer()
             request.body?.writeTo(requestBuffer)
             requestBody = requestBuffer.readByteString()
-        }
+//        }
 
         Logger.t("HTTP")
             .d(
@@ -59,7 +59,7 @@ class OkHttpInterceptor : Interceptor {
             |$method $requestUrl
             |Header
             |${requestHeads}Request Body:${requestBody.utf8()}
-            |
+            |-------------------------------------------------------
             |Code $code
             |Response Body $body
             """.trimMargin()
