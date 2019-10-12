@@ -2,12 +2,16 @@ package com.github2136.basemvvm
 
 import android.app.Dialog
 import android.app.ProgressDialog
+import android.content.DialogInterface
 import android.os.Bundle
+import androidx.annotation.NonNull
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 
 /**
  * Created by YB on 2019/9/12
  */
+@Deprecated(message = "快速显示时有错误")
 class ProgressDialog private constructor() : DialogFragment() {
 
     private val dialog by lazy {
@@ -25,8 +29,6 @@ class ProgressDialog private constructor() : DialogFragment() {
     fun setMessage(msg: String) {
         arguments?.putString("message", msg)
     }
-
-    fun isShowing() = dialog.isShowing
 
     companion object {
         fun getInstance(cancelable: Boolean = true, message: String = ""): com.github2136.basemvvm.ProgressDialog {

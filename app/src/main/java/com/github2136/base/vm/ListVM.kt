@@ -13,7 +13,7 @@ import java.util.*
  * Created by YB on 2019/9/23
  */
 class ListVM(app: Application) : BaseVM(app) {
-    val adapter = MutableLiveData<ListMultipleAdapter>()
+    val adapterLD = MutableLiveData<ListMultipleAdapter>()
 
     fun setData() {
         executor.submit {
@@ -24,7 +24,7 @@ class ListVM(app: Application) : BaseVM(app) {
             }
             Thread.sleep(1000)
             handle.post {
-                adapter.value = ListMultipleAdapter(data)
+                adapterLD.value = ListMultipleAdapter(data)
             }
         }
     }

@@ -17,8 +17,8 @@ class LoginActivity : BaseActivity<LoginVM, ActivityLoginBinding>() {
     override fun initData(savedInstanceState: Bundle?) {
         bind.view = this
         bind.vm = vm
-        vm.userName.value = "admin"
-        vm.passWord.value = "admin"
+        vm.userNameLD.value = "admin"
+        vm.passWordLD.value = "admin"
 
         vm.getWeather()
     }
@@ -29,7 +29,7 @@ class LoginActivity : BaseActivity<LoginVM, ActivityLoginBinding>() {
     }
 
     override fun initObserve() {
-        vm.userInfo.observe(this, Observer {
+        vm.userInfoLD.observe(this, Observer {
             dismissProgressDialog()
             if (it is String) {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()

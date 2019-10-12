@@ -18,10 +18,10 @@ import retrofit2.Response
 class LoginVM(application: Application) : BaseVM(application) {
     val httpModel: HttpModel by lazy { HttpModel.getInstance(application) }
 
-    val userName = MutableLiveData<String>()
-    val passWord = MutableLiveData<String>()
-    val userInfo = MutableLiveData<Any>()
-    val weather = MutableLiveData<String>()
+    val userNameLD = MutableLiveData<String>()
+    val passWordLD = MutableLiveData<String>()
+    val userInfoLD = MutableLiveData<Any>()
+    val weatherLD = MutableLiveData<String>()
 
     fun getWeather() {
         val call = httpModel.api.getWeather("101010100")
@@ -33,7 +33,7 @@ class LoginVM(application: Application) : BaseVM(application) {
 
             override fun onResponse(call: Call<Weather>, response: Response<Weather>) {
                 if (response.isSuccessful) {
-                    weather.postValue(response.body().toString())
+                    weatherLD.postValue(response.body().toString())
                 }
             }
         })
@@ -42,14 +42,14 @@ class LoginVM(application: Application) : BaseVM(application) {
     fun login() {
         executor.execute {
             Thread.sleep(2000)
-            if (userName.value == "admin" && passWord.value == "admin") {
+            if (userNameLD.value == "admin" && passWordLD.value == "admin") {
                 mSpUtil.edit {
                     putString("username", "admin")
                     putString("password", "admin")
                 }
-                userInfo.postValue(User(userName.value!!, passWord.value!!))
+                userInfoLD.postValue(User(userNameLD.value!!, passWordLD.value!!))
             } else {
-                userInfo.postValue("账号或密码错误")
+                userInfoLD.postValue("账号或密码错误")
             }
         }
     }

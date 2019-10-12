@@ -33,6 +33,14 @@
             android:onClick="@{view::onClick}"
             android:text="LoadMore" />
 
+        <Button
+            android:id="@+id/btnClick3"
+            style="@style/BtnMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{view::onClick}"
+            android:text="dialog" />
+
 
     </LinearLayout>
 </layout>

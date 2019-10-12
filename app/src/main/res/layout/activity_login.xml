@@ -22,17 +22,17 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{vm.weather}" />
+            android:text="@{vm.weatherLD}" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@={vm.userName}" />
+            android:text="@={vm.userNameLD}" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@={vm.passWord}" />
+            android:text="@={vm.passWordLD}" />
 
         <Button
             style="@style/BtnMedium"

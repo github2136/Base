@@ -1,6 +1,7 @@
 package com.github2136.basemvvm
 
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
@@ -30,9 +31,12 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
     protected val mHandler by lazy { Handler(this) }
     protected lateinit var mToast: Toast
     protected val mDialog: ProgressDialog by lazy {
-        val dialog = ProgressDialog.getInstance(false)
-        dialog
+        ProgressDialog(activity)
     }
+//    protected val mDialog: ProgressDialog by lazy {
+//        val dialog = ProgressDialog.getInstance(false)
+//        dialog
+//    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -70,6 +74,11 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
                 showProgressDialog(str)
             } else {
                 dismissProgressDialog()
+            }
+        })
+        vm.ldToast.observe(this, Observer { str ->
+            if (!TextUtils.isEmpty(str)) {
+                showToast(str)
             }
         })
         initObserve()
@@ -120,25 +129,26 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
         }
     }
 
-    open fun showProgressDialog(@StringRes resId: Int) {
-        showProgressDialog(resources.getString(resId))
+    open fun showProgressDialog(@StringRes resId: Int, cancelable: Boolean = false) {
+        showProgressDialog(resources.getString(resId), cancelable)
     }
 
-    open fun showProgressDialog(msg: String? = null) {
+    open fun showProgressDialog(msg: String? = null, cancelable: Boolean = false) {
         if (msg == null) {
             mDialog.setMessage(vm.loadingStr)
         } else {
             mDialog.setMessage(msg)
         }
-        if (isAdded && !isDetached) {
+        mDialog.setCancelable(cancelable)
+        if (isAdded && !isDetached && !mDialog.isShowing) {
             activity?.apply {
-                mDialog.show(supportFragmentManager, "progressDialog")
+                mDialog.show()
             }
         }
     }
 
     open fun dismissProgressDialog() {
-        if (mDialog.isShowing()) {
+        if (mDialog.isShowing) {
             mDialog.dismiss()
         }
     }

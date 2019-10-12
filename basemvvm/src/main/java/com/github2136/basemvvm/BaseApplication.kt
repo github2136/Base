@@ -12,7 +12,7 @@ import java.util.*
 /**
  * Created by yb on 2018/11/2.
  */
-class BaseApplication : Application() {
+open class BaseApplication : Application() {
     private val mActivitys: ArrayList<AppCompatActivity> = ArrayList()
 
     override fun onCreate() {

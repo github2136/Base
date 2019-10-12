@@ -24,10 +24,11 @@ abstract class BaseVM(app: Application) : AndroidViewModel(app) {
 
     val loadingStr = "请稍后……"
     val failedStr = "无法连接服务器"
-    var mJsonUtil: JsonUtil = JsonUtil.instance
-    var mSpUtil: SharedPreferences = SPUtil.getSharedPreferences(app)
+    val mJsonUtil: JsonUtil = JsonUtil.instance
+    val mSpUtil: SharedPreferences = SPUtil.getSharedPreferences(app)
     //显示dialog
     val ldDialog = MutableLiveData<String>()
+    val ldToast= MutableLiveData<String>()
     val handle = Handler(Looper.getMainLooper())
 
     @Synchronized

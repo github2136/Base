@@ -2,6 +2,7 @@ package com.github2136.base
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import com.github2136.base.databinding.ActivityMainBinding
 import com.github2136.base.vm.MainVM
@@ -22,6 +23,11 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
             }
             R.id.btnClick2 -> {
                 startActivity(Intent(this, LoadMoreActivity::class.java))
+            }
+            R.id.btnClick3 -> {
+                showProgressDialog("aaaa")
+                dismissProgressDialog()
+                showProgressDialog("ccc")
 
             }
         }

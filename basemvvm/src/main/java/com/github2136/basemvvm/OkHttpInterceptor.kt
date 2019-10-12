@@ -47,11 +47,14 @@ class OkHttpInterceptor : Interceptor {
         }
 
         var requestBody: ByteString = ByteString.EMPTY
-//        if (!request.body?.contentType().toString().startsWith("multipart/form-data")) {
-            val requestBuffer = Buffer()
-            request.body?.writeTo(requestBuffer)
-            requestBody = requestBuffer.readByteString()
-//        }
+        request.body?.apply {
+            val contentType = contentType()
+            if (contentType?.subtype == "json" || contentType?.type == "text") {
+                val requestBuffer = Buffer()
+                request.body?.writeTo(requestBuffer)
+                requestBody = requestBuffer.readByteString()
+            }
+        }
 
         Logger.t("HTTP")
             .d(
