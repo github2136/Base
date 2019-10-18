@@ -41,6 +41,18 @@
             android:onClick="@{view::onClick}"
             android:text="dialog" />
 
+        <ProgressBar
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="@{vm.downloadLD}" />
 
+        <Button
+            android:id="@+id/btnDownload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{view::onClick}"
+            android:text="下载" />
     </LinearLayout>
 </layout>

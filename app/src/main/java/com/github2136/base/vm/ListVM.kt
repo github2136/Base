@@ -28,8 +28,4 @@ class ListVM(app: Application) : BaseVM(app) {
             }
         }
     }
-
-    override fun cancelRequest() {
-
-    }
 }
