@@ -5,6 +5,7 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -156,7 +157,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
     ///////////////////////////////////////////////////////////////////////////
     // Handler
     ///////////////////////////////////////////////////////////////////////////
-    class Handler(fragment: BaseFragment<out BaseVM, out ViewDataBinding>) : android.os.Handler() {
+    class Handler(fragment: BaseFragment<out BaseVM, out ViewDataBinding>) : android.os.Handler(Looper.getMainLooper()) {
         var weakReference = WeakReference(fragment)
 
         override fun handleMessage(msg: Message) {

@@ -3,6 +3,7 @@ package com.github2136.basemvvm
 import android.app.ProgressDialog
 import android.os.Build
 import android.os.Bundle
+import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
 import android.widget.Toast
@@ -78,7 +79,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
     ///////////////////////////////////////////////////////////////////////////
     // Handler
     ///////////////////////////////////////////////////////////////////////////
-    class Handler(activity: BaseActivity<out BaseVM, out ViewDataBinding>) : android.os.Handler() {
+    class Handler(activity: BaseActivity<out BaseVM, out ViewDataBinding>) :android.os.Handler(Looper.getMainLooper()) {
         private var weakReference = WeakReference(activity)
 
         override fun handleMessage(msg: Message) {
