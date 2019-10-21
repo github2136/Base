@@ -44,7 +44,6 @@ class DownloadUtil private constructor(val app: Application) {
                 }
                 callback(state, progress, path, error)
             }
-            Log.e("download", "download")
             val task = DownloadTask(app, url, filePath, ::callback)
             task.start()
             downloadTask[url] = task

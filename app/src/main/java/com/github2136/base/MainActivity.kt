@@ -41,7 +41,7 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
                     downloadUtil.download(url, File(FileUtil.getExternalStorageRootPath(), "163.exe").absolutePath) { state, progress, path, error ->
                         when (state) {
                             DownloadUtil.STATE_DOWNLOAD -> {
-                                vm.downloadLD.value = progress
+                                vm.downloadLD.postValue(progress)
                             }
                             DownloadUtil.STATE_SUCCESS  -> {
                                 showToast("下载完成$path")
@@ -55,7 +55,7 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
                         }
 
                     }
-                }else{
+                } else {
                     showToast("下载已完成")
                 }
             }
