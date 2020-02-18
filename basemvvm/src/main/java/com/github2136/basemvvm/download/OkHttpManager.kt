@@ -17,6 +17,7 @@ class OkHttpManager private constructor() {
     fun call(url: String): Call {
         val request = Request.Builder()
             .url(url)
+            .addHeader("Accept-Encoding", "identity")
             .build()
         return client.newCall(request)
     }
