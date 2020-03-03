@@ -42,6 +42,10 @@ class OkHttpInterceptor : Interceptor {
                 }
                 if (contentLength != 0L) {
                     body = buffer.clone().readString(charset!!)
+                    //响应内容裁剪，如果内容太多会影响后续内容打印
+                    if (body.length > 2000) {
+                        body = body.substring(0..2000)
+                    }
                 }
             }
         }

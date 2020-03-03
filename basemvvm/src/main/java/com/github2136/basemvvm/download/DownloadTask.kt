@@ -94,8 +94,8 @@ class DownloadTask(
                             val randomFile = RandomAccessFile(file, "rw")
                             randomFile.setLength(length)
                             //分块下载
-                            if (length > 1024 && response.header("accept-ranges") == "bytes") {
-                                //文件超过1K分块下载并且支持断点续传
+                            if (length > 1048576 && response.header("accept-ranges") == "bytes") {
+                                //文件超过1M分块下载并且支持断点续传
                                 download(downloadFile!!.id, 5, url, length)
                             } else {
                                 download(downloadFile!!.id, 1, url, length)
