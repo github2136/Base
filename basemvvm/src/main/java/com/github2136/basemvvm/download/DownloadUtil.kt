@@ -63,6 +63,7 @@ class DownloadUtil private constructor(val app: Application) {
         if (downloadTask.containsKey(url)) {
             val task = downloadTask[url]
             task?.stop()
+            downloadTask.remove(url)
         }
     }
 
