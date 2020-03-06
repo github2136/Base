@@ -11,7 +11,7 @@ import com.github2136.base.ViewHolderRecyclerView
  * Created by YB on 2019/9/23
  * 一种类型的Adapter
  */
-abstract class BaseRecyclerVMAdapter<T, B : ViewDataBinding>(protected var list: MutableList<T>? = null) :
+abstract class BaseRecyclerVMAdapter<T, B : ViewDataBinding>(var list: MutableList<T>? = null) :
     RecyclerView.Adapter<ViewHolderRecyclerView>() {
     protected lateinit var mLayoutInflater: LayoutInflater
     /**
