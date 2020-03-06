@@ -1,8 +1,6 @@
 package com.github2136.basemvvm.list
 
 import android.app.Application
-import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.MutableLiveData
 import com.github2136.basemvvm.BaseVM
 
 /**
@@ -55,6 +53,16 @@ abstract class BaseListVM<T>(app: Application) : BaseVM(app) {
         handle.post {
             adapter.notifyDataSetChanged()
         }
+    }
+
+    fun baseInitData() {
+        adapter.refresh()
+        initData()
+    }
+
+    fun baseLoadMoreData() {
+        adapter.loading.value = true
+        loadMoreData()
     }
 
     /**

@@ -1,7 +1,6 @@
 package com.github2136.base
 
 import android.os.Bundle
-import com.github2136.base.databinding.ActivityListBinding
 import com.github2136.base.databinding.ActivityLoadMoreBinding
 import com.github2136.base.entity.User
 import com.github2136.base.vm.LoadMoreVM
@@ -19,9 +18,6 @@ class LoadMoreActivity : BaseListActivity<LoadMoreVM, ActivityLoadMoreBinding, U
         bind.vm = vm
     }
 
-    fun onRefreshListener() {
-        vm.initData()
-    }
     override fun initObserve() {
 
     }

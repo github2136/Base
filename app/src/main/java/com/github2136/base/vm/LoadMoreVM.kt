@@ -11,11 +11,10 @@ import java.util.*
  * Created by YB on 2019/9/20
  */
 class LoadMoreVM(app: Application) : BaseListVM<User>(app) {
-    override fun initAdapter() = LoadMoreAdapter(this::initData, this::loadMoreData)
+    override fun initAdapter() = LoadMoreAdapter(this::baseInitData, this::baseLoadMoreData)
 
     override fun initData() {
         adapter.pageIndex = 1
-        adapter.refresh()
 
         executor.submit {
             val data = mutableListOf<User>()
@@ -33,7 +32,6 @@ class LoadMoreVM(app: Application) : BaseListVM<User>(app) {
     }
 
     override fun loadMoreData() {
-        adapter.loading.value = true
         executor.submit {
             val data = mutableListOf<User>()
             val r = Random().nextInt()
