@@ -28,7 +28,7 @@ abstract class BaseRecyclerVMAdapter<T, B : ViewDataBinding>(var list: MutableLi
     /**
      * 获得对象
      */
-    fun getItem(position: Int): T? {
+    open fun getItem(position: Int): T? {
         return list?.get(position)
     }
 

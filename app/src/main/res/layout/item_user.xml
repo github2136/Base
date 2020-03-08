@@ -3,14 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-<variable
-    name="user"
-    type="com.github2136.base.entity.User" />
+
+        <variable
+            name="user"
+            type="com.github2136.base.entity.User" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#AEFCCF"
         android:orientation="vertical"
         android:padding="10dp">
 

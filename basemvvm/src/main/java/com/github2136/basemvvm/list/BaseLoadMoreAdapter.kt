@@ -90,6 +90,14 @@ abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding>(private val retryCall
         }
     }
 
+    override fun getItem(position: Int): T? {
+        return if (result.value != null && position + 1 == itemCount) {
+            null
+        } else {
+            super.getItem(position)
+        }
+    }
+
     override fun getItemCount(): Int {
         return super.getItemCount() + (if (result.value != null) 1 else 0)
     }
