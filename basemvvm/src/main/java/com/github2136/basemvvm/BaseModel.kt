@@ -9,6 +9,7 @@ import com.github2136.util.SPUtil
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by yb on 2018/11/2.
@@ -26,6 +27,10 @@ open class BaseModel(app: Application) {
     protected val client: OkHttpClient by lazy {
         OkHttpClient().newBuilder()
             .addNetworkInterceptor(OkHttpInterceptor())
+            .connectTimeout(2, TimeUnit.SECONDS)
+            .callTimeout(2, TimeUnit.SECONDS)
+            .readTimeout(2, TimeUnit.SECONDS)
+            .writeTimeout(2, TimeUnit.SECONDS)
             //使用拦截器添加通用参数
             .addInterceptor { chain ->
                 val original = chain.request()

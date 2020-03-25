@@ -4,6 +4,7 @@ import com.orhanobut.logger.Logger
 import okhttp3.Interceptor
 import okhttp3.Response
 import okio.*
+import java.io.IOException
 import java.nio.charset.Charset
 
 /**
@@ -11,44 +12,12 @@ import java.nio.charset.Charset
  * OKHTTP拦截器
  */
 class OkHttpInterceptor : Interceptor {
+    @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val requestUrl = request.url
         val method = request.method
         val requestHeads = request.headers
-        val response = chain.proceed(request)
-        val code = response.code
-        val responseHeads = response.headers
-        val responseBody = response.body
-        var body = ""
-        responseBody?.apply {
-            val contentType = contentType()
-            if (contentType == null || contentType.subtype == "json" || contentType.type == "text") {
-                val contentLength = contentLength()
-                val source: BufferedSource
-                source = if ("gzip" == responseHeads["Content-Encoding"]) {
-                    val gzipSource = GzipSource(source().peek())
-                    gzipSource.buffer()
-                } else {
-                    source().peek()
-                }
-                source.request(java.lang.Long.MAX_VALUE) // Buffer the entire body.+  Charset charset = UTF8;
-                val buffer = source.buffer
-
-                var charset: Charset? = Charset.forName("UTF-8")
-
-                if (contentType != null) {
-                    charset = contentType.charset(Charset.forName("UTF-8"))
-                }
-                if (contentLength != 0L) {
-                    body = buffer.clone().readString(charset!!)
-                    //响应内容裁剪，如果内容太多会影响后续内容打印
-                    if (body.length > 2000) {
-                        body = body.substring(0..2000)
-                    }
-                }
-            }
-        }
 
         var requestBody: ByteString = ByteString.EMPTY
         request.body?.apply {
@@ -59,23 +28,65 @@ class OkHttpInterceptor : Interceptor {
                 requestBody = requestBuffer.readByteString()
             }
         }
+        val response: Response
+        var responseLog = ""
+        try {
+            response = chain.proceed(request)
+            val code = response.code
+            val responseHeads = response.headers
+            val responseBody = response.body
+            var body = ""
+            responseBody?.apply {
+                val contentType = contentType()
+                if (contentType == null || contentType.subtype == "json" || contentType.type == "text") {
+                    val contentLength = contentLength()
+                    val source: BufferedSource
+                    source = if ("gzip" == responseHeads["Content-Encoding"]) {
+                        val gzipSource = GzipSource(source().peek())
+                        gzipSource.buffer()
+                    } else {
+                        source().peek()
+                    }
+                    source.request(java.lang.Long.MAX_VALUE) // Buffer the entire body.+  Charset charset = UTF8;
+                    val buffer = source.buffer
 
-        Logger.t("HTTP")
-            .d(
-                """
+                    var charset: Charset? = Charset.forName("UTF-8")
+
+                    if (contentType != null) {
+                        charset = contentType.charset(Charset.forName("UTF-8"))
+                    }
+                    if (contentLength != 0L) {
+                        body = buffer.clone().readString(charset!!)
+                        //响应内容裁剪，如果内容太多会影响后续内容打印
+                        if (body.length > 2000) {
+                            body = body.substring(0..2000)
+                        }
+                    }
+                }
+            }
+            responseLog = """Code $code
+            |Response Body $body
+            """.trimIndent()
+//             |${if (responseHeads.size > 0) {
+//                "Header\n$responseHeads"
+//            } else {
+//                ""
+//            }}
+            return response
+        } catch (e: Exception) {
+            responseLog ="$e"
+            throw e
+        } finally {
+            Logger.t("HTTP")
+                .d(
+                    """
             |$method $requestUrl
             |Header
             |${requestHeads}Request Body:${requestBody.utf8()}
             |-------------------------------------------------------
-            |Code $code
-            |Response Body $body
+            |$responseLog
             """.trimMargin()
-            )
-//        |${if (responseHeads.size() > 0) {
-//            "Header\n$responseHeads"
-//        } else {
-//            ""
-//        }}
-        return response
+                )
+        }
     }
 }
