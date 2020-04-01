@@ -10,7 +10,7 @@ import com.github2136.basemvvm.loadmore.BaseLoadMoreAdapter
 /**
  * Created by YB on 2019/9/20
  */
-class LoadMoreAdapter(retryCallback: () -> Unit, loadMore: () -> Unit) : BaseLoadMoreAdapter<User, ItemUserBinding>(retryCallback, loadMore)
+class LoadMoreAdapter : BaseLoadMoreAdapter<User, ItemUserBinding>()
     , IDivider {
     override fun getLayoutIdByList(viewType: Int) = R.layout.item_user
 

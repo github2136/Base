@@ -11,11 +11,11 @@ import java.util.*
  * Created by YB on 2019/9/20
  */
 class LoadMoreVM(app: Application) : BaseLoadMoreVM<User>(app) {
-    override fun initAdapter() = LoadMoreAdapter(this::baseInitData, this::baseLoadMoreData)
+    override fun initAdapter() = LoadMoreAdapter()
 
     override fun initData() {
         adapter.pageIndex = 1
-        adapter.pageCount=5
+        adapter.pageCount = 5
         executor.submit {
             val data = mutableListOf<User>()
             val r = Random().nextInt()
@@ -24,7 +24,7 @@ class LoadMoreVM(app: Application) : BaseLoadMoreVM<User>(app) {
             }
             Thread.sleep(500)
 //            if (Random().nextBoolean()) {
-                setData(data)
+            setData(data)
 //            } else {
 //                failedData()
 //            }
@@ -41,11 +41,11 @@ class LoadMoreVM(app: Application) : BaseLoadMoreVM<User>(app) {
                 adapter.pageCount
             }
             for (i in 0 until count) {
-                data.add(User("pageIndex ${adapter.pageIndex} i $i $r", "", r.toString()+"5555555"))
+                data.add(User("pageIndex ${adapter.pageIndex} i $i $r", "", r.toString() + "5555555"))
             }
             Thread.sleep(500)
 //            if (Random().nextBoolean()) {
-                appendData(data)
+            appendData(data)
 //            } else {
 //                failedData()
 //            }

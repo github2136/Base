@@ -12,8 +12,7 @@ import com.github2136.basemvvm.R
  * Created by YB on 2019/9/23
  * viewType -1,-2,-3不能使用
  */
-abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding>(private val retryCallback: () -> Unit, private val loadMore: () -> Unit) :
-    BaseRecyclerVMAdapter<T, B>() {
+abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding> : BaseRecyclerVMAdapter<T, B>() {
     //页码
     var pageIndex = 1
     //每页数量
@@ -26,6 +25,10 @@ abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding>(private val retryCall
     var result = MutableLiveData<Boolean>()
     //加载所有数据
     var complete = false
+    //首页重试
+    lateinit var retryCallback: () -> Unit
+    //加载更多
+    lateinit var loadMore: () -> Unit
 
     override fun getLayoutId(viewType: Int): Int {
         return when (viewType) {

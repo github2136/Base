@@ -9,6 +9,11 @@ import com.github2136.basemvvm.BaseVM
 abstract class BaseLoadMoreVM<T>(app: Application) : BaseVM(app) {
     var adapter: BaseLoadMoreAdapter<T, *> = initAdapter()
 
+    init {
+        adapter.retryCallback = ::baseInitData
+        adapter.loadMore = ::baseLoadMoreData
+    }
+
     /**
      * 设置首页数据
      */
