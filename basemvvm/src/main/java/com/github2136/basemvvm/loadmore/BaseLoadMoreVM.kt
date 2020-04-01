@@ -1,4 +1,4 @@
-package com.github2136.basemvvm.list
+package com.github2136.basemvvm.loadmore
 
 import android.app.Application
 import com.github2136.basemvvm.BaseVM
@@ -6,7 +6,7 @@ import com.github2136.basemvvm.BaseVM
 /**
  * Created by YB on 2019/8/29
  */
-abstract class BaseListVM<T>(app: Application) : BaseVM(app) {
+abstract class BaseLoadMoreVM<T>(app: Application) : BaseVM(app) {
     var adapter: BaseLoadMoreAdapter<T, *> = initAdapter()
 
     /**

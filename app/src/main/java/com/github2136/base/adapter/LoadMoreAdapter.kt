@@ -5,7 +5,7 @@ import com.github2136.base.ViewHolderRecyclerView
 import com.github2136.base.databinding.ItemUserBinding
 import com.github2136.base.divider.IDivider
 import com.github2136.base.entity.User
-import com.github2136.basemvvm.list.BaseLoadMoreAdapter
+import com.github2136.basemvvm.loadmore.BaseLoadMoreAdapter
 
 /**
  * Created by YB on 2019/9/20

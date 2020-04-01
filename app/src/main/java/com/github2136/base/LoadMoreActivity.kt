@@ -6,13 +6,13 @@ import com.github2136.base.databinding.ActivityLoadMoreBinding
 import com.github2136.base.divider.Divider
 import com.github2136.base.entity.User
 import com.github2136.base.vm.LoadMoreVM
-import com.github2136.basemvvm.list.BaseListActivity
+import com.github2136.basemvvm.loadmore.BaseLoadMoreActivity
 import kotlinx.android.synthetic.main.activity_load_more.*
 
 /**
  * Created by YB on 2019/9/20
  */
-class LoadMoreActivity : BaseListActivity<LoadMoreVM, ActivityLoadMoreBinding, User>() {
+class LoadMoreActivity : BaseLoadMoreActivity<LoadMoreVM, ActivityLoadMoreBinding, User>() {
 
     override fun getLayoutId() = R.layout.activity_load_more
 

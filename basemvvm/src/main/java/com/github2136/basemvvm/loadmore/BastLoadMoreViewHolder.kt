@@ -1,4 +1,4 @@
-package com.github2136.basemvvm.list
+package com.github2136.basemvvm.loadmore
 
 import android.view.LayoutInflater
 import android.view.View

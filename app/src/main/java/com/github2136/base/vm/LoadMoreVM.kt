@@ -4,13 +4,13 @@ import android.app.Application
 import com.github2136.base.adapter.LoadMoreAdapter
 import com.github2136.base.entity.User
 import com.github2136.base.executor
-import com.github2136.basemvvm.list.BaseListVM
+import com.github2136.basemvvm.loadmore.BaseLoadMoreVM
 import java.util.*
 
 /**
  * Created by YB on 2019/9/20
  */
-class LoadMoreVM(app: Application) : BaseListVM<User>(app) {
+class LoadMoreVM(app: Application) : BaseLoadMoreVM<User>(app) {
     override fun initAdapter() = LoadMoreAdapter(this::baseInitData, this::baseLoadMoreData)
 
     override fun initData() {
