@@ -17,6 +17,10 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <Button
             android:id="@+id/btnClick1"
             style="@style/BtnMedium"
@@ -54,6 +58,7 @@
             android:layout_height="wrap_content"
             android:onClick="@{view::onClick}"
             android:text="下载" />
+
         <Button
             android:id="@+id/btnDownload2"
             android:layout_width="match_parent"

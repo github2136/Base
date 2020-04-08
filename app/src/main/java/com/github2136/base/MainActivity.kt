@@ -2,6 +2,7 @@ package com.github2136.base
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.github2136.base.databinding.ActivityMainBinding
 import com.github2136.base.vm.MainVM
@@ -19,6 +20,7 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
         bind.vm = vm
     }
 
+    var i = 0
     fun onClick(view: View) {
         when (view.id) {
             R.id.btnClick1    -> {
@@ -35,48 +37,54 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
             }
             R.id.btnDownload  -> {
                 val url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk"
+                val start = System.currentTimeMillis()
+                Log.e("download", "$start")
 //                if (downloadUtil.getPathExists(url) == null) {
-                    downloadUtil.download(url, File(FileUtil.getExternalStorageRootPath(), "163.exe").absolutePath) { state, progress, path, error ->
-                        when (state) {
-                            DownloadUtil.STATE_DOWNLOAD -> {
-                                vm.downloadLD.postValue(progress)
-                            }
-                            DownloadUtil.STATE_SUCCESS  -> {
-                                showToast("下载完成$path")
-                            }
-                            DownloadUtil.STATE_FAIL     -> {
-                                showToast("下载失败$error")
-                            }
-                            DownloadUtil.STATE_STOP     -> {
-                                showToast("下载停止")
-                            }
+                downloadUtil.download(url, File(FileUtil.getExternalStorageRootPath(), "163.exe").absolutePath) { state, progress, path, error ->
+                    when (state) {
+                        DownloadUtil.STATE_DOWNLOAD -> {
+                            vm.downloadLD.postValue(progress)
                         }
-
+                        DownloadUtil.STATE_SUCCESS  -> {
+                            showToast("下载完成$path")
+                            val end = System.currentTimeMillis()
+                            Log.e("download", "${end - start}")
+                        }
+                        DownloadUtil.STATE_FAIL     -> {
+                            showToast("下载失败$error")
+                        }
+                        DownloadUtil.STATE_STOP     -> {
+                            showToast("下载停止")
+                        }
                     }
+
+                }
 //                } else {
 //                    showToast("下载已完成")
 //                }
             }
             R.id.btnDownload2 -> {
-                val url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk"
-//                if (downloadUtil.getPathExists(url) == null) {
-                    downloadUtil.download(url, File(FileUtil.getExternalStorageRootPath(), "163.exe").absolutePath) { state, progress, path, error ->
-                        when (state) {
-                            DownloadUtil.STATE_DOWNLOAD -> {
-                                vm.downloadLD.postValue(progress)
-                            }
-                            DownloadUtil.STATE_SUCCESS  -> {
-                                showToast("下载完成$path")
-                            }
-                            DownloadUtil.STATE_FAIL     -> {
-                                showToast("下载失败$error")
-                            }
-                            DownloadUtil.STATE_STOP     -> {
-                                showToast("下载停止")
-                            }
-                        }
-
-                    }
+                showToast("xxxx$i")
+                i++
+//                val url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk"
+////                if (downloadUtil.getPathExists(url) == null) {
+//                    downloadUtil.download(url, File(FileUtil.getExternalStorageRootPath(), "163.exe").absolutePath) { state, progress, path, error ->
+//                        when (state) {
+//                            DownloadUtil.STATE_DOWNLOAD -> {
+//                                vm.downloadLD.postValue(progress)
+//                            }
+//                            DownloadUtil.STATE_SUCCESS  -> {
+//                                showToast("下载完成$path")
+//                            }
+//                            DownloadUtil.STATE_FAIL     -> {
+//                                showToast("下载失败$error")
+//                            }
+//                            DownloadUtil.STATE_STOP     -> {
+//                                showToast("下载停止")
+//                            }
+//                        }
+//
+//                    }
 //                } else {
 //                    showToast("下载已完成")
 //                }

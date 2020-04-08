@@ -6,14 +6,18 @@ import android.os.Bundle
 import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.NotificationManagerCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.github2136.util.CommonUtil
+import com.google.android.material.snackbar.Snackbar
 import java.lang.ref.WeakReference
 import java.lang.reflect.ParameterizedType
 
@@ -26,10 +30,14 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
     protected val TAG = this.javaClass.name
     protected val mApp by lazy { application as BaseApplication }
     protected val mHandler by lazy { Handler(this) }
-    protected lateinit var mToast: Toast
-    protected val mDialog: ProgressDialog by lazy {
-        ProgressDialog(this)
-    }
+    //根视图用于Snackbar
+    protected val rootView by lazy { window.decorView.findViewById<ViewGroup>(android.R.id.content) }
+    protected val mToast: Toast by lazy { Toast.makeText(this, "", Toast.LENGTH_SHORT) }
+    protected val mSnackbar: Snackbar by lazy { Snackbar.make(rootView, "", Snackbar.LENGTH_SHORT) }
+    protected val mDialog: ProgressDialog by lazy { ProgressDialog(this) }
+    //是否有应用通知权限
+    protected var notificationEnable = false
+    protected val notificationManagerCompat by lazy { NotificationManagerCompat.from(this) }
 //    protected val mDialog: ProgressDialog by lazy {
 //        val dialog = ProgressDialog.getInstance(false)
 //        dialog
@@ -43,7 +51,6 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
 
         val type = (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments
         getVM(type[0] as Class<V>)
-        mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT)
         vm.ldDialog.observe(this, Observer { str ->
             if (str != null) {
                 showProgressDialog(str)
@@ -58,6 +65,11 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
         })
         initObserve()
         initData(savedInstanceState)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        notificationEnable = notificationManagerCompat.areNotificationsEnabled()
     }
 
     override fun onDestroy() {
@@ -79,7 +91,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
     ///////////////////////////////////////////////////////////////////////////
     // Handler
     ///////////////////////////////////////////////////////////////////////////
-    class Handler(activity: BaseActivity<out BaseVM, out ViewDataBinding>) :android.os.Handler(Looper.getMainLooper()) {
+    class Handler(activity: BaseActivity<out BaseVM, out ViewDataBinding>) : android.os.Handler(Looper.getMainLooper()) {
         private var weakReference = WeakReference(activity)
 
         override fun handleMessage(msg: Message) {
@@ -89,35 +101,86 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
         }
     }
 
-    fun showToast(msg: String) {
-        mToast.let {
+    fun showSnackbar(msg: String) {
+        mSnackbar.let {
             it.setText(msg)
-            it.duration = Toast.LENGTH_SHORT
+            it.duration = Snackbar.LENGTH_SHORT
             it.show()
+        }
+    }
+
+    fun showSnackbar(@StringRes resId: Int) {
+        CommonUtil.closeKeybord(this)
+        mSnackbar.let {
+            it.setText(resId)
+            it.duration = Snackbar.LENGTH_SHORT
+            it.show()
+        }
+    }
+
+    fun showSnackbarLong(msg: String) {
+        CommonUtil.closeKeybord(this)
+        mSnackbar.let {
+            it.setText(msg)
+            it.duration = Snackbar.LENGTH_LONG
+            it.show()
+        }
+    }
+
+    fun showSnackbarLong(@StringRes resId: Int) {
+        CommonUtil.closeKeybord(this)
+        mSnackbar.let {
+            it.setText(resId)
+            it.duration = Snackbar.LENGTH_LONG
+            it.show()
+        }
+    }
+
+    fun showToast(msg: String) {
+        if (notificationEnable) {
+            mToast.let {
+                it.setText(msg)
+                it.duration = Toast.LENGTH_SHORT
+                it.show()
+            }
+        } else {
+            showSnackbar(msg)
         }
     }
 
     fun showToast(@StringRes resId: Int) {
-        mToast.let {
-            it.setText(resId)
-            it.duration = Toast.LENGTH_SHORT
-            it.show()
+        if (notificationEnable) {
+            mToast.let {
+                it.setText(resId)
+                it.duration = Toast.LENGTH_SHORT
+                it.show()
+            }
+        } else {
+            showSnackbar(resId)
         }
     }
 
     fun showToastLong(msg: String) {
-        mToast.let {
-            it.setText(msg)
-            it.duration = Toast.LENGTH_LONG
-            it.show()
+        if (notificationEnable) {
+            mToast.let {
+                it.setText(msg)
+                it.duration = Toast.LENGTH_LONG
+                it.show()
+            }
+        } else {
+            showSnackbarLong(msg)
         }
     }
 
     fun showToastLong(@StringRes resId: Int) {
-        mToast.let {
-            it.setText(resId)
-            it.duration = Toast.LENGTH_LONG
-            it.show()
+        if (notificationEnable) {
+            mToast.let {
+                it.setText(resId)
+                it.duration = Toast.LENGTH_LONG
+                it.show()
+            }
+        } else {
+            showSnackbarLong(resId)
         }
     }
 
