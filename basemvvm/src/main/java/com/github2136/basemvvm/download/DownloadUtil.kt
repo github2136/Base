@@ -1,7 +1,6 @@
 package com.github2136.basemvvm.download
 
 import android.app.Application
-import android.util.Log
 import com.github2136.basemvvm.download.dao.DownloadBlockDao
 import com.github2136.basemvvm.download.dao.DownloadFileDao
 import java.io.File
@@ -16,6 +15,7 @@ class DownloadUtil private constructor(val app: Application) {
     private val downLoadFileDao by lazy { DownloadFileDao(app) }
     private val downLoadBlockDao by lazy { DownloadBlockDao(app) }
     private val downloadTask = mutableMapOf<String, DownloadTask>()
+    private val downloadMultipleTask = mutableMapOf<String, DownloadMultipleTask>()
 
     /**
      * 根据下载地址获取本地存储地址且文件必须存在，如果为null则表示没有下载或下载未完成
@@ -36,6 +36,9 @@ class DownloadUtil private constructor(val app: Application) {
         return null
     }
 
+    /**
+     * 但文件下载
+     */
     fun download(url: String, filePath: String, callback: (state: Int, progress: Int, path: String, error: String?) -> Unit) {
         if (!downloadTask.containsKey(url)) {
             fun callback(state: Int, progress: Int, path: String, url: String, error: String?) {
@@ -44,6 +47,7 @@ class DownloadUtil private constructor(val app: Application) {
                 }
                 callback(state, progress, path, error)
             }
+
             val task = DownloadTask(app, url, filePath, ::callback)
             task.start()
             downloadTask[url] = task
@@ -58,6 +62,12 @@ class DownloadUtil private constructor(val app: Application) {
         }
     }
 
+    /**
+     * 多文件下载
+     */
+    fun downloadMultiple(urlAndPath: Map<String, String>, callback: (state: Int, progress: Int, path: String, url: String, error: String?) -> Unit) {
+//        DownloadMultipleTask(app, urlAndPath, callback)
+    }
 
     fun stop(url: String) {
         if (downloadTask.containsKey(url)) {
