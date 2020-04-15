@@ -9,6 +9,7 @@ import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.*
+import kotlin.random.Random
 
 /**
  * Created by YB on 2019/6/11
@@ -19,13 +20,17 @@ class DownloadTask(
     private val filePath: String,
     val callback: (state: Int, progress: Int, path: String, url: String, error: String?) -> Unit
 ) {
+    //下载时临时文件名下载完成后需要修改文件名
+    private val downloadPath by lazy { "$filePath.temp" }
     private val downLoadFileDao by lazy { DownloadFileDao(app) }
     private val downLoadBlockDao by lazy { DownloadBlockDao(app) }
     private val okHttpManager = OkHttpManager.instance
     //每块的下载进度
-    private var mProgress: LongArray? = null
+    private lateinit var progressArray: LongArray
     //下载的文件
     private lateinit var file: File
+    //文件下载总进度
+    private var totalProgress: Int = -1
     //文件总长度
     private var length: Long = 0
     //下载完成的块
@@ -58,7 +63,7 @@ class DownloadTask(
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 //下载失败
-                fail("start onFailure ${e.stackTrace}")
+                fail("start onFailure ${e.message}")
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -76,7 +81,7 @@ class DownloadTask(
                             }
                             if (downloadFile == null) {
                                 //未下载过
-                                downloadFile = DownloadFile(0, url, filePath, 0, length, false)
+                                downloadFile = DownloadFile(0, url, downloadPath, 0, length, false)
                                 val fileId = downLoadFileDao.install(downloadFile!!)
                                 downloadFile?.id = fileId
                             } else {
@@ -84,19 +89,30 @@ class DownloadTask(
                                     //文件大小不一致，删除记录重新下载
                                     downLoadFileDao.delete(url)
                                     downLoadBlockDao.delete(url)
-                                    downloadFile = DownloadFile(0, url, filePath, 0, length, false)
+                                    downloadFile = DownloadFile(0, url, downloadPath, 0, length, false)
                                     val fileId = downLoadFileDao.install(downloadFile!!)
                                     downloadFile?.id = fileId
                                 }
                             }
-                            file = File(filePath)
+                            file = File(downloadPath)
                             if (!file.parentFile.exists()) file.parentFile.mkdirs()
                             val randomFile = RandomAccessFile(file, "rw")
                             randomFile.setLength(length)
                             //分块下载
-                            if (length > 1048576 && response.header("accept-ranges") == "bytes") {
-                                //文件超过1M分块下载并且支持断点续传
-                                download(downloadFile!!.id, 5, url, length)
+                            if (response.header("accept-ranges") == "bytes") {
+                                //分块下载并且支持断点续传
+                                val threadSize: Int = when (length) {
+                                    //1m
+                                    1048576L   -> 1
+                                    //5M
+                                    5242880L   -> 2
+                                    //50M
+                                    52428800L  -> 3
+                                    //100M
+                                    104857600L -> 4
+                                    else       -> 5
+                                }
+                                download(downloadFile!!.id, threadSize, url, length)
                             } else {
                                 download(downloadFile!!.id, 1, url, length)
                             }
@@ -124,7 +140,7 @@ class DownloadTask(
      * fileId 文件id
      */
     private fun download(fileId: Long, threadSize: Int, url: String, contentLength: Long) {
-        mProgress = LongArray(threadSize) { 0L }
+        progressArray = LongArray(threadSize) { 0L }
         val blockSize: Long = contentLength / threadSize
         var fileBlocks = downLoadBlockDao.get(fileId)
         if (fileBlocks.size != threadSize) {
@@ -144,7 +160,7 @@ class DownloadTask(
             val fileBlock: DownloadBlock
             if (fileBlocks.isEmpty()) {
                 //没有记录
-                fileBlock = DownloadBlock(0, fileId, start, end, url, filePath, 0, false)
+                fileBlock = DownloadBlock(0, fileId, start, end, url, downloadPath, 0, false)
                 //插入记录
                 fileBlock.id = downLoadBlockDao.install(fileBlock)
             } else {
@@ -154,7 +170,7 @@ class DownloadTask(
             if (fileBlock.complete) {
                 //表示该块下载完成
                 childFinish()
-                mProgress!![i] = fileBlock.fileSize
+                progressArray[i] = fileBlock.fileSize
                 continue
             }
 
@@ -189,7 +205,7 @@ class DownloadTask(
                                         fileBlock.complete = true
                                         downLoadBlockDao.update(fileBlock)
                                     }
-                                    mProgress!![i] = current
+                                    progressArray[i] = current
                                     time2 = System.currentTimeMillis()
                                     if (time2 - time1 > 200) {
                                         downLoadBlockDao.update(fileBlock)
@@ -202,7 +218,7 @@ class DownloadTask(
                                         break
                                     }
                                 }
-                                mProgress!![i] = current
+                                progressArray[i] = current
                                 progress()
                                 if (childFinish() == threadSize && state == DownloadUtil.STATE_DOWNLOAD) {
                                     if (stop) {
@@ -212,7 +228,20 @@ class DownloadTask(
                                     } else {
                                         //下载完成
                                         state = DownloadUtil.STATE_SUCCESS
-                                        callback.invoke(DownloadUtil.STATE_SUCCESS, 100, file.absolutePath, url, null)
+                                        var newFile = File(filePath)
+                                        if (file.exists()) {
+                                            while (newFile.exists()) {
+                                                newFile = File(newFile.parent + "/" + Random.nextInt() + newFile.name)
+                                            }
+                                            file.renameTo(newFile)
+                                            downloadFile?.run {
+                                                filePath = newFile.absolutePath
+                                                downLoadFileDao.update(this)
+                                            }
+                                            callback.invoke(DownloadUtil.STATE_SUCCESS, 100, newFile.absolutePath, url, null)
+                                        } else {
+                                            callback.invoke(DownloadUtil.STATE_FAIL, 100, "", "", "File miss")
+                                        }
                                     }
                                 }
 
@@ -243,7 +272,7 @@ class DownloadTask(
 
     fun progress() {
         var progress = 0L
-        mProgress?.forEach { p ->
+        progressArray.forEach { p ->
             progress += p
         }
         downloadFile?.apply {
@@ -253,7 +282,11 @@ class DownloadTask(
             }
             downLoadFileDao.update(this)
         }
-        callback.invoke(state, (progress.toFloat() / length * 100).toInt(), "", url, null)
+        val tempProgress = (progress.toFloat() / length * 100).toInt()
+        if (totalProgress != tempProgress) {
+            callback.invoke(state, tempProgress, "", url, null)
+            totalProgress = tempProgress
+        }
     }
 
     fun stop() {

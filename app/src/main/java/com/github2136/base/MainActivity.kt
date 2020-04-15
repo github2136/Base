@@ -33,61 +33,36 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
                 showProgressDialog("aaaa")
                 dismissProgressDialog()
                 showProgressDialog("ccc")
-
             }
             R.id.btnDownload  -> {
                 val url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk"
                 val start = System.currentTimeMillis()
                 Log.e("download", "$start")
-//                if (downloadUtil.getPathExists(url) == null) {
-                downloadUtil.download(url, File(FileUtil.getExternalStorageRootPath(), "163.exe").absolutePath) { state, progress, path, error ->
+                if (downloadUtil.getPathExists(url) != null) {
+                    showToast("本地已存在")
+                }
+                downloadUtil.download(url, File(FileUtil.getExternalStorageRootPath(), "qq.apk").absolutePath) { state, progress, path, error ->
                     when (state) {
                         DownloadUtil.STATE_DOWNLOAD -> {
+                            Log.e("download", "$progress")
                             vm.downloadLD.postValue(progress)
                         }
                         DownloadUtil.STATE_SUCCESS  -> {
-                            showToast("下载完成$path")
                             val end = System.currentTimeMillis()
                             Log.e("download", "${end - start}")
                         }
                         DownloadUtil.STATE_FAIL     -> {
-                            showToast("下载失败$error")
+                            Log.e("download", "下载失败$error")
                         }
                         DownloadUtil.STATE_STOP     -> {
-                            showToast("下载停止")
+                            Log.e("download", "下载停止")
                         }
                     }
 
                 }
-//                } else {
-//                    showToast("下载已完成")
-//                }
+
             }
             R.id.btnDownload2 -> {
-                showToast("xxxx$i")
-                i++
-//                val url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk"
-////                if (downloadUtil.getPathExists(url) == null) {
-//                    downloadUtil.download(url, File(FileUtil.getExternalStorageRootPath(), "163.exe").absolutePath) { state, progress, path, error ->
-//                        when (state) {
-//                            DownloadUtil.STATE_DOWNLOAD -> {
-//                                vm.downloadLD.postValue(progress)
-//                            }
-//                            DownloadUtil.STATE_SUCCESS  -> {
-//                                showToast("下载完成$path")
-//                            }
-//                            DownloadUtil.STATE_FAIL     -> {
-//                                showToast("下载失败$error")
-//                            }
-//                            DownloadUtil.STATE_STOP     -> {
-//                                showToast("下载停止")
-//                            }
-//                        }
-//
-//                    }
-//                } else {
-//                    showToast("下载已完成")
-//                }
             }
         }
     }
