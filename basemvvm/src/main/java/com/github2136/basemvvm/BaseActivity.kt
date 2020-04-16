@@ -51,14 +51,14 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
 
         val type = (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments
         getVM(type[0] as Class<V>)
-        vm.ldDialog.observe(this, Observer { str ->
+        vm.dialogLD.observe(this, Observer { str ->
             if (str != null) {
                 showProgressDialog(str)
             } else {
                 dismissProgressDialog()
             }
         })
-        vm.ldToast.observe(this, Observer { str ->
+        vm.toastLD.observe(this, Observer { str ->
             if (!TextUtils.isEmpty(str)) {
                 showToast(str)
             }

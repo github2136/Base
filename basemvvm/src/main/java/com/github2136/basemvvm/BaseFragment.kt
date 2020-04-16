@@ -70,14 +70,14 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
 
         getVM(type[0] as Class<V>)
 
-        vm.ldDialog.observe(this, Observer { str ->
+        vm.dialogLD.observe(this, Observer { str ->
             if (str != null) {
                 showProgressDialog(str)
             } else {
                 dismissProgressDialog()
             }
         })
-        vm.ldToast.observe(this, Observer { str ->
+        vm.toastLD.observe(this, Observer { str ->
             if (!TextUtils.isEmpty(str)) {
                 showToast(str)
             }

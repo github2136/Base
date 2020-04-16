@@ -3,8 +3,8 @@ package com.github2136.basemvvm.download
 import android.app.Application
 import com.github2136.basemvvm.download.dao.DownloadBlockDao
 import com.github2136.basemvvm.download.dao.DownloadFileDao
-import com.github2136.basemvvm.download.entity.DownloadFile
 import java.io.Closeable
+import java.io.File
 import java.io.IOException
 
 
@@ -15,11 +15,52 @@ import java.io.IOException
 class DownloadMultipleTask(
     val app: Application,
     private val urlAndPath: Map<String, String>,
-    val callback: (state: Int, progress: Int, path: String, url: String, error: String?) -> Unit
+    val callback: (state: Int, path: String, url: String, error: String?) -> Unit
 ) {
-    private val downloadTask = mutableMapOf<String, DownloadTask>()
-    fun start(){
+    private val downLoadFileDao by lazy { DownloadFileDao(app) }
+    private val downLoadBlockDao by lazy { DownloadBlockDao(app) }
 
+    private val downloadTask = mutableMapOf<String, DownloadTask>()
+
+    fun start() {
+        DownloadUtil.executors.execute {
+            var url: String
+            for (entry in urlAndPath) {
+                url = entry.key
+                val path = getPathExists(url)
+                if (path == null) {
+                    //下载文件
+                    downloadTask[url] = DownloadTask(app, url, entry.value, ::callback).apply { start() }
+                } else {
+                    //已下载
+                    callback.invoke(DownloadUtil.STATE_SUCCESS, path, url, null)
+                }
+            }
+        }
+    }
+
+    fun getPathExists(url: String): String? {
+        downLoadFileDao.get(url)?.apply {
+            if (complete) {
+                //记录存在并且已经下载完成
+                if (File(filePath).exists()) {
+                    return filePath
+                } else {
+                    //如果记录文件下载完成但实际文件不存在则删除下载记录
+                    downLoadFileDao.delete(url)
+                    downLoadBlockDao.delete(url)
+                }
+            }
+        }
+        return null
+    }
+
+    fun callback(state: Int, progress: Int, path: String, url: String, error: String?) {
+        when (state) {
+            DownloadUtil.STATE_SUCCESS, DownloadUtil.STATE_FAIL -> {
+                callback.invoke(state, path, url, error)
+            }
+        }
     }
 //    private val downLoadFileDao by lazy { DownloadFileDao(app) }
 //    private val downLoadBlockDao by lazy { DownloadBlockDao(app) }

@@ -4,6 +4,7 @@ import android.app.Application
 import com.github2136.basemvvm.download.dao.DownloadBlockDao
 import com.github2136.basemvvm.download.dao.DownloadFileDao
 import java.io.File
+import java.util.concurrent.Executors
 
 /**
  * Created by YB on 2019/6/6
@@ -65,8 +66,9 @@ class DownloadUtil private constructor(val app: Application) {
     /**
      * 多文件下载
      */
-    fun downloadMultiple(urlAndPath: Map<String, String>, callback: (state: Int, progress: Int, path: String, url: String, error: String?) -> Unit) {
-//        DownloadMultipleTask(app, urlAndPath, callback)
+    fun downloadMultiple(urlAndPath: Map<String, String>, callback: (state: Int, path: String, url: String, error: String?) -> Unit) {
+        downloadMultipleTask.put("", DownloadMultipleTask(app, urlAndPath, callback).apply{ start() })
+
     }
 
     fun stop(url: String) {
@@ -88,7 +90,7 @@ class DownloadUtil private constructor(val app: Application) {
         const val STATE_FAIL = 2//下载失败
         const val STATE_SUCCESS = 3//下载成功
         const val STATE_STOP = 4//下载停止
-
+        val executors by lazy { Executors.newCachedThreadPool() }
         private var instance: DownloadUtil? = null
         fun getInstance(app: Application): DownloadUtil {
             if (instance == null) {
