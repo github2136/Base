@@ -594,27 +594,34 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
         )
     }
 
+    val url = "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=53868&y=27313&z=16"
+    //                val url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk"
+    var multipleId = ""
+
     fun onClick(view: View) {
         when (view.id) {
-            R.id.btnClick1    -> {
+            R.id.btnClick1        -> {
                 startActivity(Intent(this, ListActivity::class.java))
             }
-            R.id.btnClick2    -> {
+            R.id.btnClick2        -> {
                 startActivity(Intent(this, LoadMoreActivity::class.java))
             }
-            R.id.btnClick3    -> {
+            R.id.btnClick3        -> {
                 showProgressDialog("aaaa")
                 dismissProgressDialog()
                 showProgressDialog("ccc")
             }
-            R.id.btnDownload  -> {
-                val url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk"
+            R.id.btnDownload      -> {
+
                 val start = System.currentTimeMillis()
                 Log.e("download", "$start")
                 if (downloadUtil.getPathExists(url) != null) {
                     showToast("本地已存在")
                 }
-                downloadUtil.download(url, File(FileUtil.getExternalStorageRootPath(), "qq.apk").absolutePath) { state, progress, path, error ->
+                downloadUtil.download(
+                    url,
+                    File(FileUtil.getExternalStorageProjectPath(this), "xx.jpg").absolutePath
+                ) { state, progress, path, error ->
                     when (state) {
                         DownloadUtil.STATE_DOWNLOAD -> {
                             Log.e("download", "$progress")
@@ -634,8 +641,40 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
 
                 }
             }
-            R.id.btnDownload2 -> {
-                downloadUtil.downloadMultiple(urlAndPath) { state, path, url, error -> }
+            R.id.btnDownloadStop  -> {
+                downloadUtil.stop(url)
+            }
+            R.id.btnDownload2     -> {
+                val m = mutableMapOf(
+                    "https://dldir1.qq.com/dlomg/sports/QQSports_1741.apk" to filePath + "/1.txt",
+                    "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk" to filePath + "/2.exe",
+                    "https://dldir1.qq.com/weixin/android/weixin7013android1640.apk" to filePath + "/3.exe",
+                    "https://dldir1.qq.com/weixin/Windows/WeChatSetup.exe" to filePath + "/4.exe",
+                    "https://9c80a9f7765f4da5bb5baa78fdc41def.dd.cdntips.com/dlied6.qq.com/invc/xfspeed/qqpcmgr/download/QQPCDownload1671.exe?mkey=5e99e43231d3b95d&f=24c3&cip=49.211.159.168&proto=https" to filePath + "/5.exe",
+                    "https://d1.music.126.net/dmusic/cloudmusicsetup2.7.1.198242.exe" to filePath + "/6.exe"
+                )
+                multipleId = downloadUtil.downloadMultiple(m) { state, path, url, error ->
+                    when (state) {
+                        DownloadUtil.STATE_BLOCK_SUCCESS -> {
+                            Log.e("multipleDownload", "blockSuccess")
+                        }
+                        DownloadUtil.STATE_BLOCK_FAIL    -> {
+                            Log.e("multipleDownload", "blockFail")
+                        }
+                        DownloadUtil.STATE_SUCCESS       -> {
+                            Log.e("multipleDownload", "Success")
+                        }
+                        DownloadUtil.STATE_FAIL          -> {
+                            Log.e("multipleDownload", "Fail")
+                        }
+                        DownloadUtil.STATE_STOP          -> {
+                            Log.e("multipleDownload", "Stop")
+                        }
+                    }
+                }
+            }
+            R.id.btnDownload2Stop -> {
+                downloadUtil.stopMultiple(multipleId)
             }
         }
     }

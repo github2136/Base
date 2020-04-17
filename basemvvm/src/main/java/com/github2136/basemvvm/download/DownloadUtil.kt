@@ -38,9 +38,14 @@ class DownloadUtil private constructor(val app: Application) {
     }
 
     /**
-     * 但文件下载
+     * 单文件下载
      */
-    fun download(url: String, filePath: String, callback: (state: Int, progress: Int, path: String, error: String?) -> Unit) {
+    fun download(
+        url: String,
+        filePath: String,
+        replay: Boolean = false,
+        callback: (state: Int, progress: Int, path: String, error: String?) -> Unit
+    ) {
         if (!downloadTask.containsKey(url)) {
             fun callback(state: Int, progress: Int, path: String, url: String, error: String?) {
                 if (state != STATE_DOWNLOAD) {
@@ -49,7 +54,7 @@ class DownloadUtil private constructor(val app: Application) {
                 callback(state, progress, path, error)
             }
 
-            val task = DownloadTask(app, url, filePath, ::callback)
+            val task = DownloadTask(app, url, filePath, ::callback, replay)
             task.start()
             downloadTask[url] = task
         } else {
@@ -66,9 +71,18 @@ class DownloadUtil private constructor(val app: Application) {
     /**
      * 多文件下载
      */
-    fun downloadMultiple(urlAndPath: Map<String, String>, callback: (state: Int, path: String, url: String, error: String?) -> Unit) {
-        downloadMultipleTask.put("", DownloadMultipleTask(app, urlAndPath, callback).apply{ start() })
-
+    fun downloadMultiple(urlAndPath: Map<String, String>, callback: (state: Int, path: String, url: String, error: String?) -> Unit): String {
+        val multipleTask = DownloadMultipleTask(app, urlAndPath)
+        val id = multipleTask.hashCode().toString()
+        fun callback(state: Int, path: String, url: String, error: String?) {
+            if (state == STATE_SUCCESS || state == STATE_FAIL) {
+                downloadMultipleTask.remove(id)
+            }
+            callback.invoke(state, path, url, error)
+        }
+        multipleTask.callback = ::callback
+        downloadMultipleTask[id] = multipleTask.apply { start() }
+        return id
     }
 
     fun stop(url: String) {
@@ -77,6 +91,11 @@ class DownloadUtil private constructor(val app: Application) {
             task?.stop()
             downloadTask.remove(url)
         }
+    }
+
+    fun stopMultiple(id: String) {
+        downloadMultipleTask[id]?.stop()
+        downloadMultipleTask.remove(id)
     }
 
     fun release() {
@@ -90,6 +109,8 @@ class DownloadUtil private constructor(val app: Application) {
         const val STATE_FAIL = 2//下载失败
         const val STATE_SUCCESS = 3//下载成功
         const val STATE_STOP = 4//下载停止
+        const val STATE_BLOCK_SUCCESS = 5//多文件下载，其中一块成功
+        const val STATE_BLOCK_FAIL = 6//多文件下载，其中一块失败
         val executors by lazy { Executors.newCachedThreadPool() }
         private var instance: DownloadUtil? = null
         fun getInstance(app: Application): DownloadUtil {
