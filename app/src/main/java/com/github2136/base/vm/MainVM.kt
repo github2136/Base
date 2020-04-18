@@ -9,6 +9,7 @@ import com.github2136.basemvvm.BaseVM
  */
 class MainVM(app: Application) : BaseVM(app) {
     val downloadLD = MutableLiveData<Int>()
+    val downloadMultipleLD = MutableLiveData<Int>()
     override fun cancelRequest() {
 
     }

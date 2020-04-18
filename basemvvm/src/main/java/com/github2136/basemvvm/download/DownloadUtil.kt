@@ -71,14 +71,17 @@ class DownloadUtil private constructor(val app: Application) {
     /**
      * 多文件下载
      */
-    fun downloadMultiple(urlAndPath: Map<String, String>, callback: (state: Int, path: String, url: String, error: String?) -> Unit): String {
+    fun downloadMultiple(
+        urlAndPath: Map<String, String>,
+        callback: (state: Int, progress: Int, path: String, url: String, error: String?) -> Unit
+    ): String {
         val multipleTask = DownloadMultipleTask(app, urlAndPath)
         val id = multipleTask.hashCode().toString()
-        fun callback(state: Int, path: String, url: String, error: String?) {
+        fun callback(state: Int, progress: Int, path: String, url: String, error: String?) {
             if (state == STATE_SUCCESS || state == STATE_FAIL) {
                 downloadMultipleTask.remove(id)
             }
-            callback.invoke(state, path, url, error)
+            callback.invoke(state, progress, path, url, error)
         }
         multipleTask.callback = ::callback
         downloadMultipleTask[id] = multipleTask.apply { start() }
