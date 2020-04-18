@@ -9,19 +9,19 @@ import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.*
-import kotlin.random.Random
 
 /**
  * Created by YB on 2019/6/11
  */
 class DownloadTask(
     val app: Application,
-    private val url: String,
-    private val filePath: String,
-    val callback: (state: Int, progress: Int, path: String, url: String, error: String?) -> Unit
+    val url: String,
+    var filePath: String,
+    val callback: (state: Int, progress: Int, path: String, url: String, error: String?) -> Unit,
+    val replay: Boolean
 ) {
     //下载时临时文件名下载完成后需要修改文件名
-    private val downloadPath by lazy { "$filePath.temp" }
+    private val downloadPath by lazy { "$filePath.basetemp" }
     private val downLoadFileDao by lazy { DownloadFileDao(app) }
     private val downLoadBlockDao by lazy { DownloadBlockDao(app) }
     private val okHttpManager = OkHttpManager.instance
@@ -229,9 +229,24 @@ class DownloadTask(
                                         //下载完成
                                         state = DownloadUtil.STATE_SUCCESS
                                         var newFile = File(filePath)
+                                        val index = newFile.name.lastIndexOf(".")
+                                        val name = StringBuilder(newFile.name)
+                                        if (index == -1) {
+                                            name.append("%s")
+                                        } else {
+                                            name.insert(index, "%s")
+                                        }
                                         if (file.exists()) {
-                                            while (newFile.exists()) {
-                                                newFile = File(newFile.parent + "/" + Random.nextInt() + newFile.name)
+                                            if (replay) {
+                                                if (newFile.exists()) {
+                                                    newFile.delete()
+                                                }
+                                            } else {
+                                                var i = 1
+                                                while (newFile.exists()) {
+                                                    newFile = File(newFile.parent, name.toString().format("-$i"))
+                                                    i++
+                                                }
                                             }
                                             file.renameTo(newFile)
                                             downloadFile?.run {

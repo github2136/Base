@@ -27,8 +27,8 @@ abstract class BaseVM(app: Application) : AndroidViewModel(app) {
     val mJsonUtil: JsonUtil = JsonUtil.instance
     val mSpUtil: SharedPreferences = SPUtil.getSharedPreferences(app)
     //显示dialog
-    val ldDialog = MutableLiveData<String>()
-    val ldToast= MutableLiveData<String>()
+    val dialogLD = MutableLiveData<String>()
+    val toastLD = MutableLiveData<String>()
     val handle = Handler(Looper.getMainLooper())
 
     @Synchronized
