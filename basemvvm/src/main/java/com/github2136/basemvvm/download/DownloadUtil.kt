@@ -73,19 +73,21 @@ class DownloadUtil private constructor(val app: Application) {
      */
     fun downloadMultiple(
         urlAndPath: Map<String, String>,
+        id: String? = null,
         callback: (state: Int, progress: Int, path: String, url: String, error: String?) -> Unit
     ): String {
         val multipleTask = DownloadMultipleTask(app, urlAndPath)
-        val id = multipleTask.hashCode().toString()
+        val taskId = id ?: multipleTask.hashCode().toString()
+
         fun callback(state: Int, progress: Int, path: String, url: String, error: String?) {
             if (state == STATE_SUCCESS || state == STATE_FAIL) {
-                downloadMultipleTask.remove(id)
+                downloadMultipleTask.remove(taskId)
             }
             callback.invoke(state, progress, path, url, error)
         }
         multipleTask.callback = ::callback
-        downloadMultipleTask[id] = multipleTask.apply { start() }
-        return id
+        downloadMultipleTask[taskId] = multipleTask.apply { start() }
+        return taskId
     }
 
     fun stop(url: String) {
@@ -114,6 +116,7 @@ class DownloadUtil private constructor(val app: Application) {
         const val STATE_STOP = 4//下载停止
         const val STATE_BLOCK_SUCCESS = 5//多文件下载，其中一块成功
         const val STATE_BLOCK_FAIL = 6//多文件下载，其中一块失败
+        const val STATE_PROGRESS = 7//多文件下载，下载进度，跳过已下载只在实际文件下载时调用，所以调用时会有延迟
         val executors by lazy { Executors.newCachedThreadPool() }
         private var instance: DownloadUtil? = null
         fun getInstance(app: Application): DownloadUtil {

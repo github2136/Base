@@ -1082,7 +1082,7 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
 //                    "https://d1.music.126.net/dmusic/cloudmusicsetup2.7.1.198242.exe" to filePath + "/6.exe"
 //                )
                 var i = 0
-                multipleId = downloadUtil.downloadMultiple(urlAndPath) { state, progress, path, url, error ->
+                multipleId = downloadUtil.downloadMultiple(urlAndPath,"xx") { state, progress, path, url, error ->
                     when (state) {
                         DownloadUtil.STATE_BLOCK_SUCCESS -> {
                             Log.e("multipleDownload", "blockSuccess ${i++}")
