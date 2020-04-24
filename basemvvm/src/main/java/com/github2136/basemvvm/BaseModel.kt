@@ -26,7 +26,6 @@ open class BaseModel(app: Application) {
     }
     protected val client: OkHttpClient by lazy {
         OkHttpClient().newBuilder()
-            .addNetworkInterceptor(OkHttpInterceptor())
             .connectTimeout(2, TimeUnit.SECONDS)
             .callTimeout(2, TimeUnit.SECONDS)
             .readTimeout(2, TimeUnit.SECONDS)
@@ -39,6 +38,7 @@ open class BaseModel(app: Application) {
                 val request = requestBuild.build()
                 return@addInterceptor chain.proceed(request)
             }
+            .addInterceptor(OkHttpInterceptor())
             .build()
     }
 
