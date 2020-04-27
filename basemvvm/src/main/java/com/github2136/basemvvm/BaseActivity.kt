@@ -196,7 +196,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
         }
         mDialog.setCancelable(cancelable)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            if ((!isDestroyed || !isFinishing) && !mDialog.isShowing) {
+            if (!(isDestroyed || isFinishing) && !mDialog.isShowing) {
                 mDialog.show()
             }
         } else {
