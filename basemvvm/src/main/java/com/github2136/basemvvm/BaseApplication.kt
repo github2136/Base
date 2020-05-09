@@ -66,7 +66,6 @@ open class BaseApplication : Application() {
             if (!act.isFinishing) {
                 act.finish()
             }
-            acts.remove()
         }
     }
 }
