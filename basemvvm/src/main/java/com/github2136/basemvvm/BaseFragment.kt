@@ -23,6 +23,7 @@ import java.lang.reflect.ParameterizedType
 
 /**
  * Created by yb on 2018/11/2.
+ * 基础Fragment
  */
 abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
     protected val TAG = this.javaClass.name

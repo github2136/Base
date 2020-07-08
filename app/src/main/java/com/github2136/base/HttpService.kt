@@ -12,16 +12,4 @@ import retrofit2.http.Path
 interface HttpService {
     @GET("adat/sk/{cityId}.html")
     fun getWeather(@Path("cityId") cityId: String): Call<Weather>
-
-    @GET("http://192.168.1.106:8080/queryUserList")
-    fun getUrl(): Call<ResponseBody>
-
-    @GET("http://192.168.1.106:8080/queryUserLists")
-    fun getUrl404(): Call<ResponseBody>
-
-    @GET("http://192.168.1.106:8080/queryUserList500")
-    fun getUrl500(): Call<ResponseBody>
-
-    @GET("http://192.168.1.106:8080/queryUserListTimeOut")
-    fun getUrlTimeOut(): Call<ResponseBody>
 }

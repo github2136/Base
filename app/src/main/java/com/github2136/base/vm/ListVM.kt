@@ -2,30 +2,30 @@ package com.github2136.base.vm
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import com.github2136.base.adapter.ListAdapter
 import com.github2136.base.adapter.ListMultipleAdapter
 import com.github2136.base.entity.User
-import com.github2136.base.executor
+import com.github2136.base.repository.UserRepository
 import com.github2136.basemvvm.BaseVM
-import java.util.*
+import com.github2136.basemvvm.RepositoryCallback
 
 /**
  * Created by YB on 2019/9/23
  */
 class ListVM(app: Application) : BaseVM(app) {
+    val userRepository by lazy { UserRepository(app) }
+
     val adapterLD = MutableLiveData<ListMultipleAdapter>()
 
     fun setData() {
-        executor.submit {
-            val data = mutableListOf<User>()
-            val r = Random().nextInt()
-            for (i in 0 until 10) {
-                data.add(User("name $i $r", "$r"))
+        userRepository.getUser(1, 20, object : RepositoryCallback<MutableList<User>> {
+            override fun onSuccess(t: MutableList<User>) {
+                adapterLD.postValue(ListMultipleAdapter(t))
             }
-            Thread.sleep(1000)
-            handle.post {
-                adapterLD.value = ListMultipleAdapter(data)
-            }
-        }
+
+            override fun onFail(errorCode: Int, msg: String) {}
+        })
+    }
+
+    override fun cancelRequest() {
     }
 }

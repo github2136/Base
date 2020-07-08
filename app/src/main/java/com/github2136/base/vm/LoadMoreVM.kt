@@ -3,56 +3,45 @@ package com.github2136.base.vm
 import android.app.Application
 import com.github2136.base.adapter.LoadMoreAdapter
 import com.github2136.base.entity.User
-import com.github2136.base.executor
+import com.github2136.base.repository.UserRepository
+import com.github2136.basemvvm.RepositoryCallback
 import com.github2136.basemvvm.loadmore.BaseLoadMoreVM
-import java.util.*
 
 /**
  * Created by YB on 2019/9/20
  */
 class LoadMoreVM(app: Application) : BaseLoadMoreVM<User>(app) {
+    val userRepository by lazy { UserRepository(app) }
+
     override fun initAdapter() = LoadMoreAdapter()
 
     override fun initData() {
         adapter.pageIndex = 1
         adapter.pageCount = 5
-        executor.submit {
-            val data = mutableListOf<User>()
-            val r = Random().nextInt()
-            for (i in 0 until adapter.pageCount) {
-                data.add(User("pageIndex ${adapter.pageIndex} i $i $r", "", "中文中"))
+        userRepository.getUser(adapter.pageIndex, adapter.pageCount, object : RepositoryCallback<MutableList<User>> {
+            override fun onSuccess(t: MutableList<User>) {
+                setData(t)
             }
-            Thread.sleep(500)
-//            if (Random().nextBoolean()) {
-            setData(data)
-//            } else {
-//                failedData()
-//            }
-        }
+
+            override fun onFail(errorCode: Int, msg: String) {
+                failedData()
+            }
+        })
     }
 
     override fun loadMoreData() {
-        executor.submit {
-            val data = mutableListOf<User>()
-            val r = Random().nextInt()
-            val count = if (adapter.pageIndex > 10) {
-                10
-            } else {
-                adapter.pageCount
+        userRepository.getUser(adapter.pageIndex, adapter.pageCount, object : RepositoryCallback<MutableList<User>> {
+            override fun onSuccess(t: MutableList<User>) {
+                appendData(t)
             }
-            for (i in 0 until count) {
-                data.add(User("pageIndex ${adapter.pageIndex} i $i $r", "", r.toString() + "5555555"))
+
+            override fun onFail(errorCode: Int, msg: String) {
+                failedData()
             }
-            Thread.sleep(500)
-//            if (Random().nextBoolean()) {
-            appendData(data)
-//            } else {
-//                failedData()
-//            }
-        }
+        })
     }
 
     override fun cancelRequest() {
-
+        userRepository.cancelRequest()
     }
 }
