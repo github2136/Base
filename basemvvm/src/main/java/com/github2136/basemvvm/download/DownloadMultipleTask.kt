@@ -41,10 +41,11 @@ class DownloadMultipleTask(
                     //下载文件
                     readyDownloadTask.add(DownloadTask(app, url, entry.value, ::callback, true))
                 } else {
+                    successCount.incrementAndGet()
                     val p = getProgress()
                     //已下载
                     callback?.invoke(DownloadUtil.STATE_BLOCK_SUCCESS, p, path, url, null)
-                    if (successCount.incrementAndGet() == fileCount) {
+                    if (successCount.get() == fileCount) {
                         callback?.invoke(DownloadUtil.STATE_SUCCESS, p, path, url, null)
                     }
                 }
@@ -81,11 +82,11 @@ class DownloadMultipleTask(
     }
 
     fun callback(state: Int, progress: Int, path: String, url: String, error: String?) {
-        val p = getProgress()
         when (state) {
             DownloadUtil.STATE_SUCCESS -> {
                 downloadTask.take()
                 successCount.incrementAndGet()
+                val p = getProgress()
                 callback?.invoke(DownloadUtil.STATE_BLOCK_SUCCESS, p, path, url, error)
                 callback?.invoke(DownloadUtil.STATE_PROGRESS, p, path, url, error)
                 if (successCount.get() + failCount.get() == fileCount) {
@@ -97,6 +98,7 @@ class DownloadMultipleTask(
             DownloadUtil.STATE_FAIL    -> {
                 downloadTask.take()
                 failCount.incrementAndGet()
+                val p = getProgress()
                 callback?.invoke(DownloadUtil.STATE_BLOCK_FAIL, p, path, url, error)
                 if (successCount.get() + failCount.get() == fileCount) {
                     //全部下载完成，部分失败
