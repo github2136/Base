@@ -179,5 +179,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
     protected abstract fun initObserve()
 
     //取消请求
-    fun cancelRequest() {}
+    protected fun cancelRequest() {
+        vm.cancelRequest()
+    }
 }
