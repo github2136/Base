@@ -31,11 +31,11 @@ android {
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation lib["kotlin-stdlib"]
+    implementation lib['kotlin-stdlib']
     implementation project(path: ':basemvvm')
-    kapt lib["android-databinding"]
+    kapt lib['android-databinding']
 
-    androidTestImplementation lib["android-test"]
-    testImplementation lib["junit"]
-    androidTestImplementation lib["espresso"]
+    androidTestImplementation lib['android-test']
+    testImplementation lib['junit']
+    androidTestImplementation lib['espresso']
 }

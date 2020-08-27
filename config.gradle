@@ -7,7 +7,7 @@ ext {
     ]
     dependencies = [
             //kotlin相关
-            'kotlin-stdlib'       : 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version',
+            'kotlin-stdlib'       : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
             'kotlin-ktx'          : 'androidx.core:core-ktx:1.2.0-alpha03',
             //json转换类
             'gson'                : 'com.google.code.gson:gson:2.8.5',
