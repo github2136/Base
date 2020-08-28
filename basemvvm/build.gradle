@@ -42,9 +42,9 @@ dependencies {
     api lib['okhttp-gson']
 
     api lib['android-appcompat']
-    api lib['android-legacy-v4']
     api lib['android-material']
     api lib['android-recyclerview']
+    api lib['android-swiperefreshlayout']
 
     api lib['gson']
 
