@@ -41,9 +41,31 @@ abstract class BaseRepository(app: Application) {
             iterable.remove()
         }
     }
+    inner class RepositoryCallback<T> {
+        /**
+         * 请求完成
+         */
+        var mComplete: (() -> Unit)? = null
+        /**
+         * 成功
+         */
+        var mSuccess: ((T) -> Unit)? = null
+        /**
+         * 失败
+         */
+        var mFail: ((Int, String) -> Unit)? = null
+
+        fun onComplete(action: () -> Unit) {
+            mComplete = action
+        }
+
+        fun onSuccess(action: (T) -> Unit) {
+            mSuccess = action
+        }
+
+        fun onFail(action: (errorCode: Int, msg: String) -> Unit) {
+            mFail = action
+        }
+    }
 }
 
-interface RepositoryCallback<T> {
-    fun onSuccess(t: T)
-    fun onFail(errorCode: Int, msg: String)
-}

@@ -3,9 +3,10 @@ package com.github2136.base.repository
 import android.app.Application
 import androidx.core.content.edit
 import com.github2136.base.entity.User
-import com.github2136.base.executor
 import com.github2136.basemvvm.BaseRepository
-import com.github2136.basemvvm.RepositoryCallback
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 /**
@@ -14,35 +15,40 @@ import java.util.*
  */
 class UserRepository(app: Application) : BaseRepository(app) {
 
-    fun login(user: String, password: String, callback: RepositoryCallback<User>) {
-        executor.execute {
-            Thread.sleep(2000)
+    fun login(user: String, password: String, callback: RepositoryCallback<User>.() -> Unit) {
+        val mCallback = RepositoryCallback<User>().apply(callback)
+        GlobalScope.launch {
+            delay(2000)
             if (user == "admin" && password == "admin") {
                 mSpUtil.edit {
                     putString("username", user)
                     putString("password", password)
                 }
-                callback.onSuccess(User(user, password))
+                mCallback.mComplete?.invoke()
+                mCallback.mSuccess?.invoke(User(user, password))
             } else {
-                callback.onFail(-1, failedStr)
+                mCallback.mComplete?.invoke()
+                mCallback.mFail?.invoke(-1, failedStr)
             }
         }
     }
 
-    fun getUser(pageIndex: Int, pageSize: Int, callback: RepositoryCallback<MutableList<User>>) {
-        executor.submit {
+    fun getUser(pageIndex: Int, pageSize: Int, callback: RepositoryCallback<MutableList<User>>.() -> Unit) {
+        val mCallback = RepositoryCallback<MutableList<User>>().apply(callback)
+        GlobalScope.launch {
             val data = mutableListOf<User>()
             val r = Random().nextInt()
             for (i in 0 until pageSize) {
                 data.add(User("pageIndex $pageIndex i $i $r", "", "中文中"))
             }
-            Thread.sleep(500)
+            delay(500)
             if (Random().nextBoolean()) {
-                callback.onSuccess(data)
+                mCallback.mComplete?.invoke()
+                mCallback.mSuccess?.invoke(data)
             } else {
-                callback.onFail(-1, failedStr)
+                mCallback.mComplete?.invoke()
+                mCallback.mFail?.invoke(-1, failedStr)
             }
         }
     }
-
 }

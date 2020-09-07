@@ -2,11 +2,9 @@ package com.github2136.base.vm
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import com.github2136.base.entity.User
 import com.github2136.base.repository.UserRepository
 import com.github2136.base.repository.WeatherRepository
 import com.github2136.basemvvm.BaseVM
-import com.github2136.basemvvm.RepositoryCallback
 
 /**
  * Created by YB on 2019/8/28
@@ -21,27 +19,16 @@ class LoginVM(app: Application) : BaseVM(app) {
     val weatherLD = MutableLiveData<String>()
 
     fun getWeather() {
-        weatherRepository.getWeather(object : RepositoryCallback<String> {
-            override fun onSuccess(t: String) {
-                weatherLD.postValue(t)
-            }
-
-            override fun onFail(errorCode: Int, msg: String) {
-
-            }
-        })
+        weatherRepository.getWeather {
+            onSuccess { weatherLD.postValue(it) }
+        }
     }
 
     fun login() {
-        userRepository.login(userNameLD.value!!, passWordLD.value!!, object : RepositoryCallback<User> {
-            override fun onSuccess(t: User) {
-                userInfoLD.postValue(t)
-            }
-
-            override fun onFail(errorCode: Int, msg: String) {
-                userInfoLD.postValue(msg)
-            }
-        })
+        userRepository.login(userNameLD.value!!, passWordLD.value!!) {
+            onSuccess { userInfoLD.postValue(it) }
+            onFail { errorCode, msg -> userInfoLD.postValue(msg) }
+        }
     }
 
     override fun cancelRequest() {

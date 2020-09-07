@@ -4,7 +4,6 @@ import android.app.Application
 import com.github2136.base.HttpModel
 import com.github2136.base.entity.Weather
 import com.github2136.basemvvm.BaseRepository
-import com.github2136.basemvvm.RepositoryCallback
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -15,25 +14,29 @@ import retrofit2.Response
 class WeatherRepository(app: Application) : BaseRepository(app) {
     val httpModel: HttpModel by lazy { HttpModel.getInstance(app) }
 
-    fun getWeather(callback: RepositoryCallback<String>) {
+    fun getWeather(callback: RepositoryCallback<String>.() -> Unit) {
+        val mCallback = RepositoryCallback<String>().apply(callback)
         if (networkUtil.isNetworkAvailable()) {
             val call = httpModel.api.getWeather("101010100")
             addCall(call)
             call.enqueue(object : Callback<Weather> {
                 override fun onFailure(call: Call<Weather>, t: Throwable) {
-                    callback.onFail(-1, "fail")
+                    mCallback.mComplete?.invoke()
+                    mCallback.mFail?.invoke(-1, "fail")
                 }
 
                 override fun onResponse(call: Call<Weather>, response: Response<Weather>) {
+                    mCallback.mComplete?.invoke()
                     if (response.isSuccessful) {
-                        callback.onSuccess(response.body().toString())
+                        mCallback.mSuccess?.invoke(response.body().toString())
                     } else {
-                        callback.onFail(-1, "fail")
+                        mCallback.mFail?.invoke(-1, "fail")
                     }
                 }
             })
         } else {
-            callback.onSuccess("local data")
+            mCallback.mComplete?.invoke()
+            mCallback.mSuccess?.invoke("local data")
         }
     }
 }

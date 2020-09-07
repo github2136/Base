@@ -1024,7 +1024,7 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
     }
 
     val url = "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=53868&y=27313&z=16"
-//    val url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk"
+    //    val url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk"
     var multipleId = ""
 
     fun onClick(view: View) {
@@ -1036,9 +1036,9 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
                 startActivity(Intent(this, LoadMoreActivity::class.java))
             }
             R.id.btnClick3        -> {
-                showProgressDialog("aaaa")
+                showProgressDialog("aaaa", true)
                 dismissProgressDialog()
-                showProgressDialog("ccc")
+                showProgressDialog("ccc", true)
             }
             R.id.btnDownload      -> {
                 val start = System.currentTimeMillis()

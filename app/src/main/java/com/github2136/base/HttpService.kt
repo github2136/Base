@@ -12,4 +12,7 @@ import retrofit2.http.Path
 interface HttpService {
     @GET("adat/sk/{cityId}.html")
     fun getWeather(@Path("cityId") cityId: String): Call<Weather>
+
+    @GET("adat/sk/{cityId}.html")
+    suspend fun getWeatherFlow(@Path("cityId") cityId: String): Weather
 }
