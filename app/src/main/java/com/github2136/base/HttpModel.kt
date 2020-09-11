@@ -1,16 +1,12 @@
 package com.github2136.base
 
 import android.app.Application
-import com.github2136.basemvvm.BaseModel
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
-import java.io.IOException
+import com.github2136.basemvvm.BaseWebModel
 
 /**
  * Created by yb on 2019/10/7
  */
-class HttpModel private constructor(app: Application) : BaseModel(app) {
+class HttpModel private constructor(app: Application) : BaseWebModel(app) {
     override val baseUrl: String = "http://www.weather.com.cn/"
 
     val api by lazy { retrofit.create(HttpService::class.java) }

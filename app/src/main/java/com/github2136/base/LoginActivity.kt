@@ -3,6 +3,7 @@ package com.github2136.base
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.collection.ArrayMap
@@ -32,7 +33,6 @@ class LoginActivity : BaseActivity<LoginVM, ActivityLoginBinding>() {
     }
 
     fun onClick(view: View) {
-        showProgressDialog("asdf${Random().nextInt()}")
         vm.login()
     }
 
@@ -54,6 +54,9 @@ class LoginActivity : BaseActivity<LoginVM, ActivityLoginBinding>() {
             } else if (it is User) {
                 startActivity(Intent(this, MainActivity::class.java))
             }
+        })
+        vm.weatherLD.observe(this, Observer {
+            Log.e("getWeather","xxxx")
         })
     }
 

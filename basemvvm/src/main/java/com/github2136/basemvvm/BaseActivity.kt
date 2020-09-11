@@ -23,6 +23,7 @@ import java.lang.reflect.ParameterizedType
 
 /**
  * Created by YB on 2019/8/29
+ * 基础Activity
  */
 abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity() {
     protected lateinit var vm: V
@@ -38,10 +39,6 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
     //是否有应用通知权限
     protected var notificationEnable = false
     protected val notificationManagerCompat by lazy { NotificationManagerCompat.from(this) }
-//    protected val mDialog: ProgressDialog by lazy {
-//        val dialog = ProgressDialog.getInstance(false)
-//        dialog
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
