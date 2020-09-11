@@ -33,7 +33,6 @@ class LoginActivity : BaseActivity<LoginVM, ActivityLoginBinding>() {
     }
 
     fun onClick(view: View) {
-        showProgressDialog("asdf${Random().nextInt()}")
         vm.login()
     }
 
