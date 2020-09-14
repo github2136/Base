@@ -17,7 +17,7 @@ class DownloadTask(
     val app: Application,
     val url: String,
     var filePath: String,
-    val callback: (state: Int, progress: Int, path: String, url: String, error: String?) -> Unit,
+    var callback: (state: Int, progress: Int, path: String, url: String, error: String?) -> Unit,
     val replay: Boolean
 ) {
     //下载时临时文件名下载完成后需要修改文件名

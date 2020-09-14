@@ -46,20 +46,20 @@ class DownloadUtil private constructor(val app: Application) {
         replay: Boolean = false,
         callback: (state: Int, progress: Int, path: String, error: String?) -> Unit
     ) {
-        if (!downloadTask.containsKey(url)) {
-            fun callback(state: Int, progress: Int, path: String, url: String, error: String?) {
-                if (state != STATE_DOWNLOAD) {
-                    downloadTask.remove(url)
-                }
-                callback(state, progress, path, error)
+        fun callback(state: Int, progress: Int, path: String, url: String, error: String?) {
+            if (state != STATE_DOWNLOAD) {
+                downloadTask.remove(url)
             }
-
+            callback(state, progress, path, error)
+        }
+        if (!downloadTask.containsKey(url)) {
             val task = DownloadTask(app, url, filePath, ::callback, replay)
             task.start()
             downloadTask[url] = task
         } else {
             val task = downloadTask[url]
             task?.apply {
+                this.callback = ::callback
                 if (state != STATE_DOWNLOAD) {
                     //非下载中则下载
                     start()
