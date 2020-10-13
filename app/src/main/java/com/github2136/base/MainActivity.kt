@@ -1051,7 +1051,7 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
                     File(FileUtil.getExternalStorageProjectPath(this), "xx.jpg").absolutePath
                 ) { state, progress, path, error ->
                     when (state) {
-                        DownloadUtil.STATE_DOWNLOAD -> {
+                        DownloadUtil.STATE_PROGRESS -> {
                             Log.e("download", "$progress")
                             vm.downloadLD.postValue(progress)
                         }

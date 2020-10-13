@@ -7,6 +7,7 @@ import com.github2136.base.entity.Weather
 import com.github2136.basemvvm.BaseRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
@@ -18,15 +19,10 @@ class WeatherRepository(app: Application) : BaseRepository(app) {
 
     suspend fun getWeatherFlow(): Flow<Result<Weather>> = flow {
         if (networkUtil.isNetworkAvailable()) {
-
-            try {
-                val weather = httpModel.api.getWeatherFlow("101010100")
-                emit(Result.Success(weather))
-            } catch (e: Exception) {
-                emit(Result.Error(0, "error"))
-            }
-        }else{
+            val weather = httpModel.api.getWeatherFlow("101010100")
+            emit(Result.Success(weather))
+        } else {
             emit(Result.Error(0, "No network"))
         }
-    }.flowOn(Dispatchers.IO)
+    }.catch { emit(Result.Error(0, "error")) }.flowOn(Dispatchers.IO)
 }

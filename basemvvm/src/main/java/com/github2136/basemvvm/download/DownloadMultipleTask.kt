@@ -88,7 +88,7 @@ class DownloadMultipleTask(
                 successCount.incrementAndGet()
                 val p = getProgress()
                 callback?.invoke(DownloadUtil.STATE_BLOCK_SUCCESS, p, path, url, error)
-                callback?.invoke(DownloadUtil.STATE_PROGRESS, p, path, url, error)
+                callback?.invoke(DownloadUtil.STATE_BLOCK_PROGRESS, p, path, url, error)
                 if (successCount.get() + failCount.get() == fileCount) {
                     //全部下载完成
                     callback?.invoke(DownloadUtil.STATE_SUCCESS, p, "", "", "")

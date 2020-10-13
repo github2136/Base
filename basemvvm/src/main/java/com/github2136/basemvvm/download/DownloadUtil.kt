@@ -46,21 +46,21 @@ class DownloadUtil private constructor(val app: Application) {
         replay: Boolean = false,
         callback: (state: Int, progress: Int, path: String, error: String?) -> Unit
     ) {
-        if (!downloadTask.containsKey(url)) {
-            fun callback(state: Int, progress: Int, path: String, url: String, error: String?) {
-                if (state != STATE_DOWNLOAD) {
-                    downloadTask.remove(url)
-                }
-                callback(state, progress, path, error)
+        fun callback(state: Int, progress: Int, path: String, url: String, error: String?) {
+            if (state != STATE_PROGRESS) {
+                downloadTask.remove(url)
             }
-
+            callback(state, progress, path, error)
+        }
+        if (!downloadTask.containsKey(url)) {
             val task = DownloadTask(app, url, filePath, ::callback, replay)
             task.start()
             downloadTask[url] = task
         } else {
             val task = downloadTask[url]
             task?.apply {
-                if (state != STATE_DOWNLOAD) {
+                this.callback = ::callback
+                if (state != STATE_PROGRESS) {
                     //非下载中则下载
                     start()
                 }
@@ -110,13 +110,13 @@ class DownloadUtil private constructor(val app: Application) {
 
 
     companion object {
-        const val STATE_DOWNLOAD = 1//下载中
+        const val STATE_PROGRESS = 1//下载中
         const val STATE_FAIL = 2//下载失败
         const val STATE_SUCCESS = 3//下载成功
         const val STATE_STOP = 4//下载停止
         const val STATE_BLOCK_SUCCESS = 5//多文件下载，其中一块成功
         const val STATE_BLOCK_FAIL = 6//多文件下载，其中一块失败
-        const val STATE_PROGRESS = 7//多文件下载，下载进度，跳过已下载只在实际文件下载时调用，所以调用时会有延迟
+        const val STATE_BLOCK_PROGRESS = 7//多文件下载，下载进度，跳过已下载只在实际文件下载时调用，所以调用时会有延迟
         val executors by lazy { Executors.newCachedThreadPool() }
         private var instance: DownloadUtil? = null
         fun getInstance(app: Application): DownloadUtil {
