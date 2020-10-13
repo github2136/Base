@@ -48,7 +48,7 @@ class DownloadTask(
     fun start() {
         stop = false
         childFinishCount = 0
-        state = DownloadUtil.STATE_DOWNLOAD
+        state = DownloadUtil.STATE_PROGRESS
         downloadFile = downLoadFileDao.get(url)
         downloadFile?.apply {
             if (complete) {
@@ -220,7 +220,7 @@ class DownloadTask(
                                 }
                                 progressArray[i] = current
                                 progress()
-                                if (childFinish() == threadSize && state == DownloadUtil.STATE_DOWNLOAD) {
+                                if (childFinish() == threadSize && state == DownloadUtil.STATE_PROGRESS) {
                                     if (stop) {
                                         //停止
                                         state = DownloadUtil.STATE_STOP
