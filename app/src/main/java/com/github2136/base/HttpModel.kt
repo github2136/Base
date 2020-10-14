@@ -11,6 +11,11 @@ class HttpModel private constructor(app: Application) : BaseWebModel(app) {
 
     val api by lazy { retrofit.create(HttpService::class.java) }
 
+    override fun addHead(): MutableMap<String, String>? = null
+
+    override fun preProcessing(body: String) {
+    }
+
     companion object {
         @Volatile
         private var instances: HttpModel? = null
