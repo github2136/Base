@@ -2,7 +2,7 @@ package com.github2136.base.repository
 
 import android.app.Application
 import com.github2136.base.HttpModel
-import com.github2136.base.entity.Result
+import com.github2136.base.entity.ResultFlow
 import com.github2136.base.entity.Weather
 import com.github2136.basemvvm.BaseRepository
 import kotlinx.coroutines.Dispatchers
@@ -17,12 +17,12 @@ import kotlinx.coroutines.flow.flowOn
 class WeatherRepository(app: Application) : BaseRepository(app) {
     val httpModel: HttpModel by lazy { HttpModel.getInstance(app) }
 
-    suspend fun getWeatherFlow(): Flow<Result<Weather>> = flow {
+    suspend fun getWeatherFlow(): Flow<ResultFlow<Weather>> = flow {
         if (networkUtil.isNetworkAvailable()) {
             val weather = httpModel.api.getWeatherFlow("101010100")
-            emit(Result.Success(weather))
+            emit(ResultFlow.Success(weather))
         } else {
-            emit(Result.Error(0, "No network"))
+            emit(ResultFlow.Error(0, "No network"))
         }
-    }.catch { emit(Result.Error(0, "error")) }.flowOn(Dispatchers.IO)
+    }.catch { e -> emit(ResultFlow.Error(0, "error", e)) }.flowOn(Dispatchers.IO)
 }
