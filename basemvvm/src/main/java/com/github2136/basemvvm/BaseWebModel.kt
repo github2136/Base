@@ -28,10 +28,9 @@ abstract class BaseWebModel(app: Application) {
             .build()
     }
 
-    protected val mJsonUtil: JsonUtil by lazy { JsonUtil.instance }
-    protected val mSpUtil: SharedPreferences by lazy { SPUtil.getSharedPreferences(app) }
-    protected val client: OkHttpClient by lazy {
-
+    protected val mJsonUtil by lazy { JsonUtil.instance }
+    protected val mSpUtil by lazy { SPUtil.getSharedPreferences(app) }
+    protected val client by lazy {
         OkHttpClient().newBuilder()
             .addInterceptor { chain ->
                 val original = chain.request()

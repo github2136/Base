@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.flowOn
  * Created by YB on 2020/7/8
  */
 class WeatherRepository(app: Application) : BaseRepository(app) {
-    val httpModel: HttpModel by lazy { HttpModel.getInstance(app) }
+    val httpModel by lazy { HttpModel.getInstance(app) }
 
     suspend fun getWeatherFlow(): Flow<ResultFlow<Weather>> = flow {
         if (networkUtil.isNetworkAvailable()) {

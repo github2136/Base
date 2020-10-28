@@ -31,10 +31,8 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
     protected lateinit var bind: B
     protected lateinit var mContext: Context
     protected val mHandler by lazy { Handler(this) }
-    protected lateinit var mToast: Toast
-    protected val mDialog: ProgressDialog by lazy {
-        ProgressDialog(activity)
-    }
+    protected val mToast by lazy { Toast.makeText(mContext, "", Toast.LENGTH_SHORT) }
+    protected val mDialog by lazy { ProgressDialog(activity) }
 //    protected val mDialog: ProgressDialog by lazy {
 //        val dialog = ProgressDialog.getInstance(false)
 //        dialog
@@ -47,7 +45,6 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
 
     private fun attach(context: Context) {
         mContext = context
-        mToast = Toast.makeText(mContext, "", Toast.LENGTH_SHORT)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

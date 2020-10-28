@@ -12,7 +12,7 @@ ext {
             //json转换类
             'gson'                      : 'com.google.code.gson:gson:2.8.5',
             //基础功能类
-            'android-util'              : 'com.github.github2136:Android-utils:48a38735d7',
+            'android-util'              : 'com.github.github2136:Android-utils:1.1',
             //日志打印
             'logger'                    : 'com.orhanobut:logger:2.2.0',
             //网络请求

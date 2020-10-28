@@ -33,9 +33,9 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
     protected val mHandler by lazy { Handler(this) }
     //根视图用于Snackbar
     protected val rootView by lazy { window.decorView.findViewById<ViewGroup>(android.R.id.content) }
-    protected val mToast: Toast by lazy { Toast.makeText(this, "", Toast.LENGTH_SHORT) }
-    protected val mSnackbar: Snackbar by lazy { Snackbar.make(rootView, "", Snackbar.LENGTH_SHORT) }
-    protected val mDialog: ProgressDialog by lazy { ProgressDialog(this) }
+    protected val mToast by lazy { Toast.makeText(this, "", Toast.LENGTH_SHORT) }
+    protected val mSnackbar by lazy { Snackbar.make(rootView, "", Snackbar.LENGTH_SHORT) }
+    protected val mDialog by lazy { ProgressDialog(this) }
     //是否有应用通知权限
     protected var notificationEnable = false
     protected val notificationManagerCompat by lazy { NotificationManagerCompat.from(this) }

@@ -14,7 +14,7 @@ abstract class BaseRepository(app: Application) {
     val failedStr = "无法连接服务器"
 
     val networkUtil by lazy { NetworkUtil.getInstance(app) }
-    val mJsonUtil: JsonUtil = JsonUtil.instance
+    val mJsonUtil by lazy { JsonUtil.instance }
     val mSpUtil: SharedPreferences = SPUtil.getSharedPreferences(app)
 
     //取消请求
