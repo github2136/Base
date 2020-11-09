@@ -1,7 +1,6 @@
 package com.github2136.basemvvm
 
-import android.app.Application
-import android.content.SharedPreferences
+import android.content.Context
 import com.github2136.util.JsonUtil
 import com.github2136.util.SPUtil
 import okhttp3.OkHttpClient
@@ -16,7 +15,7 @@ import java.nio.charset.Charset
  * Created by yb on 2018/11/2.
  * webModel
  */
-abstract class BaseWebModel(app: Application) {
+abstract class BaseWebModel(context: Context) {
     open val baseUrl = ""
 
     protected val retrofit by lazy {
@@ -29,7 +28,7 @@ abstract class BaseWebModel(app: Application) {
     }
 
     protected val mJsonUtil by lazy { JsonUtil.instance }
-    protected val mSpUtil by lazy { SPUtil.getSharedPreferences(app) }
+    protected val mSpUtil by lazy { SPUtil.getSharedPreferences(context) }
     protected val client by lazy {
         OkHttpClient().newBuilder()
             .addInterceptor { chain ->

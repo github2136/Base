@@ -1,6 +1,6 @@
 package com.github2136.base.repository
 
-import android.app.Application
+import android.content.Context
 import com.github2136.base.HttpModel
 import com.github2136.base.entity.ResultFlow
 import com.github2136.base.entity.Weather
@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.flowOn
 /**
  * Created by YB on 2020/7/8
  */
-class WeatherRepository(app: Application) : BaseRepository(app) {
-    val httpModel by lazy { HttpModel.getInstance(app) }
+class WeatherRepository(context: Context) : BaseRepository(context) {
+    val httpModel by lazy { HttpModel.getInstance(context) }
 
     suspend fun getWeatherFlow(): Flow<ResultFlow<Weather>> = flow {
         if (networkUtil.isNetworkAvailable()) {

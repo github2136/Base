@@ -1,6 +1,6 @@
 package com.github2136.base.repository
 
-import android.app.Application
+import android.content.Context
 import androidx.core.content.edit
 import com.github2136.base.entity.ResultFlow
 import com.github2136.base.entity.User
@@ -16,7 +16,7 @@ import java.util.*
  * Created by YB on 2020/7/8
  * 用户信息
  */
-class UserRepository(app: Application) : BaseRepository(app) {
+class UserRepository(context: Context) : BaseRepository(context) {
 
     fun loginFlow(user: String, password: String): Flow<ResultFlow<User>> = flow {
         delay(2000)
