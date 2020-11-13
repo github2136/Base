@@ -1,6 +1,6 @@
 package com.github2136.basemvvm.download
 
-import android.app.Application
+import android.content.Context
 import com.github2136.basemvvm.download.dao.DownloadBlockDao
 import com.github2136.basemvvm.download.dao.DownloadFileDao
 import java.io.File
@@ -12,9 +12,9 @@ import java.util.concurrent.Executors
  * getPathExists获取本地存在的文件路径
  * download下载文件并存储在指定位置，如果正在下载则不做任何操作，如果存在记录则会删除记录重新下载
  */
-class DownloadUtil private constructor(val app: Application) {
-    private val downLoadFileDao by lazy { DownloadFileDao(app) }
-    private val downLoadBlockDao by lazy { DownloadBlockDao(app) }
+class DownloadUtil private constructor(val context: Context) {
+    private val downLoadFileDao by lazy { DownloadFileDao(context) }
+    private val downLoadBlockDao by lazy { DownloadBlockDao(context) }
     private val downloadTask = mutableMapOf<String, DownloadTask>()
     private val downloadMultipleTask = mutableMapOf<String, DownloadMultipleTask>()
 
@@ -53,7 +53,7 @@ class DownloadUtil private constructor(val app: Application) {
             callback(state, progress, path, error)
         }
         if (!downloadTask.containsKey(url)) {
-            val task = DownloadTask(app, url, filePath, ::callback, replay)
+            val task = DownloadTask(context, url, filePath, ::callback, replay)
             task.start()
             downloadTask[url] = task
         } else {
@@ -76,7 +76,7 @@ class DownloadUtil private constructor(val app: Application) {
         id: String? = null,
         callback: (state: Int, progress: Int, path: String, url: String, error: String?) -> Unit
     ): String {
-        val multipleTask = DownloadMultipleTask(app, urlAndPath)
+        val multipleTask = DownloadMultipleTask(context, urlAndPath)
         val taskId = id ?: multipleTask.hashCode().toString()
 
         fun callback(state: Int, progress: Int, path: String, url: String, error: String?) {
@@ -119,11 +119,11 @@ class DownloadUtil private constructor(val app: Application) {
         const val STATE_BLOCK_PROGRESS = 7//多文件下载，下载进度，跳过已下载只在实际文件下载时调用，所以调用时会有延迟
         val executors by lazy { Executors.newCachedThreadPool() }
         private var instance: DownloadUtil? = null
-        fun getInstance(app: Application): DownloadUtil {
+        fun getInstance(context: Context): DownloadUtil {
             if (instance == null) {
                 synchronized(DownloadUtil::class) {
                     if (instance == null) {
-                        instance = DownloadUtil(app)
+                        instance = DownloadUtil(context)
                     }
                 }
             }

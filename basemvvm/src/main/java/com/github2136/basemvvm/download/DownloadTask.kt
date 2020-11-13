@@ -1,6 +1,6 @@
 package com.github2136.basemvvm.download
 
-import android.app.Application
+import android.content.Context
 import com.github2136.basemvvm.download.dao.DownloadBlockDao
 import com.github2136.basemvvm.download.dao.DownloadFileDao
 import com.github2136.basemvvm.download.entity.DownloadBlock
@@ -14,7 +14,7 @@ import java.io.*
  * Created by YB on 2019/6/11
  */
 class DownloadTask(
-    val app: Application,
+    val context: Context,
     val url: String,
     var filePath: String,
     var callback: (state: Int, progress: Int, path: String, url: String, error: String?) -> Unit,
@@ -22,8 +22,8 @@ class DownloadTask(
 ) {
     //下载时临时文件名下载完成后需要修改文件名
     private val downloadPath by lazy { "$filePath.basetemp" }
-    private val downLoadFileDao by lazy { DownloadFileDao(app) }
-    private val downLoadBlockDao by lazy { DownloadBlockDao(app) }
+    private val downLoadFileDao by lazy { DownloadFileDao(context) }
+    private val downLoadBlockDao by lazy { DownloadBlockDao(context) }
     private val okHttpManager = OkHttpManager.instance
     //每块的下载进度
     private lateinit var progressArray: LongArray

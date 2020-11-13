@@ -1,6 +1,6 @@
 package com.github2136.basemvvm.download
 
-import android.app.Application
+import android.content.Context
 import com.github2136.basemvvm.download.dao.DownloadBlockDao
 import com.github2136.basemvvm.download.dao.DownloadFileDao
 import java.io.File
@@ -12,12 +12,12 @@ import java.util.concurrent.atomic.AtomicInteger
  * 多文件下载
  */
 class DownloadMultipleTask(
-    val app: Application,
+    val context: Context,
     private val urlAndPath: Map<String, String>
 ) {
     var callback: ((state: Int, progress: Int, path: String, url: String, error: String?) -> Unit)? = null
-    private val downLoadFileDao by lazy { DownloadFileDao(app) }
-    private val downLoadBlockDao by lazy { DownloadBlockDao(app) }
+    private val downLoadFileDao by lazy { DownloadFileDao(context) }
+    private val downLoadBlockDao by lazy { DownloadBlockDao(context) }
     private val fileCount = urlAndPath.size
     private val downloadTask = ArrayBlockingQueue<DownloadTask>(5)
     //准备下载的任务
@@ -39,7 +39,7 @@ class DownloadMultipleTask(
                 val path = getPathExists(url)
                 if (path == null) {
                     //下载文件
-                    readyDownloadTask.add(DownloadTask(app, url, entry.value, ::callback, true))
+                    readyDownloadTask.add(DownloadTask(context, url, entry.value, ::callback, true))
                 } else {
                     successCount.incrementAndGet()
                     val p = getProgress()
