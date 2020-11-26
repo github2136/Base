@@ -1,4 +1,4 @@
-package com.github2136.base
+package com.github2136.base.view.activity
 
 import android.Manifest
 import android.content.Intent
@@ -8,12 +8,12 @@ import android.view.View
 import android.widget.Toast
 import androidx.collection.ArrayMap
 import androidx.lifecycle.Observer
+import com.github2136.base.R
 import com.github2136.base.databinding.ActivityLoginBinding
-import com.github2136.base.entity.User
-import com.github2136.base.vm.LoginVM
+import com.github2136.base.model.entity.User
+import com.github2136.base.vm.activity.LoginVM
 import com.github2136.basemvvm.BaseActivity
 import com.github2136.util.PermissionUtil
-import java.util.*
 
 class LoginActivity : BaseActivity<LoginVM, ActivityLoginBinding>() {
     override fun getLayoutId() = R.layout.activity_login

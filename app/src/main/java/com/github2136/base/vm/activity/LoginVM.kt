@@ -1,9 +1,9 @@
-package com.github2136.base.vm
+package com.github2136.base.vm.activity
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.github2136.base.entity.ResultFlow
+import com.github2136.base.model.entity.ResultFlow
 import com.github2136.base.repository.UserRepository
 import com.github2136.base.repository.WeatherRepository
 import com.github2136.basemvvm.BaseVM

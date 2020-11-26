@@ -2,8 +2,8 @@ package com.github2136.base.repository
 
 import android.content.Context
 import androidx.core.content.edit
-import com.github2136.base.entity.ResultFlow
-import com.github2136.base.entity.User
+import com.github2136.base.model.entity.ResultFlow
+import com.github2136.base.model.entity.User
 import com.github2136.basemvvm.BaseRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

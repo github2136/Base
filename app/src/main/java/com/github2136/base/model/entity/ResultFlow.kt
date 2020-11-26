@@ -1,4 +1,4 @@
-package com.github2136.base.entity
+package com.github2136.base.model.entity
 
 /**
  * Created by YB on 2020/9/4

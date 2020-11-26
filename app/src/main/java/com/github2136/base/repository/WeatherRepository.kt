@@ -1,9 +1,9 @@
 package com.github2136.base.repository
 
 import android.content.Context
-import com.github2136.base.HttpModel
-import com.github2136.base.entity.ResultFlow
-import com.github2136.base.entity.Weather
+import com.github2136.base.model.HttpModel
+import com.github2136.base.model.entity.ResultFlow
+import com.github2136.base.model.entity.Weather
 import com.github2136.basemvvm.BaseRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

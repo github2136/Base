@@ -6,18 +6,18 @@
 
         <variable
             name="view"
-            type="com.github2136.base.LoginActivity" />
+            type="com.github2136.base.view.activity.LoginActivity" />
 
         <variable
             name="vm"
-            type="com.github2136.base.vm.LoginVM" />
+            type="com.github2136.base.vm.activity.LoginVM" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".LoginActivity">
+        tools:context=".view.activity.LoginActivity">
 
         <TextView
             android:layout_width="match_parent"

@@ -1,11 +1,11 @@
-package com.github2136.base.adapter
+package com.github2136.base.view.adapter
 
 import androidx.databinding.ViewDataBinding
 import com.github2136.base.R
 import com.github2136.base.ViewHolderRecyclerView
 import com.github2136.base.databinding.ItemList2Binding
 import com.github2136.base.databinding.ItemListBinding
-import com.github2136.base.entity.User
+import com.github2136.base.model.entity.User
 import com.github2136.basemvvm.BaseRecyclerVMAdapter
 
 /**

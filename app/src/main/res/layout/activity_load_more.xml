@@ -6,11 +6,11 @@
 
         <variable
             name="view"
-            type="com.github2136.base.LoadMoreActivity" />
+            type="com.github2136.base.view.activity.LoadMoreActivity" />
 
         <variable
             name="vm"
-            type="com.github2136.base.vm.LoadMoreVM" />
+            type="com.github2136.base.vm.activity.LoadMoreVM" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

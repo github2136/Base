@@ -5,11 +5,11 @@
 
         <variable
             name="view"
-            type="com.github2136.base.MainActivity" />
+            type="com.github2136.base.view.activity.MainActivity" />
 
         <variable
             name="vm"
-            type="com.github2136.base.vm.MainVM" />
+            type="com.github2136.base.vm.activity.MainVM" />
     </data>
 
     <LinearLayout

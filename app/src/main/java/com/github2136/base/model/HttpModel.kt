@@ -1,4 +1,4 @@
-package com.github2136.base
+package com.github2136.base.model
 
 import android.content.Context
 import com.github2136.basemvvm.BaseWebModel

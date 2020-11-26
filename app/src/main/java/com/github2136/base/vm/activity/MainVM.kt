@@ -1,4 +1,4 @@
-package com.github2136.base.vm
+package com.github2136.base.vm.activity
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData

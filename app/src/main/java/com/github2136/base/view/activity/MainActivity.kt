@@ -1,11 +1,12 @@
-package com.github2136.base
+package com.github2136.base.view.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import com.github2136.base.R
 import com.github2136.base.databinding.ActivityMainBinding
-import com.github2136.base.vm.MainVM
+import com.github2136.base.vm.activity.MainVM
 import com.github2136.basemvvm.BaseActivity
 import com.github2136.basemvvm.download.DownloadUtil
 import com.github2136.util.FileUtil

@@ -1,8 +1,9 @@
-package com.github2136.base
+package com.github2136.base.view.activity
 
 import android.os.Bundle
+import com.github2136.base.R
 import com.github2136.base.databinding.ActivityListBinding
-import com.github2136.base.vm.ListVM
+import com.github2136.base.vm.activity.ListVM
 import com.github2136.basemvvm.BaseActivity
 
 class ListActivity : BaseActivity<ListVM, ActivityListBinding>() {

@@ -1,6 +1,6 @@
-package com.github2136.base
+package com.github2136.base.model
 
-import com.github2136.base.entity.Weather
+import com.github2136.base.model.entity.Weather
 import retrofit2.http.GET
 import retrofit2.http.Path
 

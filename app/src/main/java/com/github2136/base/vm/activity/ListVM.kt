@@ -1,10 +1,10 @@
-package com.github2136.base.vm
+package com.github2136.base.vm.activity
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.github2136.base.adapter.ListMultipleAdapter
-import com.github2136.base.entity.ResultFlow
+import com.github2136.base.view.adapter.ListMultipleAdapter
+import com.github2136.base.model.entity.ResultFlow
 import com.github2136.base.repository.UserRepository
 import com.github2136.basemvvm.BaseVM
 import kotlinx.coroutines.flow.collect
@@ -23,7 +23,7 @@ class ListVM(app: Application) : BaseVM(app) {
             userRepository.getUserFlow(1, 20)
                 .collect {
                     when (it) {
-                        is ResultFlow.Success -> adapterLD.value=ListMultipleAdapter(it.data)
+                        is ResultFlow.Success -> adapterLD.value= ListMultipleAdapter(it.data)
                     }
                 }
         }
