@@ -29,7 +29,7 @@ class LoginActivity : BaseActivity<LoginVM, ActivityLoginBinding>() {
         permissionUtil.getPermission(permission) {
             vm.getWeather()
         }
-
+        vm.titleTextLD.value="登录"
     }
 
     fun onClick(view: View) {

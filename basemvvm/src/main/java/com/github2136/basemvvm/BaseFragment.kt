@@ -25,7 +25,7 @@ import java.lang.reflect.ParameterizedType
  * Created by yb on 2018/11/2.
  * 基础Fragment
  */
-abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
+abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() ,IBaseView{
     protected val TAG = this.javaClass.name
     protected lateinit var vm: V
     protected lateinit var bind: B
@@ -82,6 +82,13 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
         })
         initObserve()
         initData(savedInstanceState)
+    }
+
+    override fun leftBtnClick(btnLeft: View) {
+        activity?.finish()
+    }
+
+    override fun rightBtnClick(btnRight: View) {
     }
 
     private fun getVM(clazz: Class<V>) {

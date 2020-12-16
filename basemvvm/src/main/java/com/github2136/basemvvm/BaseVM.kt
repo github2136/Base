@@ -14,6 +14,8 @@ abstract class BaseVM(app: Application) : AndroidViewModel(app) {
     //显示dialog
     val dialogLD = MutableLiveData<String>()
     val toastLD = MutableLiveData<String>()
+    val titleTextLD = MutableLiveData<String>()
+    val rightBtnLD = MutableLiveData<String>()
     val handle = Handler(Looper.getMainLooper())
 
     //取消请求

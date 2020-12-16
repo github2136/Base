@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -25,7 +26,7 @@ import java.lang.reflect.ParameterizedType
  * Created by YB on 2019/8/29
  * 基础Activity
  */
-abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity() {
+abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity(), IBaseView {
     protected lateinit var vm: V
     protected lateinit var bind: B
     protected val TAG = this.javaClass.name
@@ -84,6 +85,12 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         tbTitle.setNavigationOnClickListener { finish() }
     }
+
+    override fun leftBtnClick(btnLeft: View) {
+        finish()
+    }
+
+    override fun rightBtnClick(btnRight: View) {}
 
     ///////////////////////////////////////////////////////////////////////////
     // Handler
