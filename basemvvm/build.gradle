@@ -32,27 +32,27 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    api lib['kotlin-stdlib']
-    api lib['kotlin-ktx']
+    api lib["kotlin-stdlib"]
+    api lib["kotlin-ktx"]
 
-    api lib['logger']
+    api lib["logger"]
 
-    api lib['okhttp']
-    api lib['okhttp-retrofit']
-    api lib['okhttp-gson']
+    api lib["okhttp"]
+    api lib["okhttp-retrofit"]
+    api lib["okhttp-gson"]
 
-    api lib['android-appcompat']
-    api lib['android-material']
-    api lib['android-recyclerview']
-    api lib['android-swiperefreshlayout']
+    api lib["android-appcompat"]
+    api lib["android-material"]
+    api lib["android-recyclerview"]
+    api lib["android-swiperefreshlayout"]
 
-    api lib['gson']
+    api lib["gson"]
 
-    api lib['android-util']
+    api lib["android-util"]
 
-    androidTestImplementation lib['android-test']
-    testImplementation lib['junit']
-    androidTestImplementation lib['espresso']
+    androidTestImplementation lib["android-test"]
+    testImplementation lib["junit"]
+    androidTestImplementation lib["espresso"]
 }
 repositories {
     mavenCentral()
