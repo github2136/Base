@@ -43,6 +43,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        notificationEnable = notificationManagerCompat.areNotificationsEnabled()
         mApp.addActivity(this)
         bind = DataBindingUtil.setContentView(this, getLayoutId())
         bind.lifecycleOwner = this
