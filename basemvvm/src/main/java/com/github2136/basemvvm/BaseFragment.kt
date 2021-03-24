@@ -28,22 +28,25 @@ import java.lang.reflect.ParameterizedType
  * Created by yb on 2018/11/2.
  * 基础Fragment
  */
-abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() ,IBaseView{
+abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBaseView {
     protected val TAG = this.javaClass.name
     protected lateinit var vm: V
     protected lateinit var bind: B
     protected lateinit var mContext: Context
     protected val mHandler by lazy { Handler(this) }
+
     //根视图用于Snackbar
     protected val rootView by lazy { activity?.window?.decorView?.findViewById<ViewGroup>(android.R.id.content)!! }
     protected val mToast by lazy { Toast.makeText(mContext, "", Toast.LENGTH_SHORT) }
     protected val mSnackbar by lazy { Snackbar.make(rootView, "", Snackbar.LENGTH_SHORT) }
     protected val mDialog by lazy { ProgressDialog(activity) }
+
     //    protected val mDialog: ProgressDialog by lazy {
 //        val dialog = ProgressDialog.getInstance(false)
 //        dialog
 //    }
     open protected var eventBusEnable = false
+
     //是否有应用通知权限
     protected var notificationEnable = false
     protected val notificationManagerCompat by lazy { NotificationManagerCompat.from(mContext) }
@@ -117,6 +120,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() ,IBase
         cancelRequest()
         super.onDestroyView()
     }
+
     fun showSnackbar(msg: String) {
         mSnackbar.let {
             it.setText(msg)
@@ -151,6 +155,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() ,IBase
             it.show()
         }
     }
+
     fun showToast(msg: String) {
         if (notificationEnable) {
             mToast.let {
@@ -237,6 +242,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() ,IBase
     }
 
     protected fun handleMessage(msg: Message) {}
+
     //布局ID
     protected abstract fun getViewResId(): Int
 
