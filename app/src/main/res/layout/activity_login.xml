@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="view"
-            type="com.github2136.base.LoginActivity" />
+            type="com.github2136.base.view.activity.LoginActivity" />
 
         <variable
             name="vm"
-            type="com.github2136.base.vm.LoginVM" />
+            type="com.github2136.base.vm.activity.LoginVM" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".LoginActivity">
+        tools:context=".view.activity.LoginActivity">
+
+        <include
+            layout="@layout/view_title"
+            bind:view="@{view}"
+            bind:vm="@{vm}" />
 
         <TextView
             android:layout_width="match_parent"

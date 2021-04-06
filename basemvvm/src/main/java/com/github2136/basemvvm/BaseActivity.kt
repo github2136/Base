@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -25,23 +26,32 @@ import java.lang.reflect.ParameterizedType
  * Created by YB on 2019/8/29
  * 基础Activity
  */
-abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity() {
+abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity(), IBaseView {
     protected lateinit var vm: V
     protected lateinit var bind: B
     protected val TAG = this.javaClass.name
     protected val mApp by lazy { application as BaseApplication }
     protected val mHandler by lazy { Handler(this) }
+
     //根视图用于Snackbar
     protected val rootView by lazy { window.decorView.findViewById<ViewGroup>(android.R.id.content) }
-    protected val mToast: Toast by lazy { Toast.makeText(this, "", Toast.LENGTH_SHORT) }
-    protected val mSnackbar: Snackbar by lazy { Snackbar.make(rootView, "", Snackbar.LENGTH_SHORT) }
-    protected val mDialog: ProgressDialog by lazy { ProgressDialog(this) }
+    protected val mToast by lazy { Toast.makeText(this, "", Toast.LENGTH_SHORT) }
+    protected val mSnackbar by lazy { Snackbar.make(rootView, "", Snackbar.LENGTH_SHORT) }
+    protected val mDialog by lazy { ProgressDialog(this) }
+
+    //状态栏高度
+    val statusBarHeight by lazy { resources.getDimensionPixelSize(resources.getIdentifier("status_bar_height", "dimen", "android")) }
+
+    //导航栏高度
+    val navigationBarHeight by lazy { resources.getDimensionPixelSize(resources.getIdentifier("navigation_bar_height", "dimen", "android")) }
+
     //是否有应用通知权限
     protected var notificationEnable = false
     protected val notificationManagerCompat by lazy { NotificationManagerCompat.from(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        notificationEnable = notificationManagerCompat.areNotificationsEnabled()
         mApp.addActivity(this)
         bind = DataBindingUtil.setContentView(this, getLayoutId())
         bind.lifecycleOwner = this
@@ -84,6 +94,12 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         tbTitle.setNavigationOnClickListener { finish() }
     }
+
+    override fun leftBtnClick(btnLeft: View) {
+        finish()
+    }
+
+    override fun rightBtnClick(btnRight: View) {}
 
     ///////////////////////////////////////////////////////////////////////////
     // Handler

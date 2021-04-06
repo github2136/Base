@@ -1,9 +1,9 @@
-package com.github2136.base.vm
+package com.github2136.base.vm.activity
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.github2136.base.entity.Result
+import com.github2136.base.model.entity.ResultFlow
 import com.github2136.base.repository.UserRepository
 import com.github2136.base.repository.WeatherRepository
 import com.github2136.basemvvm.BaseVM
@@ -38,8 +38,8 @@ class LoginVM(app: Application) : BaseVM(app) {
                 .onCompletion { dialogLD.value = null }
                 .collect {
                     when (it) {
-                        is Result.Success -> userInfoLD.value = it.data
-                        is Result.Error   -> userInfoLD.value = it.msg
+                        is ResultFlow.Success -> userInfoLD.value = it.data
+                        is ResultFlow.Error   -> userInfoLD.value = it.msg
                     }
                 }
         }

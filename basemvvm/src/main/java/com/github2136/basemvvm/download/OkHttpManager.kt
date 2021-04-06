@@ -9,7 +9,7 @@ import okhttp3.Request
  * Created by YB on 2019/6/11
  */
 class OkHttpManager private constructor() {
-    private val client: OkHttpClient by lazy {
+    private val client by lazy {
         OkHttpClient().newBuilder()
             .build()
     }
@@ -32,6 +32,6 @@ class OkHttpManager private constructor() {
     }
 
     companion object {
-        val instance by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) { OkHttpManager() }
+        val instance by lazy { OkHttpManager() }
     }
 }

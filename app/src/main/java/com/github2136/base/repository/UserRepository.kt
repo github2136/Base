@@ -1,9 +1,9 @@
 package com.github2136.base.repository
 
-import android.app.Application
+import android.content.Context
 import androidx.core.content.edit
-import com.github2136.base.entity.Result
-import com.github2136.base.entity.User
+import com.github2136.base.model.entity.ResultFlow
+import com.github2136.base.model.entity.User
 import com.github2136.basemvvm.BaseRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -16,22 +16,22 @@ import java.util.*
  * Created by YB on 2020/7/8
  * 用户信息
  */
-class UserRepository(app: Application) : BaseRepository(app) {
+class UserRepository(context: Context) : BaseRepository(context) {
 
-    fun loginFlow(user: String, password: String): Flow<Result<User>> = flow {
+    fun loginFlow(user: String, password: String): Flow<ResultFlow<User>> = flow {
         delay(2000)
         if (user == "admin" && password == "admin") {
             mSpUtil.edit {
                 putString("username", user)
                 putString("password", password)
             }
-            emit(Result.Success(User(user, password)))
+            emit(ResultFlow.Success(User(user, password)))
         } else {
-            emit(Result.Error(0, "error"))
+            emit(ResultFlow.Error(0, "error"))
         }
     }.flowOn(Dispatchers.IO)
 
-    fun getUserFlow(pageIndex: Int, pageSize: Int): Flow<Result<MutableList<User>>> = flow {
+    fun getUserFlow(pageIndex: Int, pageSize: Int): Flow<ResultFlow<MutableList<User>>> = flow {
         val data = mutableListOf<User>()
         val r = Random().nextInt()
         for (i in 0 until pageSize) {
@@ -39,9 +39,9 @@ class UserRepository(app: Application) : BaseRepository(app) {
         }
         delay(500)
         if (Random().nextBoolean()) {
-            emit(Result.Success(data))
+            emit(ResultFlow.Success(data))
         } else {
-            emit(Result.Error(-1, failedStr))
+            emit(ResultFlow.Error(-1, failedStr))
         }
     }.flowOn(Dispatchers.IO)
 }

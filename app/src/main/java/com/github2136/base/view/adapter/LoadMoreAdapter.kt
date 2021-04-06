@@ -1,10 +1,10 @@
-package com.github2136.base.adapter
+package com.github2136.base.view.adapter
 
 import com.github2136.base.R
 import com.github2136.base.ViewHolderRecyclerView
 import com.github2136.base.databinding.ItemUserBinding
 import com.github2136.base.divider.IDivider
-import com.github2136.base.entity.User
+import com.github2136.base.model.entity.User
 import com.github2136.basemvvm.loadmore.BaseLoadMoreAdapter
 
 /**

@@ -13,11 +13,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.core.app.NotificationManagerCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.github2136.util.CommonUtil
+import com.google.android.material.snackbar.Snackbar
 import java.lang.ref.WeakReference
 import java.lang.reflect.ParameterizedType
 
@@ -25,20 +28,28 @@ import java.lang.reflect.ParameterizedType
  * Created by yb on 2018/11/2.
  * 基础Fragment
  */
-abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
+abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBaseView {
     protected val TAG = this.javaClass.name
     protected lateinit var vm: V
     protected lateinit var bind: B
     protected lateinit var mContext: Context
     protected val mHandler by lazy { Handler(this) }
-    protected lateinit var mToast: Toast
-    protected val mDialog: ProgressDialog by lazy {
-        ProgressDialog(activity)
-    }
-//    protected val mDialog: ProgressDialog by lazy {
+
+    //根视图用于Snackbar
+    protected val rootView by lazy { activity?.window?.decorView?.findViewById<ViewGroup>(android.R.id.content)!! }
+    protected val mToast by lazy { Toast.makeText(mContext, "", Toast.LENGTH_SHORT) }
+    protected val mSnackbar by lazy { Snackbar.make(rootView, "", Snackbar.LENGTH_SHORT) }
+    protected val mDialog by lazy { ProgressDialog(activity) }
+
+    //    protected val mDialog: ProgressDialog by lazy {
 //        val dialog = ProgressDialog.getInstance(false)
 //        dialog
 //    }
+    open protected var eventBusEnable = false
+
+    //是否有应用通知权限
+    protected var notificationEnable = false
+    protected val notificationManagerCompat by lazy { NotificationManagerCompat.from(mContext) }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -47,7 +58,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
 
     private fun attach(context: Context) {
         mContext = context
-        mToast = Toast.makeText(mContext, "", Toast.LENGTH_SHORT)
+        notificationEnable = notificationManagerCompat.areNotificationsEnabled()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,6 +98,18 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
         initData(savedInstanceState)
     }
 
+    override fun onResume() {
+        super.onResume()
+        notificationEnable = notificationManagerCompat.areNotificationsEnabled()
+    }
+
+    override fun leftBtnClick(btnLeft: View) {
+        activity?.finish()
+    }
+
+    override fun rightBtnClick(btnRight: View) {
+    }
+
     private fun getVM(clazz: Class<V>) {
         activity?.let {
             this.vm = ViewModelProvider.AndroidViewModelFactory.getInstance(it.application).create(clazz)
@@ -98,36 +121,86 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
         super.onDestroyView()
     }
 
+    fun showSnackbar(msg: String) {
+        mSnackbar.let {
+            it.setText(msg)
+            it.duration = Snackbar.LENGTH_SHORT
+            it.show()
+        }
+    }
+
+    fun showSnackbar(@StringRes resId: Int) {
+        CommonUtil.closeKeybord(activity!!)
+        mSnackbar.let {
+            it.setText(resId)
+            it.duration = Snackbar.LENGTH_SHORT
+            it.show()
+        }
+    }
+
+    fun showSnackbarLong(msg: String) {
+        CommonUtil.closeKeybord(activity!!)
+        mSnackbar.let {
+            it.setText(msg)
+            it.duration = Snackbar.LENGTH_LONG
+            it.show()
+        }
+    }
+
+    fun showSnackbarLong(@StringRes resId: Int) {
+        CommonUtil.closeKeybord(activity!!)
+        mSnackbar.let {
+            it.setText(resId)
+            it.duration = Snackbar.LENGTH_LONG
+            it.show()
+        }
+    }
 
     fun showToast(msg: String) {
-        mToast.let {
-            it.setText(msg)
-            it.duration = Toast.LENGTH_SHORT
-            it.show()
+        if (notificationEnable) {
+            mToast.let {
+                it.setText(msg)
+                it.duration = Toast.LENGTH_SHORT
+                it.show()
+            }
+        } else {
+            showSnackbar(msg)
         }
     }
 
     fun showToast(@StringRes resId: Int) {
-        mToast.let {
-            it.setText(resId)
-            it.duration = Toast.LENGTH_SHORT
-            it.show()
+        if (notificationEnable) {
+            mToast.let {
+                it.setText(resId)
+                it.duration = Toast.LENGTH_SHORT
+                it.show()
+            }
+        } else {
+            showSnackbar(resId)
         }
     }
 
     fun showToastLong(msg: String) {
-        mToast.let {
-            it.setText(msg)
-            it.duration = Toast.LENGTH_LONG
-            it.show()
+        if (notificationEnable) {
+            mToast.let {
+                it.setText(msg)
+                it.duration = Toast.LENGTH_LONG
+                it.show()
+            }
+        } else {
+            showSnackbarLong(msg)
         }
     }
 
     fun showToastLong(@StringRes resId: Int) {
-        mToast.let {
-            it.setText(resId)
-            it.duration = Toast.LENGTH_LONG
-            it.show()
+        if (notificationEnable) {
+            mToast.let {
+                it.setText(resId)
+                it.duration = Toast.LENGTH_LONG
+                it.show()
+            }
+        } else {
+            showSnackbarLong(resId)
         }
     }
 
@@ -169,6 +242,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment() {
     }
 
     protected fun handleMessage(msg: Message) {}
+
     //布局ID
     protected abstract fun getViewResId(): Int
 

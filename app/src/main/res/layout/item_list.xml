@@ -6,7 +6,7 @@
 
         <variable
             name="user"
-            type="com.github2136.base.entity.User" />
+            type="com.github2136.base.model.entity.User" />
     </data>
 
     <LinearLayout
