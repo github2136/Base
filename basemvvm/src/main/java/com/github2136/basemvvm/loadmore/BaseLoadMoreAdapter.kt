@@ -51,7 +51,7 @@ abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding> : BaseRecyclerVMAdapt
 
     override fun onBindViewHolder(holder: ViewHolderRecyclerView, position: Int) {
         if (!complete && refreshing.value != true && loading.value != true && result.value == true) {
-            //提前触发加载更多
+            //提前半页触发加载更多
             val trigger = itemCount - pageCount / 2
             if (trigger in 1 until position) {
                 loadMore.invoke()

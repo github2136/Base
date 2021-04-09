@@ -11,6 +11,7 @@ import com.github2136.basemvvm.BaseActivity
 import com.github2136.basemvvm.download.DownloadUtil
 import com.github2136.util.FileUtil
 import java.io.File
+import java.math.BigDecimal
 
 class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
     override fun getLayoutId() = R.layout.activity_main
@@ -21,7 +22,7 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
         bind.view = this
         bind.vm = vm
         vm.titleTextLD.value = "主页"
-        vm.rightBtnLD.value="xxx"
+        vm.rightBtnLD.value = "xxx"
 
         urlAndPath = mutableMapOf(
             "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=3&y=1&z=2" to "$filePath/Offlinemap/google/2/3,1",
@@ -44,6 +45,7 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
     }
 
     val url = "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=53868&y=27313&z=16"
+
     //    val url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk"
     var multipleId = ""
 
@@ -125,6 +127,17 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
             }
             R.id.btnDownload2Stop -> {
                 downloadUtil.stopMultiple(multipleId)
+            }
+            R.id.btnLiveData      -> {
+                try {
+                    vm.byteLD.value = Byte.MAX_VALUE
+                    vm.shortLD.value = Short.MAX_VALUE
+                    vm.intLD.value = Int.MAX_VALUE
+                    vm.longLD.value = Long.MAX_VALUE
+                    vm.floatLD.value = Float.MAX_VALUE
+                    vm.doubleLD.value = Double.MAX_VALUE
+                } catch (e: Exception) {
+                }
             }
         }
     }

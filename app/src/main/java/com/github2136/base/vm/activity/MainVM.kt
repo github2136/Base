@@ -10,6 +10,14 @@ import com.github2136.basemvvm.BaseVM
 class MainVM(app: Application) : BaseVM(app) {
     val downloadLD = MutableLiveData<Int>()
     val downloadMultipleLD = MutableLiveData<Int>()
+
+    val byteLD = MutableLiveData<Byte>()
+    val shortLD = MutableLiveData<Short>()
+    val intLD = MutableLiveData<Int>()
+    val longLD = MutableLiveData<Long>()
+    val floatLD = MutableLiveData<Float>()
+    val doubleLD = MutableLiveData<Double>()
+
     override fun cancelRequest() {
 
     }
