@@ -141,9 +141,4 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
             }
         }
     }
-
-    override fun initObserve() {
-
-    }
-
 }

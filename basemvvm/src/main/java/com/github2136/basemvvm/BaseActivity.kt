@@ -234,7 +234,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
     protected abstract fun initData(savedInstanceState: Bundle?)
 
     //初始化回调
-    protected abstract fun initObserve()
+    protected open fun initObserve() {}
 
     //取消请求
     protected fun cancelRequest() {

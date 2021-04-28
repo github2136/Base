@@ -250,7 +250,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
     protected abstract fun initData(savedInstanceState: Bundle?)
 
     //初始化回调
-    protected abstract fun initObserve()
+    protected open fun initObserve() {}
 
     //取消请求
     protected fun cancelRequest() {
