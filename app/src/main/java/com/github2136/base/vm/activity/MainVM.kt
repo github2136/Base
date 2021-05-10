@@ -17,8 +17,4 @@ class MainVM(app: Application) : BaseVM(app) {
     val longLD = MutableLiveData<Long>()
     val floatLD = MutableLiveData<Float>()
     val doubleLD = MutableLiveData<Double>()
-
-    override fun cancelRequest() {
-
-    }
 }

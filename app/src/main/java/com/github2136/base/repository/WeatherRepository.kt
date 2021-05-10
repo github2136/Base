@@ -2,27 +2,24 @@ package com.github2136.base.repository
 
 import android.content.Context
 import com.github2136.base.model.HttpModel
-import com.github2136.base.model.entity.ResultFlow
+import com.github2136.base.model.entity.ResultRepo
 import com.github2136.base.model.entity.Weather
 import com.github2136.basemvvm.BaseRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 
 /**
  * Created by YB on 2020/7/8
  */
 class WeatherRepository(context: Context) : BaseRepository(context) {
-    val httpModel by lazy { HttpModel.getInstance(context) }
+    private val httpModel by lazy { HttpModel.getInstance(context) }
 
-    suspend fun getWeatherFlow(): Flow<ResultFlow<Weather>> = flow {
-        if (networkUtil.isNetworkAvailable()) {
+    suspend fun getWeatherFlow(): ResultRepo<Weather> = withContext(Dispatchers.IO) {
+        return@withContext try {
             val weather = httpModel.api.getWeatherFlow("101010100")
-            emit(ResultFlow.Success(weather))
-        } else {
-            emit(ResultFlow.Error(0, "No network"))
+            ResultRepo.Success(weather)
+        } catch (e: Exception) {
+            ResultRepo.Error(0, "error", e)
         }
-    }.catch { e -> emit(ResultFlow.Error(0, "error", e)) }.flowOn(Dispatchers.IO)
+    }
 }

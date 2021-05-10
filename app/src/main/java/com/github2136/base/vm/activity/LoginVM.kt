@@ -3,13 +3,10 @@ package com.github2136.base.vm.activity
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.github2136.base.model.entity.ResultFlow
+import com.github2136.base.model.entity.ResultRepo
 import com.github2136.base.repository.UserRepository
 import com.github2136.base.repository.WeatherRepository
 import com.github2136.basemvvm.BaseVM
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 /**
@@ -26,27 +23,27 @@ class LoginVM(app: Application) : BaseVM(app) {
 
     fun getWeather() {
         viewModelScope.launch {
-            weatherRepository.getWeatherFlow()
-                .collect { weatherLD.value = it.toString() }
+            val resultRepo = weatherRepository.getWeatherFlow()
+            when (resultRepo) {
+                is ResultRepo.Success -> {
+                    weatherLD.value = resultRepo.toString()
+                }
+                is ResultRepo.Error   -> {
+                    weatherLD.value = resultRepo.msg
+                }
+            }
         }
     }
 
     fun login() {
         viewModelScope.launch {
-            userRepository.loginFlow(userNameLD.value!!, passWordLD.value!!)
-                .onStart { dialogLD.value = loadingStr }
-                .onCompletion { dialogLD.value = null }
-                .collect {
-                    when (it) {
-                        is ResultFlow.Success -> userInfoLD.value = it.data
-                        is ResultFlow.Error   -> userInfoLD.value = it.msg
-                    }
-                }
+            dialogLD.value = loadingStr
+            val resultRepo = userRepository.loginFlow(userNameLD.value!!, passWordLD.value!!)
+            dialogLD.value = null
+            when (resultRepo) {
+                is ResultRepo.Success -> userInfoLD.value = resultRepo.data
+                is ResultRepo.Error   -> userInfoLD.value = resultRepo.msg
+            }
         }
-    }
-
-    override fun cancelRequest() {
-        userRepository.cancelRequest()
-        weatherRepository.cancelRequest()
     }
 }
