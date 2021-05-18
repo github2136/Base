@@ -41,10 +41,11 @@ abstract class BaseWebModel(context: Context) {
                 }
 
                 val request = requestBuild.build()
-
                 val response = chain.proceed(request)
+                val responseCode = response.code
                 val responseBody = response.body
                 val responseHeads = response.headers
+                preProcessingCode(responseCode)
                 responseBody?.apply {
                     val contentType = contentType()
                     if (contentType == null || contentType.subtype == "json" || contentType.type == "text") {
@@ -66,7 +67,7 @@ abstract class BaseWebModel(context: Context) {
                         }
                         if (contentLength != 0L) {
                             val body = buffer.clone().readString(charset!!)
-                            preProcessing(body)
+                            preProcessingBody(body)
                         }
                     }
                 }
@@ -79,10 +80,15 @@ abstract class BaseWebModel(context: Context) {
     /**
      * 添加Head
      */
-    abstract fun addHead(): MutableMap<String, String>?
+    open fun addHead(): MutableMap<String, String>? = null
 
     /**
      * 前置通用处理
      */
-    abstract fun preProcessing(body: String)
+    open fun preProcessingCode(code: Int) {}
+
+    /**
+     * 前置通用处理
+     */
+    open fun preProcessingBody(body: String) {}
 }
