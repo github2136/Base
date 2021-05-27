@@ -4,6 +4,7 @@ import android.content.res.Resources
 import android.util.TypedValue
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import androidx.databinding.InverseMethod
 import java.math.BigDecimal
 
 /**
@@ -11,6 +12,39 @@ import java.math.BigDecimal
  * DataBindingUtil
  */
 object DBUtil {
+    @InverseMethod("str2int")
+    @JvmStatic
+    fun int2str(value: Int?): String? {
+        return value?.let { BigDecimal(it.toString()).toPlainString() }
+    }
+
+    @JvmStatic
+    fun str2int(value: String?): Int? {
+        return value?.let {
+            try {
+                it.toInt()
+            } catch (e: Exception) {
+                null
+            }
+        }
+    }
+
+    @InverseMethod("str2double")
+    @JvmStatic
+    fun double2str(value: Double?): String? {
+        return value?.let { BigDecimal(it.toString()).toPlainString() }
+    }
+
+    @JvmStatic
+    fun str2double(value: String?): Double? {
+        return value?.let {
+            try {
+                it.toDouble()
+            } catch (e: Exception) {
+                null
+            }
+        }
+    }
     /**
      * TextView
      */

@@ -13,9 +13,6 @@ class HttpModel private constructor(context: Context) : BaseWebModel(context) {
 
     override fun addHead(): MutableMap<String, String>? = null
 
-    override fun preProcessing(body: String) {
-    }
-
     companion object {
         @Volatile
         private var instances: HttpModel? = null
