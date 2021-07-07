@@ -53,7 +53,7 @@ abstract class BaseRecyclerVMAdapter<T, B : ViewDataBinding>(var list: MutableLi
 
     protected var itemClickListener: ((Int) -> Unit)? = null
     protected var itemLongClickListener: ((Int) -> Unit)? = null
-    protected var viewClickListener: ((Int) -> Unit)? = null
+    protected var viewClickListener: ((position: Int, id: Int) -> Unit)? = null
 
     fun setOnItemClickListener(itemClickListener: (position: Int) -> Unit) {
         this.itemClickListener = itemClickListener
@@ -63,7 +63,7 @@ abstract class BaseRecyclerVMAdapter<T, B : ViewDataBinding>(var list: MutableLi
         this.itemLongClickListener = itemLongClickListener
     }
 
-    fun setOnViewClickListener(viewClickListener: (position: Int) -> Unit) {
+    fun setOnViewClickListener(viewClickListener: (position: Int, id: Int) -> Unit) {
         this.viewClickListener = viewClickListener
     }
 
