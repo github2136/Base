@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="srlList" type="id" />
+    <item name="rvList" type="id" />
+    <item name="tvTitle" type="id" />
+    <item name="ibLeft" type="id" />
+    <item name="btnRight" type="id" />
+    <item name="space" type="id" />
+</resources>

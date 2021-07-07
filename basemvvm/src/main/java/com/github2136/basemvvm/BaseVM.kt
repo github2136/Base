@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
  * Created by YB on 2019/8/29
  */
 abstract class BaseVM(app: Application) : AndroidViewModel(app) {
+    protected val TAG = this.javaClass.name
     val loadingStr = "请稍后……"
     //显示dialog
     val dialogLD = MutableLiveData<String>()
