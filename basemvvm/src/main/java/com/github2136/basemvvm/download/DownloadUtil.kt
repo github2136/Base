@@ -1,6 +1,8 @@
 package com.github2136.basemvvm.download
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import com.github2136.basemvvm.download.dao.DownloadBlockDao
 import com.github2136.basemvvm.download.dao.DownloadFileDao
 import java.io.File
@@ -13,6 +15,7 @@ import java.util.concurrent.Executors
  * download下载文件并存储在指定位置，如果正在下载则不做任何操作，如果存在记录则会删除记录重新下载
  */
 class DownloadUtil private constructor(val context: Context) {
+    private val handle by lazy { Handler(Looper.getMainLooper()) }
     private val downLoadFileDao by lazy { DownloadFileDao(context) }
     private val downLoadBlockDao by lazy { DownloadBlockDao(context) }
     private val downloadTask = mutableMapOf<String, DownloadTask>()
@@ -40,17 +43,14 @@ class DownloadUtil private constructor(val context: Context) {
     /**
      * 单文件下载
      */
-    fun download(
-        url: String,
-        filePath: String,
-        replay: Boolean = false,
-        callback: (state: Int, progress: Int, path: String, error: String?) -> Unit
-    ) {
+    fun download(url: String, filePath: String, replay: Boolean = false, callback: (state: Int, progress: Int, path: String, error: String?) -> Unit) {
         fun callback(state: Int, progress: Int, path: String, url: String, error: String?) {
             if (state != STATE_PROGRESS) {
                 downloadTask.remove(url)
             }
-            callback(state, progress, path, error)
+            handle.post {
+                callback(state, progress, path, error)
+            }
         }
         if (!downloadTask.containsKey(url)) {
             val task = DownloadTask(context, url, filePath, ::callback, replay)
@@ -71,11 +71,7 @@ class DownloadUtil private constructor(val context: Context) {
     /**
      * 多文件下载
      */
-    fun downloadMultiple(
-        urlAndPath: Map<String, String>,
-        id: String? = null,
-        callback: (state: Int, progress: Int, path: String, url: String, error: String?) -> Unit
-    ): String {
+    fun downloadMultiple(urlAndPath: Map<String, String>, id: String? = null, callback: (state: Int, progress: Int, path: String, url: String, error: String?) -> Unit): String {
         val multipleTask = DownloadMultipleTask(context, urlAndPath)
         val taskId = id ?: multipleTask.hashCode().toString()
 
@@ -83,7 +79,9 @@ class DownloadUtil private constructor(val context: Context) {
             if (state == STATE_SUCCESS || state == STATE_FAIL) {
                 downloadMultipleTask.remove(taskId)
             }
-            callback.invoke(state, progress, path, url, error)
+            handle.post {
+                callback.invoke(state, progress, path, url, error)
+            }
         }
         multipleTask.callback = ::callback
         downloadMultipleTask[taskId] = multipleTask.apply { start() }

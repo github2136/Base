@@ -75,16 +75,15 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
         return bind.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val type = (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments
 
         getVM(type[0] as Class<V>)
 
-        vm.dialogLD.observe(this, Observer { str ->
-            if (str != null) {
-                showProgressDialog(str)
+        vm.dialogLD.observe(this, Observer { dialog ->
+            if (dialog.msg != null) {
+                showProgressDialog(dialog.msg, dialog.cancelable, dialog.canceledOnTouchOutside)
             } else {
                 dismissProgressDialog()
             }
@@ -204,17 +203,18 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
         }
     }
 
-    open fun showProgressDialog(@StringRes resId: Int, cancelable: Boolean = false) {
-        showProgressDialog(resources.getString(resId), cancelable)
+    open fun showProgressDialog(@StringRes resId: Int, cancelable: Boolean = false, canceledOnTouchOutside: Boolean = false) {
+        showProgressDialog(resources.getString(resId), cancelable, canceledOnTouchOutside)
     }
 
-    open fun showProgressDialog(msg: String? = null, cancelable: Boolean = false) {
+    open fun showProgressDialog(msg: String? = null, cancelable: Boolean = false, canceledOnTouchOutside: Boolean = false) {
         if (msg == null) {
             mDialog.setMessage(vm.loadingStr)
         } else {
             mDialog.setMessage(msg)
         }
         mDialog.setCancelable(cancelable)
+        mDialog.setCanceledOnTouchOutside(canceledOnTouchOutside)
         if (isAdded && !isDetached && !mDialog.isShowing) {
             activity?.apply {
                 mDialog.show()
