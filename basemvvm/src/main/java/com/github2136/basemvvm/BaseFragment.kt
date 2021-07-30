@@ -1,9 +1,7 @@
 package com.github2136.basemvvm
 
-
 import android.app.ProgressDialog
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.os.Message
@@ -65,12 +63,8 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        bind = DataBindingUtil.inflate(inflater, getViewResId(), container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        bind = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
         bind.lifecycleOwner = this
         return bind.root
     }
@@ -244,7 +238,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
     protected fun handleMessage(msg: Message) {}
 
     //布局ID
-    protected abstract fun getViewResId(): Int
+    protected abstract fun getLayoutId(): Int
 
     //初始化
     protected abstract fun initData(savedInstanceState: Bundle?)

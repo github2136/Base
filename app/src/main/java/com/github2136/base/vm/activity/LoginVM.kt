@@ -37,7 +37,7 @@ class LoginVM(app: Application) : BaseVM(app) {
 
     fun login() {
         viewModelScope.launch {
-            dialogLD.value = loadingStr
+            dialogLD.value = DialogData(loadingStr)
             val resultRepo = userRepository.loginFlow(userNameLD.value!!, passWordLD.value!!)
             dialogLD.value = null
             when (resultRepo) {
