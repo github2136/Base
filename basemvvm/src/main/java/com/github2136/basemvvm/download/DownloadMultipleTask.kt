@@ -11,10 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * Created by yb on 2020/4/10
  * 多文件下载
  */
-class DownloadMultipleTask(
-    val context: Context,
-    private val urlAndPath: Map<String, String>
-) {
+class DownloadMultipleTask(val context: Context, private val urlAndPath: Map<String, String>, val replay: Boolean) {
     var callback: ((state: Int, progress: Int, path: String, url: String, error: String?) -> Unit)? = null
     private val downLoadFileDao by lazy { DownloadFileDao(context) }
     private val downLoadBlockDao by lazy { DownloadBlockDao(context) }
@@ -37,7 +34,7 @@ class DownloadMultipleTask(
                 }
                 url = entry.key
                 val path = getPathExists(url)
-                if (path == null) {
+                if (path == null || replay) {
                     //下载文件
                     readyDownloadTask.add(DownloadTask(context, url, entry.value, ::callback, true))
                 } else {

@@ -3,6 +3,7 @@ package com.github2136.basemvvm.download
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import androidx.annotation.MainThread
 import com.github2136.basemvvm.download.dao.DownloadBlockDao
 import com.github2136.basemvvm.download.dao.DownloadFileDao
 import java.io.File
@@ -71,8 +72,8 @@ class DownloadUtil private constructor(val context: Context) {
     /**
      * 多文件下载
      */
-    fun downloadMultiple(urlAndPath: Map<String, String>, id: String? = null, callback: (state: Int, progress: Int, path: String, url: String, error: String?) -> Unit): String {
-        val multipleTask = DownloadMultipleTask(context, urlAndPath)
+    fun downloadMultiple(urlAndPath: Map<String, String>, id: String? = null, replay: Boolean = false, callback: (state: Int, progress: Int, path: String, url: String, error: String?) -> Unit): String {
+        val multipleTask = DownloadMultipleTask(context, urlAndPath, replay)
         val taskId = id ?: multipleTask.hashCode().toString()
 
         fun callback(state: Int, progress: Int, path: String, url: String, error: String?) {
@@ -105,7 +106,6 @@ class DownloadUtil private constructor(val context: Context) {
         downLoadFileDao.close()
         downLoadBlockDao.close()
     }
-
 
     companion object {
         const val STATE_PROGRESS = 1//下载中
