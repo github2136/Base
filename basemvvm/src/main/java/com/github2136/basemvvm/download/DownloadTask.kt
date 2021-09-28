@@ -45,6 +45,9 @@ class DownloadTask(
     /**
      * 开始下载
      */
+    /**
+     * 开始下载
+     */
     fun start() {
         stop = false
         childFinishCount = 0
@@ -73,52 +76,50 @@ class DownloadTask(
                         response.body?.apply {
                             close(this)
                         }
-                        if (length > -1) {
-                            if (response.header("accept-ranges") != "bytes") {
-                                //不允许断点续传，删除之前的下载记录
+                        if (length == -1L) {
+                            length = 0
+                        }
+                        if (response.header("accept-ranges") != "bytes") {
+                            //不允许断点续传，删除之前的下载记录
+                            downLoadFileDao.delete(url)
+                            downLoadBlockDao.delete(url)
+                        }
+                        if (downloadFile == null) {
+                            //未下载过
+                            downloadFile = DownloadFile(0, url, downloadPath, 0, length, false)
+                            val fileId = downLoadFileDao.install(downloadFile!!)
+                            downloadFile?.id = fileId
+                        } else {
+                            if (downloadFile?.fileTotal != length) {
+                                //文件大小不一致，删除记录重新下载
                                 downLoadFileDao.delete(url)
                                 downLoadBlockDao.delete(url)
-                            }
-                            if (downloadFile == null) {
-                                //未下载过
                                 downloadFile = DownloadFile(0, url, downloadPath, 0, length, false)
                                 val fileId = downLoadFileDao.install(downloadFile!!)
                                 downloadFile?.id = fileId
-                            } else {
-                                if (downloadFile?.fileTotal != length) {
-                                    //文件大小不一致，删除记录重新下载
-                                    downLoadFileDao.delete(url)
-                                    downLoadBlockDao.delete(url)
-                                    downloadFile = DownloadFile(0, url, downloadPath, 0, length, false)
-                                    val fileId = downLoadFileDao.install(downloadFile!!)
-                                    downloadFile?.id = fileId
-                                }
                             }
-                            file = File(downloadPath)
-                            if (!file.parentFile.exists()) file.parentFile.mkdirs()
-                            val randomFile = RandomAccessFile(file, "rw")
-                            randomFile.setLength(length)
-                            //分块下载
-                            if (response.header("accept-ranges") == "bytes") {
-                                //分块下载并且支持断点续传
-                                val threadSize: Int = when (length) {
-                                    //1m
-                                    1048576L   -> 1
-                                    //5M
-                                    5242880L   -> 2
-                                    //50M
-                                    52428800L  -> 3
-                                    //100M
-                                    104857600L -> 4
-                                    else       -> 5
-                                }
-                                download(downloadFile!!.id, threadSize, url, length)
-                            } else {
-                                download(downloadFile!!.id, 1, url, length)
+                        }
+                        file = File(downloadPath)
+                        if (!file.parentFile.exists()) file.parentFile.mkdirs()
+                        val randomFile = RandomAccessFile(file, "rw")
+                        randomFile.setLength(length)
+                        //分块下载
+                        if (response.header("accept-ranges") == "bytes") {
+                            //分块下载并且支持断点续传
+                            val threadSize: Int = when {
+                                //1m
+                                length < 1048576L -> 1
+                                //5M
+                                length < 5242880L -> 2
+                                //50M
+                                length < 52428800L -> 3
+                                //100M
+                                length < 104857600L -> 4
+                                else -> 5
                             }
+                            download(downloadFile!!.id, threadSize, url, length)
                         } else {
-                            //下载失败
-                            fail("file size < 0")
+                            download(downloadFile!!.id, 1, url, length)
                         }
                     } else {
                         fail("request code ${response.code}")
@@ -133,9 +134,7 @@ class DownloadTask(
                 }
             }
         })
-
     }
-
     /**
      * fileId 文件id
      */
