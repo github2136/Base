@@ -46,6 +46,11 @@ dependencies {
     api lib["android-recyclerview"]
     api lib["android-swiperefreshlayout"]
 
+    //协程
+    api lib["android-coroutines"]
+    api lib["android-viewmodel-ktx"]
+    api lib["android-lifecycle-ktx"]
+
     api lib["gson"]
 
     api lib["android-util"]

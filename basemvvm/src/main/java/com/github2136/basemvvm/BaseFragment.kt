@@ -76,7 +76,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
         getVM(type[0] as Class<V>)
 
         vm.dialogLD.observe(this, Observer { dialog ->
-            if (dialog.msg != null) {
+            if (dialog != null) {
                 showProgressDialog(dialog.msg, dialog.cancelable, dialog.canceledOnTouchOutside)
             } else {
                 dismissProgressDialog()

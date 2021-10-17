@@ -59,7 +59,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
         val type = (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments
         getVM(type[0] as Class<V>)
         vm.dialogLD.observe(this, Observer { dialog ->
-            if (dialog.msg != null) {
+            if (dialog != null) {
                 showProgressDialog(dialog.msg, dialog.cancelable, dialog.canceledOnTouchOutside)
             } else {
                 dismissProgressDialog()

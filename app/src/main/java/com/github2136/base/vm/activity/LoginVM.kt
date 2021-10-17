@@ -23,7 +23,7 @@ class LoginVM(app: Application) : BaseVM(app) {
 
     fun getWeather() {
         viewModelScope.launch {
-            val resultRepo = weatherRepository.getWeatherFlow()
+            val resultRepo = weatherRepository.getWeather()
             when (resultRepo) {
                 is ResultRepo.Success -> {
                     weatherLD.value = resultRepo.toString()

@@ -35,11 +35,6 @@ dependencies {
 
     implementation lib["kotlin-stdlib"]
 
-    //协程
-    implementation lib["android-coroutines"]
-    implementation lib["android-viewmodel-ktx"]
-    implementation lib["android-lifecycle-ktx"]
-
     kapt lib["android-databinding"]
 
     androidTestImplementation lib["android-test"]

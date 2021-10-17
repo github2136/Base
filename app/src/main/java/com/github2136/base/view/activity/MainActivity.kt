@@ -44,7 +44,7 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
         )
     }
 
-    val url = "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=53868&y=27313&z=16"
+    val url = "https://d1.music.126.net/dmusic/cloudmusicsetup2.9.5.199424.exe"
 
     //    val url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk"
     var multipleId = ""
@@ -70,16 +70,16 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
                 }
                 downloadUtil.download(
                     url,
-                    File(FileUtil.getExternalStorageProjectPath(this), "xx.jpg").absolutePath
+                    File(FileUtil.getExternalStorageProjectPath(this), "xx.exe").absolutePath
                 ) { state, progress, path, error ->
                     when (state) {
                         DownloadUtil.STATE_PROGRESS -> {
-                            Log.e("download", "$progress")
+                            Log.e("download", "进度$progress")
                             vm.downloadLD.postValue(progress)
                         }
                         DownloadUtil.STATE_SUCCESS  -> {
                             val end = System.currentTimeMillis()
-                            Log.e("download", "${end - start}")
+                            Log.e("download", "耗时${end - start}")
                         }
                         DownloadUtil.STATE_FAIL     -> {
                             Log.e("download", "下载失败$error")
@@ -95,16 +95,16 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
                 downloadUtil.stop(url)
             }
             R.id.btnDownload2     -> {
-//                val m = mutableMapOf(
-//                    "https://dldir1.qq.com/dlomg/sports/QQSports_1741.apk" to filePath + "/1.txt",
-//                    "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk" to filePath + "/2.exe",
-//                    "https://dldir1.qq.com/weixin/android/weixin7013android1640.apk" to filePath + "/3.exe",
-//                    "https://dldir1.qq.com/weixin/Windows/WeChatSetup.exe" to filePath + "/4.exe",
-//                    "https://9c80a9f7765f4da5bb5baa78fdc41def.dd.cdntips.com/dlied6.qq.com/invc/xfspeed/qqpcmgr/download/QQPCDownload1671.exe?mkey=5e99e43231d3b95d&f=24c3&cip=49.211.159.168&proto=https" to filePath + "/5.exe",
-//                    "https://d1.music.126.net/dmusic/cloudmusicsetup2.7.1.198242.exe" to filePath + "/6.exe"
-//                )
+               val m = mutableMapOf(
+                   "https://d1.music.126.net/dmusic/cloudmusicsetup2.9.5.199424.exe" to "$filePath/xxx.exe",
+                   "https://dldir1.qq.com/dlomg/sports/QQSports_1741.apk" to "$filePath/1.apk",
+                   "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk" to "$filePath/2.exe",
+                   "https://dldir1.qq.com/weixin/android/weixin7013android1640.apk" to "$filePath/3.exe",
+                   "https://dldir1.qq.com/weixin/Windows/WeChatSetup.exe" to "$filePath/4.exe",
+                   "https://d1.music.126.net/dmusic/cloudmusicsetup2.7.1.198242.exe" to "$filePath/6.exe"
+               )
                 var i = 0
-                multipleId = downloadUtil.downloadMultiple(urlAndPath, "xx") { state, progress, path, url, error ->
+                multipleId = downloadUtil.downloadMultiple(m, "xx") { state, progress, path, url, error ->
                     when (state) {
                         DownloadUtil.STATE_BLOCK_SUCCESS -> {
                             Log.e("multipleDownload", "blockSuccess ${i++}")

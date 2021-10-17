@@ -14,8 +14,8 @@ import kotlinx.coroutines.withContext
 class WeatherRepository(context: Context) : BaseRepository(context) {
     private val httpModel by lazy { HttpModel.getInstance(context) }
 
-    suspend fun getWeatherFlow(): ResultRepo<Weather> = withContext(Dispatchers.IO) {
-        return@withContext try {
+    suspend fun getWeather(): ResultRepo<Weather> = withContext(Dispatchers.IO) {
+        try {
             val weather = httpModel.api.getWeatherFlow("101010100")
             ResultRepo.Success(weather)
         } catch (e: Exception) {
