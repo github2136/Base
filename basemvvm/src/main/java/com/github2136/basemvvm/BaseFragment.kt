@@ -43,7 +43,6 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
 //        val dialog = ProgressDialog.getInstance(false)
 //        dialog
 //    }
-    open protected var eventBusEnable = false
 
     //是否有应用通知权限
     protected var notificationEnable = false
