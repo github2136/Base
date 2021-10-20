@@ -2,12 +2,11 @@ package com.github2136.base.vm.activity
 
 import android.app.Application
 import androidx.lifecycle.viewModelScope
-import com.github2136.base.view.adapter.LoadMoreAdapter
-import com.github2136.base.model.entity.ResultFlow
+import com.github2136.base.model.entity.ResultRepo
 import com.github2136.base.model.entity.User
 import com.github2136.base.repository.UserRepository
+import com.github2136.base.view.adapter.LoadMoreAdapter
 import com.github2136.basemvvm.loadmore.BaseLoadMoreVM
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -22,29 +21,22 @@ class LoadMoreVM(app: Application) : BaseLoadMoreVM<User>(app) {
         viewModelScope.launch {
             adapter.pageIndex = 1
             adapter.pageCount = 5
-            userRepository.getUserFlow(adapter.pageIndex, adapter.pageCount)
-                .collect {
-                    when (it) {
-                        is ResultFlow.Success -> setData(it.data)
-                        is ResultFlow.Error   -> failedData()
-                    }
-                }
+            val resultRepo = userRepository.getUserFlow(adapter.pageIndex, adapter.pageCount)
+            when (resultRepo) {
+                is ResultRepo.Success -> setData(resultRepo.data)
+                is ResultRepo.Error   -> failedData()
+            }
         }
     }
+
 
     override fun loadMoreData() {
         viewModelScope.launch {
-            userRepository.getUserFlow(adapter.pageIndex, adapter.pageCount)
-                .collect {
-                    when (it) {
-                        is ResultFlow.Success -> appendData(it.data)
-                        is ResultFlow.Error   -> failedData()
-                    }
-                }
+            val resultRepo = userRepository.getUserFlow(adapter.pageIndex, adapter.pageCount)
+            when (resultRepo) {
+                is ResultRepo.Success -> appendData(resultRepo.data)
+                is ResultRepo.Error   -> failedData()
+            }
         }
-    }
-
-    override fun cancelRequest() {
-        userRepository.cancelRequest()
     }
 }

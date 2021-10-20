@@ -1,9 +1,7 @@
 package com.github2136.basemvvm
 
-
 import android.app.ProgressDialog
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.os.Message
@@ -45,7 +43,6 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
 //        val dialog = ProgressDialog.getInstance(false)
 //        dialog
 //    }
-    open protected var eventBusEnable = false
 
     //是否有应用通知权限
     protected var notificationEnable = false
@@ -65,16 +62,11 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        bind = DataBindingUtil.inflate(inflater, getViewResId(), container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        bind = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
         bind.lifecycleOwner = this
         return bind.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -82,9 +74,9 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
 
         getVM(type[0] as Class<V>)
 
-        vm.dialogLD.observe(this, Observer { str ->
-            if (str != null) {
-                showProgressDialog(str)
+        vm.dialogLD.observe(this, Observer { dialog ->
+            if (dialog != null) {
+                showProgressDialog(dialog.msg, dialog.cancelable, dialog.canceledOnTouchOutside)
             } else {
                 dismissProgressDialog()
             }
@@ -204,17 +196,18 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
         }
     }
 
-    open fun showProgressDialog(@StringRes resId: Int, cancelable: Boolean = false) {
-        showProgressDialog(resources.getString(resId), cancelable)
+    open fun showProgressDialog(@StringRes resId: Int, cancelable: Boolean = false, canceledOnTouchOutside: Boolean = false) {
+        showProgressDialog(resources.getString(resId), cancelable, canceledOnTouchOutside)
     }
 
-    open fun showProgressDialog(msg: String? = null, cancelable: Boolean = false) {
+    open fun showProgressDialog(msg: String? = null, cancelable: Boolean = false, canceledOnTouchOutside: Boolean = false) {
         if (msg == null) {
             mDialog.setMessage(vm.loadingStr)
         } else {
             mDialog.setMessage(msg)
         }
         mDialog.setCancelable(cancelable)
+        mDialog.setCanceledOnTouchOutside(canceledOnTouchOutside)
         if (isAdded && !isDetached && !mDialog.isShowing) {
             activity?.apply {
                 mDialog.show()
@@ -244,13 +237,13 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
     protected fun handleMessage(msg: Message) {}
 
     //布局ID
-    protected abstract fun getViewResId(): Int
+    protected abstract fun getLayoutId(): Int
 
     //初始化
     protected abstract fun initData(savedInstanceState: Bundle?)
 
     //初始化回调
-    protected abstract fun initObserve()
+    protected open fun initObserve() {}
 
     //取消请求
     protected fun cancelRequest() {

@@ -58,9 +58,9 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
 
         val type = (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments
         getVM(type[0] as Class<V>)
-        vm.dialogLD.observe(this, Observer { str ->
-            if (str != null) {
-                showProgressDialog(str)
+        vm.dialogLD.observe(this, Observer { dialog ->
+            if (dialog != null) {
+                showProgressDialog(dialog.msg, dialog.cancelable, dialog.canceledOnTouchOutside)
             } else {
                 dismissProgressDialog()
             }
@@ -197,17 +197,18 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
         }
     }
 
-    open fun showProgressDialog(@StringRes resId: Int, cancelable: Boolean = false) {
-        showProgressDialog(resources.getString(resId), cancelable)
+    open fun showProgressDialog(@StringRes resId: Int, cancelable: Boolean = false, canceledOnTouchOutside: Boolean = false) {
+        showProgressDialog(resources.getString(resId), cancelable, canceledOnTouchOutside)
     }
 
-    open fun showProgressDialog(msg: String? = null, cancelable: Boolean = false) {
+    open fun showProgressDialog(msg: String? = null, cancelable: Boolean = false, canceledOnTouchOutside: Boolean = false) {
         if (msg == null) {
             mDialog.setMessage(vm.loadingStr)
         } else {
             mDialog.setMessage(msg)
         }
         mDialog.setCancelable(cancelable)
+        mDialog.setCanceledOnTouchOutside(canceledOnTouchOutside)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             if (!(isDestroyed || isFinishing) && !mDialog.isShowing) {
                 mDialog.show()
@@ -234,7 +235,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
     protected abstract fun initData(savedInstanceState: Bundle?)
 
     //初始化回调
-    protected abstract fun initObserve()
+    protected open fun initObserve() {}
 
     //取消请求
     protected fun cancelRequest() {

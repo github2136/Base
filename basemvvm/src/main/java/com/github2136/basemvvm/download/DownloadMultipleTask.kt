@@ -1,67 +1,98 @@
 package com.github2136.basemvvm.download
 
 import android.content.Context
+import android.util.Log
 import com.github2136.basemvvm.download.dao.DownloadBlockDao
 import com.github2136.basemvvm.download.dao.DownloadFileDao
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 import java.io.File
-import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Created by yb on 2020/4/10
- * 多文件下载
+ * 多文件下载，下载进度按文件已下载数量及单文件下载进度来计算总进度，不是按照已下载文件大小显示总进度
  */
 class DownloadMultipleTask(
-    val context: Context,
-    private val urlAndPath: Map<String, String>
+    private val context: Context,
+    private val urlAndPath: Map<String, String>,
+    private val replay: Boolean
 ) {
-    var callback: ((state: Int, progress: Int, path: String, url: String, error: String?) -> Unit)? = null
+    /**
+     * 下载状态，下载进度百分比，已下载文件数量，总文件大小，本地路径，网络路径，错误信息
+     */
+    var callback: ((state: Int, progress: Int, successCount: Int, fileCount: Int, url: String, path: String, error: String?) -> Unit)? = null
     private val downLoadFileDao by lazy { DownloadFileDao(context) }
     private val downLoadBlockDao by lazy { DownloadBlockDao(context) }
+    private val downloadChannel by lazy { Channel<DownloadTask>() }
     private val fileCount = urlAndPath.size
-    private val downloadTask = ArrayBlockingQueue<DownloadTask>(5)
-    //准备下载的任务
-    private val readyDownloadTask = mutableListOf<DownloadTask>()
-    //下载完成数量
-    private val successCount = AtomicInteger()
-    //下载失败数量
-    private val failCount = AtomicInteger()
-    private var run = true
+    private val singleProgress = 1 / fileCount.toDouble() * 100 //单个文件占比
+
+    private val successCount = AtomicInteger() //下载完成数量
+    private val failCount = AtomicInteger() //下载失败数量
+    private val taskSize = 5 //同时下载任务数
+    private val progressTask = Array<DownloadTask?>(taskSize) { null }
+    private val progresss = mutableMapOf<String, Int>() //正在下载的下载进度
+    private var stop = false
+
     fun start() {
-        run = true
-        DownloadUtil.executors.execute {
-            var url: String
-            for (entry in urlAndPath) {
-                if (!run) {
-                    break
-                }
-                url = entry.key
-                val path = getPathExists(url)
-                if (path == null) {
-                    //下载文件
-                    readyDownloadTask.add(DownloadTask(context, url, entry.value, ::callback, true))
-                } else {
-                    successCount.incrementAndGet()
-                    val p = getProgress()
-                    //已下载
-                    callback?.invoke(DownloadUtil.STATE_BLOCK_SUCCESS, p, path, url, null)
-                    if (successCount.get() == fileCount) {
-                        callback?.invoke(DownloadUtil.STATE_SUCCESS, p, path, url, null)
+        GlobalScope.launch {
+            stop = false
+            launch {
+                repeat(taskSize) { i ->
+                    async {
+                        for (downloadTask in downloadChannel) {
+                            if (DownloadUtil.LOG_ENABLE) {
+                                Log.d(DownloadUtil.TAG, "多文件${i}开始 ${downloadTask.url}")
+                            }
+                            progressTask[i] = downloadTask
+                            downloadTask.start()
+                        }
                     }
                 }
             }
-            //开始下载未下载任务
-            for (task in readyDownloadTask) {
-                downloadTask.put(task.apply { start() })
+
+            for (entry in urlAndPath) {
+                if (stop) {
+                    break
+                }
+                val path = getPathExists(entry.key)
+                if (path == null || replay) {
+                    //下载文件
+                    if (!downloadChannel.isClosedForSend) {
+                        downloadChannel.send(DownloadTask(context, entry.key, entry.value, true, ::callback))
+                    }
+                } else {
+                    successCount.incrementAndGet()
+                    progresss.remove(entry.key)
+                    val p = getProgress()
+                    if (DownloadUtil.LOG_ENABLE) {
+                        Log.d(DownloadUtil.TAG, "多文件已存在:${entry.key}")
+                    }
+                    //已下载
+                    callback?.invoke(DownloadUtil.STATE_BLOCK_SUCCESS, p, successCount.get(), fileCount, entry.key, path, null)
+                    if (successCount.get() == fileCount) {
+                        if (DownloadUtil.LOG_ENABLE) {
+                            Log.d(DownloadUtil.TAG, "多文件全部已存在")
+                        }
+                        callback?.invoke(DownloadUtil.STATE_SUCCESS, p, successCount.get(), fileCount, entry.key, path, null)
+                    }
+                }
             }
+            downloadChannel.close()
         }
     }
 
     fun stop() {
-        run = false
-        while (downloadTask.poll()?.apply { stop() } != null) {
+        stop = true
+        downloadChannel.close()
+        for (downloadTask in progressTask) {
+            Log.d(DownloadUtil.TAG, "文件停止 ${downloadTask?.url}")
+            downloadTask?.stop()
         }
-        callback?.invoke(DownloadUtil.STATE_STOP, getProgress(), "", "", null)
+        callback?.invoke(DownloadUtil.STATE_STOP, getProgress(), successCount.get(), fileCount, "", "", null)
         callback = null
     }
 
@@ -81,35 +112,52 @@ class DownloadMultipleTask(
         return null
     }
 
-    fun callback(state: Int, progress: Int, path: String, url: String, error: String?) {
+    fun callback(state: Int, progress: Int, size: Long, contentLength: Long, path: String, url: String, error: String?) {
         when (state) {
+            DownloadUtil.STATE_PROGRESS -> {
+                progresss[url] = progress
+                val p = getProgress()
+                callback?.invoke(DownloadUtil.STATE_PROGRESS, p, successCount.get(), fileCount, url, path, error)
+            }
             DownloadUtil.STATE_SUCCESS -> {
-                downloadTask.take()
+                progresss.remove(url)
                 successCount.incrementAndGet()
                 val p = getProgress()
-                callback?.invoke(DownloadUtil.STATE_BLOCK_SUCCESS, p, path, url, error)
-                callback?.invoke(DownloadUtil.STATE_BLOCK_PROGRESS, p, path, url, error)
+                callback?.invoke(DownloadUtil.STATE_BLOCK_SUCCESS, p, successCount.get(), fileCount, url, path, error)
+                callback?.invoke(DownloadUtil.STATE_BLOCK_PROGRESS, p, successCount.get(), fileCount, url, path, error)
+                if (DownloadUtil.LOG_ENABLE) {
+                    Log.d(DownloadUtil.TAG, "多文件下载完成:${url}")
+                }
                 if (successCount.get() + failCount.get() == fileCount) {
-                    //全部下载完成
-                    callback?.invoke(DownloadUtil.STATE_SUCCESS, p, "", "", "")
-                    downloadTask.clear()
+                    if (failCount.get() == 0) {
+                        //全部下载完成
+                        callback?.invoke(DownloadUtil.STATE_SUCCESS, p, successCount.get(), fileCount, "", "", "")
+                    } else {
+                        //全部下载完成，部分失败
+                        callback?.invoke(DownloadUtil.STATE_FAIL, p, successCount.get(), fileCount, "", "", "")
+                    }
                 }
             }
-            DownloadUtil.STATE_FAIL    -> {
-                downloadTask.take()
+            DownloadUtil.STATE_FAIL -> {
                 failCount.incrementAndGet()
                 val p = getProgress()
-                callback?.invoke(DownloadUtil.STATE_BLOCK_FAIL, p, path, url, error)
+                callback?.invoke(DownloadUtil.STATE_BLOCK_FAIL, p, successCount.get(), fileCount, url, path, error)
+                if (DownloadUtil.LOG_ENABLE) {
+                    Log.d(DownloadUtil.TAG, "多文件下载失败:${url} ${error}")
+                }
                 if (successCount.get() + failCount.get() == fileCount) {
                     //全部下载完成，部分失败
-                    callback?.invoke(DownloadUtil.STATE_FAIL, p, "", "", "")
-                    downloadTask.clear()
+                    callback?.invoke(DownloadUtil.STATE_FAIL, p, successCount.get(), fileCount, "", "", "")
                 }
             }
         }
     }
 
     fun getProgress(): Int {
-        return ((successCount.get() / fileCount.toDouble()) * 100).toInt()
+        var blockProgress = 0
+        for (p in progresss) {
+            blockProgress += p.value
+        }
+        return (singleProgress * blockProgress / 100 + successCount.get() / fileCount.toDouble() * 100).toInt()
     }
 }

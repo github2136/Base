@@ -41,10 +41,11 @@ abstract class BaseWebModel(context: Context) {
                 }
 
                 val request = requestBuild.build()
-
                 val response = chain.proceed(request)
+                val responseCode = response.code
                 val responseBody = response.body
                 val responseHeads = response.headers
+                var body: String? = null
                 responseBody?.apply {
                     val contentType = contentType()
                     if (contentType == null || contentType.subtype == "json" || contentType.type == "text") {
@@ -65,11 +66,11 @@ abstract class BaseWebModel(context: Context) {
                             charset = contentType.charset(Charset.forName("UTF-8"))
                         }
                         if (contentLength != 0L) {
-                            val body = buffer.clone().readString(charset!!)
-                            preProcessing(body)
+                            body = buffer.clone().readString(charset!!)
                         }
                     }
                 }
+                preProcessing(responseCode, body)
                 return@addInterceptor response
             }
             .addInterceptor(OkHttpInterceptor())
@@ -79,10 +80,10 @@ abstract class BaseWebModel(context: Context) {
     /**
      * 添加Head
      */
-    abstract fun addHead(): MutableMap<String, String>?
+    open fun addHead(): MutableMap<String, String>? = null
 
     /**
      * 前置通用处理
      */
-    abstract fun preProcessing(body: String)
+    abstract fun preProcessing(code: Int, body: String?)
 }

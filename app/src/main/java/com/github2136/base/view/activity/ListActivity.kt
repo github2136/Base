@@ -14,10 +14,4 @@ class ListActivity : BaseActivity<ListVM, ActivityListBinding>() {
         bind.view = this
         vm.setData()
     }
-
-    override fun initObserve() {
-
-    }
-
-
 }

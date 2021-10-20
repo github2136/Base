@@ -14,6 +14,7 @@ import com.github2136.base.ViewHolderRecyclerView
 abstract class BaseRecyclerVMAdapter<T, B : ViewDataBinding>(var list: MutableList<T>? = null) :
     RecyclerView.Adapter<ViewHolderRecyclerView>() {
     protected lateinit var mLayoutInflater: LayoutInflater
+
     /**
      * 通过类型获得布局ID
      *
@@ -52,6 +53,7 @@ abstract class BaseRecyclerVMAdapter<T, B : ViewDataBinding>(var list: MutableLi
 
     protected var itemClickListener: ((Int) -> Unit)? = null
     protected var itemLongClickListener: ((Int) -> Unit)? = null
+    protected var viewClickListener: ((position: Int, id: Int) -> Unit)? = null
 
     fun setOnItemClickListener(itemClickListener: (position: Int) -> Unit) {
         this.itemClickListener = itemClickListener
@@ -59,6 +61,10 @@ abstract class BaseRecyclerVMAdapter<T, B : ViewDataBinding>(var list: MutableLi
 
     fun setOnItemLongClickListener(itemLongClickListener: (position: Int) -> Unit) {
         this.itemLongClickListener = itemLongClickListener
+    }
+
+    fun setOnViewClickListener(viewClickListener: (position: Int, id: Int) -> Unit) {
+        this.viewClickListener = viewClickListener
     }
 
     fun setData(list: MutableList<T>) {

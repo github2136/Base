@@ -23,8 +23,4 @@ class LoadMoreActivity : BaseLoadMoreActivity<LoadMoreVM, ActivityLoadMoreBindin
         d.align = Paint.Align.RIGHT
         bind.rvList.addItemDecoration(d)
     }
-
-    override fun initObserve() {
-
-    }
 }

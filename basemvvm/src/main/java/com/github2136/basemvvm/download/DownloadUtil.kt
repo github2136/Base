@@ -1,16 +1,21 @@
 package com.github2136.basemvvm.download
 
 import android.content.Context
+import android.util.Log
 import com.github2136.basemvvm.download.dao.DownloadBlockDao
 import com.github2136.basemvvm.download.dao.DownloadFileDao
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
-import java.util.concurrent.Executors
 
 /**
  * Created by YB on 2019/6/6
  * 断点续传
  * getPathExists获取本地存在的文件路径
  * download下载文件并存储在指定位置，如果正在下载则不做任何操作，如果存在记录则会删除记录重新下载
+ * 只有STATE_PROGRESS、STATE_BLOCK_PROGRESS或STATE_BLOCK_SUCCESS进度(progress)才可信其他状态下进度(progress)不一定准确
  */
 class DownloadUtil private constructor(val context: Context) {
     private val downLoadFileDao by lazy { DownloadFileDao(context) }
@@ -40,29 +45,39 @@ class DownloadUtil private constructor(val context: Context) {
     /**
      * 单文件下载
      */
-    fun download(
-        url: String,
-        filePath: String,
-        replay: Boolean = false,
-        callback: (state: Int, progress: Int, path: String, error: String?) -> Unit
-    ) {
-        fun callback(state: Int, progress: Int, path: String, url: String, error: String?) {
-            if (state != STATE_PROGRESS) {
-                downloadTask.remove(url)
-            }
-            callback(state, progress, path, error)
+    fun download(url: String, filePath: String, replay: Boolean = false, callback: (state: Int, progress: Int, size: Long, contentLength: Long, path: String, url: String, error: String?) -> Unit) {
+        if (LOG_ENABLE) {
+            Log.d(TAG, "开始单文件下载，URL:$url path:$filePath")
         }
-        if (!downloadTask.containsKey(url)) {
-            val task = DownloadTask(context, url, filePath, ::callback, replay)
-            task.start()
-            downloadTask[url] = task
-        } else {
-            val task = downloadTask[url]
-            task?.apply {
-                this.callback = ::callback
-                if (state != STATE_PROGRESS) {
-                    //非下载中则下载
-                    start()
+        GlobalScope.launch(Dispatchers.IO) {
+            if (!downloadTask.containsKey(url)) {
+                if (LOG_ENABLE) {
+                    Log.d(TAG, "新建下载对象，URL:$url path:$filePath")
+                }
+                val task = DownloadTask(context, url, filePath, replay) { state, progress, size, contentLength, path, url, error ->
+                    if (state != STATE_PROGRESS) {
+                        downloadTask.remove(url)
+                    }
+                    callback(state, progress, size, contentLength, path, url, error)
+                }
+                downloadTask[url] = task
+                task.start()
+            } else {
+                if (LOG_ENABLE) {
+                    Log.d(TAG, "继续下载对象，URL:$url path:$filePath")
+                }
+                val task = downloadTask[url]
+                task?.apply {
+                    this.callback = { state, progress, size, contentLength, path, url, error ->
+                        if (state != STATE_PROGRESS) {
+                            downloadTask.remove(url)
+                        }
+                        callback(state, progress, size, contentLength, path, url, error)
+                    }
+                    if (state != STATE_PROGRESS) {
+                        //非下载中则下载
+                        start()
+                    }
                 }
             }
         }
@@ -71,21 +86,21 @@ class DownloadUtil private constructor(val context: Context) {
     /**
      * 多文件下载
      */
-    fun downloadMultiple(
-        urlAndPath: Map<String, String>,
-        id: String? = null,
-        callback: (state: Int, progress: Int, path: String, url: String, error: String?) -> Unit
-    ): String {
-        val multipleTask = DownloadMultipleTask(context, urlAndPath)
+    fun downloadMultiple(urlAndPath: Map<String, String>, id: String? = null, replay: Boolean = false, callback: (state: Int, progress: Int, successCount: Int, fileCount: Int, url: String, path: String, error: String?) -> Unit): String {
+        if (LOG_ENABLE) {
+            Log.d(TAG, "开始多单文件下载，共${urlAndPath.size}个")
+        }
+        val multipleTask = DownloadMultipleTask(context, urlAndPath, replay)
         val taskId = id ?: multipleTask.hashCode().toString()
-
-        fun callback(state: Int, progress: Int, path: String, url: String, error: String?) {
+        if (LOG_ENABLE) {
+            Log.d(TAG, "开始多单文件下载，taskId:$taskId")
+        }
+        multipleTask.callback = { state, progress, successCount, fileCount, url, path, error ->
             if (state == STATE_SUCCESS || state == STATE_FAIL) {
                 downloadMultipleTask.remove(taskId)
             }
-            callback.invoke(state, progress, path, url, error)
+            callback(state, progress, successCount, fileCount, url, path, error)
         }
-        multipleTask.callback = ::callback
         downloadMultipleTask[taskId] = multipleTask.apply { start() }
         return taskId
     }
@@ -108,16 +123,22 @@ class DownloadUtil private constructor(val context: Context) {
         downLoadBlockDao.close()
     }
 
+    private suspend fun <T> execute(block: () -> T): T {
+        return withContext(Dispatchers.IO) {
+            block()
+        }
+    }
 
     companion object {
-        const val STATE_PROGRESS = 1//下载中
-        const val STATE_FAIL = 2//下载失败
-        const val STATE_SUCCESS = 3//下载成功
-        const val STATE_STOP = 4//下载停止
-        const val STATE_BLOCK_SUCCESS = 5//多文件下载，其中一块成功
-        const val STATE_BLOCK_FAIL = 6//多文件下载，其中一块失败
-        const val STATE_BLOCK_PROGRESS = 7//多文件下载，下载进度，跳过已下载只在实际文件下载时调用，所以调用时会有延迟
-        val executors by lazy { Executors.newCachedThreadPool() }
+        val LOG_ENABLE = true
+        val TAG = "DOWNLOAD_UTIL"
+        const val STATE_PROGRESS = 1 //下载中
+        const val STATE_FAIL = 2 //下载失败
+        const val STATE_SUCCESS = 3 //下载成功
+        const val STATE_STOP = 4 //下载停止
+        const val STATE_BLOCK_SUCCESS = 5 //多文件下载，其中一块成功
+        const val STATE_BLOCK_FAIL = 6 //多文件下载，其中一块失败
+        const val STATE_BLOCK_PROGRESS = 7 //多文件下载，下载进度，跳过已下载只在实际文件下载时调用，所以调用时会有延迟
         private var instance: DownloadUtil? = null
         fun getInstance(context: Context): DownloadUtil {
             if (instance == null) {

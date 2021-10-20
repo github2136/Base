@@ -10,9 +10,10 @@ import androidx.lifecycle.MutableLiveData
  * Created by YB on 2019/8/29
  */
 abstract class BaseVM(app: Application) : AndroidViewModel(app) {
+    protected val TAG = this.javaClass.name
     val loadingStr = "请稍后……"
     //显示dialog
-    val dialogLD = MutableLiveData<String>()
+    val dialogLD = MutableLiveData<DialogData>()
     val toastLD = MutableLiveData<String>()
     val titleTextLD = MutableLiveData<String>()
     val rightBtnLD = MutableLiveData<String>()
@@ -20,4 +21,5 @@ abstract class BaseVM(app: Application) : AndroidViewModel(app) {
 
     //取消请求
     open fun cancelRequest() {}
+    data class DialogData(var msg: String?, var cancelable: Boolean = false, var canceledOnTouchOutside: Boolean = false)
 }
