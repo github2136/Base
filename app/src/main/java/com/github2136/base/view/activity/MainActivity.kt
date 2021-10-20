@@ -11,7 +11,6 @@ import com.github2136.basemvvm.BaseActivity
 import com.github2136.basemvvm.download.DownloadUtil
 import com.github2136.util.FileUtil
 import java.io.File
-import java.math.BigDecimal
 
 class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
     override fun getLayoutId() = R.layout.activity_main
@@ -23,112 +22,103 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
         bind.vm = vm
         vm.titleTextLD.value = "主页"
         vm.rightBtnLD.value = "xxx"
-
-        urlAndPath = mutableMapOf(
-            "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=3&y=1&z=2" to "$filePath/Offlinemap/google/2/3,1",
-            "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=6&y=3&z=3" to "$filePath/Offlinemap/google/3/6,3",
-            "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=13&y=6&z=4" to "$filePath/Offlinemap/google/4/13,6",
-            "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=26&y=13&z=5" to "$filePath/Offlinemap/google/5/26,13",
-            "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=52&y=26&z=6" to "$filePath/Offlinemap/google/6/52,26",
-            "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=105&y=53&z=7" to "$filePath/Offlinemap/google/7/105,53",
-            "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=210&y=106&z=8" to "$filePath/Offlinemap/google/8/210,106",
-            "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=420&y=213&z=9" to "$filePath/Offlinemap/google/9/420,213",
-            "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=841&y=426&z=10" to "$filePath/Offlinemap/google/10/841,426",
-            "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=1683&y=853&z=11" to "$filePath/Offlinemap/google/11/1683,853",
-            "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=3366&y=1706&z=12" to "$filePath/Offlinemap/google/12/3366,1706",
-            "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=3366&y=1707&z=12" to "$filePath/Offlinemap/google/12/3366,1707",
-            "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=6732&y=3413&z=13" to "$filePath/Offlinemap/google/13/6732,3413",
-            "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=6732&y=3414&z=13" to "$filePath/Offlinemap/google/13/6732,3414",
-            "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=6733&y=3413&z=13" to "$filePath/Offlinemap/google/13/6733,3413",
-            "http://mt0.google.cn/vt/lyrs=y&gl=cn&scale=2&x=6733&y=3414&z=13" to "$filePath/Offlinemap/google/13/6733,3414"
-        )
     }
 
-    val url = "https://d1.music.126.net/dmusic/cloudmusicsetup2.9.5.199424.exe"
+    // val url = "http://223.83.128.251:48092/UploadFiles/System/app/20211018/259dc425-045f-42c6-865c-34f8efa6a50f.apk"
+    val url = "http://t6.tianditu.gov.cn/img_c/wmts?service=wmts&request=gettile&version=1.0.0&layer=img&format=tiles&STYLE=default&tilematrixset=c&tilecol=6729&tilerow=1400&tilematrix=13&tk=b77baf477f61aff4eb65003969b17809"
 
-    //    val url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk"
+    // val url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk"
     var multipleId = ""
 
     fun onClick(view: View) {
         when (view.id) {
-            R.id.btnClick1        -> {
+            R.id.btnClick1 -> {
                 startActivity(Intent(this, ListActivity::class.java))
             }
-            R.id.btnClick2        -> {
+            R.id.btnClick2 -> {
                 startActivity(Intent(this, LoadMoreActivity::class.java))
             }
-            R.id.btnClick3        -> {
+            R.id.btnClick3 -> {
                 showProgressDialog("aaaa", true)
                 dismissProgressDialog()
                 showProgressDialog("ccc", true)
             }
-            R.id.btnDownload      -> {
+            R.id.btnDownload -> {
                 val start = System.currentTimeMillis()
-                Log.e("download", "$start")
+                Log.e("download", "开始时间 $start")
                 if (downloadUtil.getPathExists(url) != null) {
                     showToast("本地已存在")
                 }
                 downloadUtil.download(
                     url,
                     File(FileUtil.getExternalStorageProjectPath(this), "xx.exe").absolutePath
-                ) { state, progress, path, error ->
+                ) { state, progress, size, contentLength, path, url, error ->
                     when (state) {
                         DownloadUtil.STATE_PROGRESS -> {
-                            Log.e("download", "进度$progress")
+                            if (contentLength == -1L) {
+                                Log.e("download", "进度${FileUtil.getAutoFileSizeStr(size)}")
+                            } else {
+                                Log.e("download", "进度${FileUtil.getAutoFileSizeStr(size)}/${FileUtil.getAutoFileSizeStr(contentLength)}($progress%)")
+                            }
                             vm.downloadLD.postValue(progress)
                         }
-                        DownloadUtil.STATE_SUCCESS  -> {
+                        DownloadUtil.STATE_SUCCESS -> {
                             val end = System.currentTimeMillis()
                             Log.e("download", "耗时${end - start}")
                         }
-                        DownloadUtil.STATE_FAIL     -> {
+                        DownloadUtil.STATE_FAIL -> {
                             Log.e("download", "下载失败$error")
                         }
-                        DownloadUtil.STATE_STOP     -> {
+                        DownloadUtil.STATE_STOP -> {
                             Log.e("download", "下载停止")
                         }
                     }
 
                 }
             }
-            R.id.btnDownloadStop  -> {
+            R.id.btnDownloadStop -> {
                 downloadUtil.stop(url)
             }
-            R.id.btnDownload2     -> {
-               val m = mutableMapOf(
-                   "https://d1.music.126.net/dmusic/cloudmusicsetup2.9.5.199424.exe" to "$filePath/xxx.exe",
-                   "https://dldir1.qq.com/dlomg/sports/QQSports_1741.apk" to "$filePath/1.apk",
-                   "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk" to "$filePath/2.exe",
-                   "https://dldir1.qq.com/weixin/android/weixin7013android1640.apk" to "$filePath/3.exe",
-                   "https://dldir1.qq.com/weixin/Windows/WeChatSetup.exe" to "$filePath/4.exe",
-                   "https://d1.music.126.net/dmusic/cloudmusicsetup2.7.1.198242.exe" to "$filePath/6.exe"
-               )
-                var i = 0
-                multipleId = downloadUtil.downloadMultiple(m, "xx") { state, progress, path, url, error ->
+            R.id.btnDownload2 -> {
+                val m = mutableMapOf(
+                    "https://d1.music.126.net/dmusic/cloudmusicsetup2.9.5.199424.exe" to "$filePath/xxx.exe",
+                    "https://dldir1.qq.com/dlomg/sports/QQSports_1741.apk" to "$filePath/1.apk",
+                    "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk" to "$filePath/2.exe",
+                    "https://dldir1.qq.com/weixin/android/weixin7013android1640.apk" to "$filePath/3.exe",
+                    "https://dldir1.qq.com/weixin/Windows/WeChatSetup.exe" to "$filePath/4.exe",
+                    "https://d1.music.126.net/dmusic/cloudmusicsetup2.7.1.198242.exe" to "$filePath/6.exe",
+                    "http://t6.tianditu.gov.cn/img_c/wmts?service=wmts&request=gettile&version=1.0.0&layer=img&format=tiles&STYLE=default&tilematrixset=c&tilecol=6729&tilerow=1400&tilematrix=13&tk=b77baf477f61aff4eb65003969b17809" to "$filePath/x.png"
+                )
+                multipleId = downloadUtil.downloadMultiple(m, "xx") { state, progress, successCount, fileCount, url, path, error ->
                     when (state) {
-                        DownloadUtil.STATE_BLOCK_SUCCESS -> {
-                            Log.e("multipleDownload", "blockSuccess ${i++}")
+                        DownloadUtil.STATE_PROGRESS -> {
+                            Log.e("multipleDownload", "progress $successCount/$fileCount($progress)")
+                            vm.downloadMultipleLD.postValue(progress)
                         }
-                        DownloadUtil.STATE_BLOCK_FAIL    -> {
+                        DownloadUtil.STATE_BLOCK_SUCCESS -> {
+                            Log.e("multipleDownload", "blockSuccess $successCount/$fileCount($progress)")
+                            vm.downloadMultipleLD.postValue(progress)
+                        }
+                        DownloadUtil.STATE_BLOCK_FAIL -> {
                             Log.e("multipleDownload", "blockFail")
                         }
-                        DownloadUtil.STATE_SUCCESS       -> {
+                        DownloadUtil.STATE_SUCCESS -> {
                             Log.e("multipleDownload", "Success")
                         }
-                        DownloadUtil.STATE_FAIL          -> {
+                        DownloadUtil.STATE_FAIL -> {
                             Log.e("multipleDownload", "Fail")
                         }
-                        DownloadUtil.STATE_STOP          -> {
+                        DownloadUtil.STATE_STOP -> {
                             Log.e("multipleDownload", "Stop")
                         }
                     }
-                    vm.downloadMultipleLD.postValue(progress)
+
                 }
             }
             R.id.btnDownload2Stop -> {
                 downloadUtil.stopMultiple(multipleId)
             }
-            R.id.btnLiveData      -> {
+            R.id.btnLiveData -> {
                 try {
                     vm.byteLD.value = Byte.MAX_VALUE
                     vm.shortLD.value = Short.MAX_VALUE

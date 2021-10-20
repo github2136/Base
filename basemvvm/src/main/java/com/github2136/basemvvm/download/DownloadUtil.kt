@@ -15,6 +15,7 @@ import java.io.File
  * 断点续传
  * getPathExists获取本地存在的文件路径
  * download下载文件并存储在指定位置，如果正在下载则不做任何操作，如果存在记录则会删除记录重新下载
+ * 只有STATE_PROGRESS、STATE_BLOCK_PROGRESS或STATE_BLOCK_SUCCESS进度(progress)才可信其他状态下进度(progress)不一定准确
  */
 class DownloadUtil private constructor(val context: Context) {
     private val downLoadFileDao by lazy { DownloadFileDao(context) }
@@ -44,7 +45,7 @@ class DownloadUtil private constructor(val context: Context) {
     /**
      * 单文件下载
      */
-    fun download(url: String, filePath: String, replay: Boolean = false, callback: (state: Int, progress: Int, path: String, error: String?) -> Unit) {
+    fun download(url: String, filePath: String, replay: Boolean = false, callback: (state: Int, progress: Int, size: Long, contentLength: Long, path: String, url: String, error: String?) -> Unit) {
         if (LOG_ENABLE) {
             Log.d(TAG, "开始单文件下载，URL:$url path:$filePath")
         }
@@ -53,11 +54,11 @@ class DownloadUtil private constructor(val context: Context) {
                 if (LOG_ENABLE) {
                     Log.d(TAG, "新建下载对象，URL:$url path:$filePath")
                 }
-                val task = DownloadTask(context, url, filePath, replay) { state, progress, path, url, error ->
+                val task = DownloadTask(context, url, filePath, replay) { state, progress, size, contentLength, path, url, error ->
                     if (state != STATE_PROGRESS) {
                         downloadTask.remove(url)
                     }
-                    callback(state, progress, path, error)
+                    callback(state, progress, size, contentLength, path, url, error)
                 }
                 downloadTask[url] = task
                 task.start()
@@ -67,11 +68,11 @@ class DownloadUtil private constructor(val context: Context) {
                 }
                 val task = downloadTask[url]
                 task?.apply {
-                    this.callback = { state, progress, path, url, error ->
+                    this.callback = { state, progress, size, contentLength, path, url, error ->
                         if (state != STATE_PROGRESS) {
                             downloadTask.remove(url)
                         }
-                        callback(state, progress, path, error)
+                        callback(state, progress, size, contentLength, path, url, error)
                     }
                     if (state != STATE_PROGRESS) {
                         //非下载中则下载
@@ -85,7 +86,7 @@ class DownloadUtil private constructor(val context: Context) {
     /**
      * 多文件下载
      */
-    fun downloadMultiple(urlAndPath: Map<String, String>, id: String? = null, replay: Boolean = false, callback: (state: Int, progress: Int, url: String, path: String, error: String?) -> Unit): String {
+    fun downloadMultiple(urlAndPath: Map<String, String>, id: String? = null, replay: Boolean = false, callback: (state: Int, progress: Int, successCount: Int, fileCount: Int, url: String, path: String, error: String?) -> Unit): String {
         if (LOG_ENABLE) {
             Log.d(TAG, "开始多单文件下载，共${urlAndPath.size}个")
         }
@@ -94,11 +95,11 @@ class DownloadUtil private constructor(val context: Context) {
         if (LOG_ENABLE) {
             Log.d(TAG, "开始多单文件下载，taskId:$taskId")
         }
-        multipleTask.callback = { state, progress, url, path, error ->
+        multipleTask.callback = { state, progress, successCount, fileCount, url, path, error ->
             if (state == STATE_SUCCESS || state == STATE_FAIL) {
                 downloadMultipleTask.remove(taskId)
             }
-            callback(state, progress, path, url, error)
+            callback(state, progress, successCount, fileCount, url, path, error)
         }
         downloadMultipleTask[taskId] = multipleTask.apply { start() }
         return taskId

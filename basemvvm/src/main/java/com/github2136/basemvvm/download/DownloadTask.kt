@@ -16,20 +16,24 @@ import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Created by YB on 2019/6/11
+ * 单文件下载，如果没有获取到文件大小那么下载时进度永远都是-1
  */
 class DownloadTask(
     private val context: Context,
     val url: String,
     private var filePath: String,
     private val replay: Boolean,
-    var callback: (state: Int, progress: Int, path: String, url: String, error: String?) -> Unit
+    /**
+     * 下载状态，下载进度百分比，已下载大小，总大小，本地路径，网络路径，错误信息
+     */
+    var callback: (state: Int, progress: Int, size: Long, contentLength: Long, path: String, url: String, error: String?) -> Unit
 ) {
     //下载时临时文件名下载完成后需要修改文件名
     private val downloadPath by lazy { "$filePath.basetemp" }
     private val downLoadFileDao by lazy { DownloadFileDao(context) }
     private val downLoadBlockDao by lazy { DownloadBlockDao(context) }
     private val okHttpManager by lazy { OkHttpManager.instance }
-    private lateinit var progressArray: LongArray //每块的下载进度
+    private var progressArray: LongArray = LongArray(1) //每块已下载大小
     private lateinit var file: File //下载的文件
     private var totalProgress: Int = -1 //文件下载总进度
     private var length: Long = 0 //文件总长度
@@ -68,9 +72,6 @@ class DownloadTask(
                         close(this)
                     }
                     var allowBlock = false //是否允许断点续传
-                    if (length == -1L) {
-                        length = 0
-                    }
 
                     if (TextUtils.equals(response.header("Accept-Range")?.toLowerCase(), "bytes")) {
                         allowBlock = true
@@ -104,10 +105,11 @@ class DownloadTask(
                             downloadFile?.id = fileId
                         }
                     }
+
                     file = File(downloadPath)
                     if (!file.parentFile.exists()) file.parentFile.mkdirs()
                     val randomFile = RandomAccessFile(file, "rw")
-                    randomFile.setLength(length)
+                    randomFile.setLength(length.let { if (it == -1L) 0 else it }) //长度不能为-1
                     //分块下载
                     if (allowBlock) {
                         //分块下载并且支持断点续传
@@ -141,7 +143,9 @@ class DownloadTask(
                 }
             } catch (e: Exception) {
                 //下载失败
-                fail(e.stackTrace.toString())
+                val w = StringWriter()
+                e.printStackTrace(PrintWriter(w))
+                fail(w.toString())
             }
         } catch (e: Exception) {
             //下载失败
@@ -191,8 +195,7 @@ class DownloadTask(
                     if (DownloadUtil.LOG_ENABLE) {
                         Log.d(DownloadUtil.TAG, "URL:$url 第${i}块开始下载")
                     }
-                    val call =
-                        okHttpManager.call(url, fileBlock.start + fileBlock.fileSize, fileBlock.end)
+                    val call = okHttpManager.call(url, fileBlock.start + fileBlock.fileSize, fileBlock.end)
                     var inputStream: InputStream? = null
                     var randomFile: RandomAccessFile? = null
                     try {
@@ -247,7 +250,7 @@ class DownloadTask(
                                         //停止
                                         state = DownloadUtil.STATE_STOP
                                         withContext(Dispatchers.Main) {
-                                            callback.invoke(DownloadUtil.STATE_STOP, 0, "", url, null)
+                                            callback.invoke(DownloadUtil.STATE_STOP, 0, progressArray.reduce { acc, l -> acc + l }, length, "", url, null)
                                         }
                                     } else {
                                         //下载完成
@@ -290,7 +293,7 @@ class DownloadTask(
                                                 downLoadFileDao.update(this)
                                             }
                                             withContext(Dispatchers.Main) {
-                                                callback.invoke(DownloadUtil.STATE_SUCCESS, 100, newFile.absolutePath, url, null)
+                                                callback.invoke(DownloadUtil.STATE_SUCCESS, 100, progressArray.reduce { acc, l -> acc + l }, length, newFile.absolutePath, url, null)
                                             }
                                         } else {
                                             if (DownloadUtil.LOG_ENABLE) {
@@ -331,7 +334,12 @@ class DownloadTask(
         val tempProgress = (progress.toFloat() / length * 100).toInt()
         if (totalProgress != tempProgress) {
             withContext(Dispatchers.Main) {
-                callback.invoke(state, tempProgress, "", url, null)
+                if (length == -1L) {
+                    //未获取到文件大小
+                    callback.invoke(state, -1, progressArray.reduce { acc, l -> acc + l }, length, "", url, null)
+                } else {
+                    callback.invoke(state, tempProgress, progressArray.reduce { acc, l -> acc + l }, length, "", url, null)
+                }
             }
             totalProgress = tempProgress
         }
@@ -346,7 +354,7 @@ class DownloadTask(
             state = DownloadUtil.STATE_FAIL
             stop = true
             withContext(Dispatchers.Main) {
-                callback.invoke(DownloadUtil.STATE_FAIL, 0, "", url, error)
+                callback.invoke(DownloadUtil.STATE_FAIL, 0, progressArray.reduce { acc, l -> acc + l }, length, "", url, error)
             }
         }
     }
