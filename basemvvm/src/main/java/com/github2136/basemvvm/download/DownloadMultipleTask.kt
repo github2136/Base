@@ -33,7 +33,7 @@ class DownloadMultipleTask(
     private val successCount = AtomicInteger() //下载完成数量
     private val failCount = AtomicInteger() //下载失败数量
     private val taskSize = 5 //同时下载任务数
-    private val progressTask = Array<DownloadTask?>(taskSize) { null }
+    private val progressTask = arrayOfNulls<DownloadTask>(taskSize)
     private val progresss = mutableMapOf<String, Int>() //正在下载的下载进度
     private var stop = false
 

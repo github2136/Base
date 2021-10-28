@@ -16,18 +16,13 @@ class HttpModel private constructor(context: Context) : BaseWebModel(context) {
     }
 
     companion object {
-        @Volatile
-        private var instances: HttpModel? = null
-
+        private lateinit var context: Context
+        private val instances: HttpModel by lazy { HttpModel(context) }
         fun getInstance(context: Context): HttpModel {
-            if (instances == null) {
-                synchronized(HttpModel::class.java) {
-                    if (instances == null) {
-                        instances = HttpModel(context)
-                    }
-                }
+            if (!this::context.isInitialized) {
+                this.context = context
             }
-            return instances!!
+            return instances
         }
     }
 }

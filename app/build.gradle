@@ -38,6 +38,7 @@ dependencies {
     kapt lib["android-databinding"]
 
     androidTestImplementation lib["android-test"]
+    androidTestImplementation lib["android-test-ext"]
     testImplementation lib["junit"]
     androidTestImplementation lib["espresso"]
 }

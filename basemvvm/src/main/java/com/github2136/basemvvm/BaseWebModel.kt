@@ -23,7 +23,7 @@ abstract class BaseWebModel(context: Context) {
             .Builder()
             .client(client)
             .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create(mJsonUtil.getGson()))
+            .addConverterFactory(GsonConverterFactory.create(mJsonUtil.gson))
             .build()
     }
 
