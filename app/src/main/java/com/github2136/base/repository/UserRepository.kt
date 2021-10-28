@@ -16,8 +16,8 @@ import java.util.*
  */
 class UserRepository(context: Context) : BaseRepository(context) {
 
-    suspend fun loginFlow(user: String, password: String): ResultRepo<User> = withContext(Dispatchers.IO) {
-        return@withContext try {
+    suspend fun loginFlow(user: String, password: String)=withContext(Dispatchers.IO) {
+        try {
             delay(2000)
             if (user == "admin" && password == "admin") {
                 mSpUtil.edit {
@@ -33,8 +33,8 @@ class UserRepository(context: Context) : BaseRepository(context) {
         }
     }
 
-    suspend fun getUserFlow(pageIndex: Int, pageSize: Int): ResultRepo<MutableList<User>> = withContext(Dispatchers.IO) {
-        return@withContext try {
+    suspend fun getUserFlow(pageIndex: Int, pageSize: Int) = withContext(Dispatchers.IO) {
+         try {
             val data = mutableListOf<User>()
             val r = Random().nextInt()
             for (i in 0 until pageSize) {

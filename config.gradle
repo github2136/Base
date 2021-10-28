@@ -18,7 +18,7 @@ ext {
             //json转换类
             "gson"                      : "com.google.code.gson:gson:2.8.5",
             //基础功能类
-            "android-util"              : "com.github.github2136:Android-utils:1.1.1",
+            "android-util"              : "com.github.github2136:Android-utils:1.1.3",
             //日志打印
             "logger"                    : "com.orhanobut:logger:2.2.0",
             //网络请求
@@ -37,6 +37,7 @@ ext {
             "android-lifecycle-ktx"     : "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0",
             //测试代码
             "android-test"              : "androidx.test:runner:1.3.0-alpha02",
+            "android-test-ext"          : "androidx.test.ext:junit:1.1.1",
             "junit"                     : "junit:junit:4.12",
             "espresso"                  : "androidx.test.espresso:espresso-core:3.3.0-alpha02",
     ]
