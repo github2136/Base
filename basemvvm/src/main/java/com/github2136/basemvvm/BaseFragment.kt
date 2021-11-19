@@ -31,6 +31,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
     protected lateinit var vm: V
     protected lateinit var bind: B
     protected lateinit var mContext: Context
+    protected var firstVisible = false //是否已经显示过
     protected val mHandler by lazy { Handler(this) }
 
     //根视图用于Snackbar
@@ -39,10 +40,10 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
     protected val mSnackbar by lazy { Snackbar.make(rootView, "", Snackbar.LENGTH_SHORT) }
     protected val mDialog by lazy { ProgressDialog(activity) }
 
-    //    protected val mDialog: ProgressDialog by lazy {
-//        val dialog = ProgressDialog.getInstance(false)
-//        dialog
-//    }
+    // protected val mDialog: ProgressDialog by lazy {
+    //     val dialog = ProgressDialog.getInstance(false)
+    //     dialog
+    // }
 
     //是否有应用通知权限
     protected var notificationEnable = false
@@ -93,7 +94,16 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
     override fun onResume() {
         super.onResume()
         notificationEnable = notificationManagerCompat.areNotificationsEnabled()
+        if (!firstVisible) {
+            firstVisible()
+            firstVisible = true
+        }
     }
+
+    /**
+     * 首次展示
+     */
+    open fun firstVisible() {}
 
     override fun leftBtnClick(btnLeft: View) {
         activity?.finish()

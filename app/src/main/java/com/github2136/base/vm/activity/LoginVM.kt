@@ -2,12 +2,10 @@ package com.github2136.base.vm.activity
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import com.github2136.base.model.entity.ResultRepo
 import com.github2136.base.repository.UserRepository
 import com.github2136.base.repository.WeatherRepository
 import com.github2136.basemvvm.BaseVM
-import kotlinx.coroutines.launch
+import com.github2136.basemvvm.ResultRepo
 
 /**
  * Created by YB on 2019/8/28
@@ -22,13 +20,14 @@ class LoginVM(app: Application) : BaseVM(app) {
     val weatherLD = MutableLiveData<String>()
 
     fun getWeather() {
-        viewModelScope.launch {
+        launch {
             val resultRepo = weatherRepository.getWeather()
             when (resultRepo) {
                 is ResultRepo.Success -> {
+                    resultRepo.data.weatherinfo
                     weatherLD.value = resultRepo.toString()
                 }
-                is ResultRepo.Error   -> {
+                is ResultRepo.Error -> {
                     weatherLD.value = resultRepo.msg
                 }
             }
@@ -36,13 +35,13 @@ class LoginVM(app: Application) : BaseVM(app) {
     }
 
     fun login() {
-        viewModelScope.launch {
+        launch {
             dialogLD.value = DialogData(loadingStr)
             val resultRepo = userRepository.loginFlow(userNameLD.value!!, passWordLD.value!!)
             dialogLD.value = null
             when (resultRepo) {
                 is ResultRepo.Success -> userInfoLD.value = resultRepo.data
-                is ResultRepo.Error   -> userInfoLD.value = resultRepo.msg
+                is ResultRepo.Error -> userInfoLD.value = resultRepo.msg
             }
         }
     }
