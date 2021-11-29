@@ -7,6 +7,7 @@ import com.github2136.util.NetworkUtil
 import com.github2136.util.SPUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
 /**
  * Created by YB on 2020/7/3
@@ -23,7 +24,12 @@ abstract class BaseRepository(context: Context) {
         try {
             block.invoke()
         } catch (e: Exception) {
-            ResultRepo.Error(0, "error", e)
+            if (e is HttpException) {
+                if (e.code() == 401) {
+                    return@withContext ResultRepo.Unauthorized(0, "未授权", e)
+                }
+            }
+            return@withContext ResultRepo.Error(0, failedStr, e)
         }
     }
 }
