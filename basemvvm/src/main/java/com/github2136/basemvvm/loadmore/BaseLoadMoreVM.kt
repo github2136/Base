@@ -18,39 +18,45 @@ abstract class BaseLoadMoreVM<T>(app: Application) : BaseVM(app) {
      * 设置首页数据
      */
     fun setData(list: MutableList<T>) {
-        adapter.pageCount = adapter.pageCount
-        adapter.pageIndex = adapter.pageIndex + 1
-        adapter.refreshing.value = false
-        adapter.result.value = true
-        if (list.size != adapter.pageCount) {
-            //加载完成
-            adapter.complete = true
+        handle.post {
+            adapter.pageCount = adapter.pageCount
+            adapter.pageIndex = adapter.pageIndex + 1
+            adapter.refreshing.value = false
+            adapter.result.value = true
+            if (list.size != adapter.pageCount) {
+                //加载完成
+                adapter.complete = true
+            }
+            adapter.setData(list)
         }
-        adapter.setData(list)
     }
 
     /**
      * 加载更多数据
      */
     fun appendData(list: MutableList<T>) {
-        adapter.pageIndex = adapter.pageIndex + 1
-        adapter.loading.value = false
-        adapter.result.value = true
-        if (list.size != adapter.pageCount) {
-            //加载完成
-            adapter.complete = true
+        handle.post {
+            adapter.pageIndex = adapter.pageIndex + 1
+            adapter.loading.value = false
+            adapter.result.value = true
+            if (list.size != adapter.pageCount) {
+                //加载完成
+                adapter.complete = true
+            }
+            adapter.appendData(list)
         }
-        adapter.appendData(list)
     }
 
     /**
      * 数据获取失败
      */
     fun failedData() {
-        adapter.refreshing.value = false
-        adapter.loading.value = false
-        adapter.result.value = false
-        adapter.notifyDataSetChanged()
+        handle.post {
+            adapter.refreshing.value = false
+            adapter.loading.value = false
+            adapter.result.value = false
+            adapter.notifyDataSetChanged()
+        }
     }
 
     fun baseInitData() {
