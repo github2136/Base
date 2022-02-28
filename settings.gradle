@@ -1,1 +1,4 @@
-include ':app', ':basemvvm', ':filelib'
+include ':app'
+include ':basemvvm'
+include ':filelib'
+rootProject.name = "Base"
