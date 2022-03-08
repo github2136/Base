@@ -38,7 +38,7 @@ class OkHttpInterceptor : Interceptor {
             var body = ""
             responseBody?.apply {
                 val contentType = contentType()
-                if (contentType == null || contentType.subtype == "json" || contentType.type == "text") {
+                if (contentType == null || contentType.type == "text" || contentType.subtype.contains("json")) {
                     val contentLength = contentLength()
                     val source: BufferedSource
                     source = if ("gzip" == responseHeads["Content-Encoding"]) {
@@ -57,35 +57,27 @@ class OkHttpInterceptor : Interceptor {
                     }
                     if (contentLength != 0L) {
                         body = buffer.clone().readString(charset!!)
-                        //响应内容裁剪，如果内容太多会影响后续内容打印
-                        if (body.length > 2000) {
-                            body = body.substring(0..2000)
-                        }
                     }
                 }
             }
             responseLog = """Code $code
-            |Response Body $body
-            """.trimIndent()
-//             |${if (responseHeads.size > 0) {
-//                "Header\n$responseHeads"
-//            } else {
-//                ""
-//            }}
+                |Response Body 
+                |$body
+                """.trimIndent()
+            // |${if (responseHeads.size > 0) "Header\n$responseHeads" else ""}
             return response
         } catch (e: Exception) {
-            responseLog ="$e"
+            responseLog = "$e"
             throw e
         } finally {
             Logger.t("HTTP")
                 .d(
                     """
-            |$method $requestUrl
-            |Header
-            |${requestHeads}Request Body:${requestBody.utf8()}
-            |-------------------------------------------------------
-            |$responseLog
-            """.trimMargin()
+                    |$method $requestUrl
+                    |Header
+                    |${requestHeads}Request Body:${requestBody.utf8()}
+                    |┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+                    |$responseLog""".trimMargin()
                 )
         }
     }
