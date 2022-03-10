@@ -18,8 +18,8 @@ open class BaseApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-//        logcat打印
-        val prettyFormatStrategy = PrettyFormatStrategy
+        // logcat打印
+        val prettyFormatStrategy = ChinesePrettyFormatStrategy
             .newBuilder()
             .tag("MVVM-TAG")
         Logger.addLogAdapter(AndroidLogAdapter(prettyFormatStrategy.build()))
