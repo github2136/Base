@@ -132,7 +132,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
     }
 
     fun showSnackbar(@StringRes resId: Int) {
-        CommonUtil.closeKeybord(activity!!)
+        CommonUtil.closeKeybord(requireActivity())
         mSnackbar.let {
             it.setText(resId)
             it.duration = Snackbar.LENGTH_SHORT
@@ -141,7 +141,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
     }
 
     fun showSnackbarLong(msg: String) {
-        CommonUtil.closeKeybord(activity!!)
+        CommonUtil.closeKeybord(requireActivity())
         mSnackbar.let {
             it.setText(msg)
             it.duration = Snackbar.LENGTH_LONG
@@ -150,7 +150,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
     }
 
     fun showSnackbarLong(@StringRes resId: Int) {
-        CommonUtil.closeKeybord(activity!!)
+        CommonUtil.closeKeybord(requireActivity())
         mSnackbar.let {
             it.setText(resId)
             it.duration = Snackbar.LENGTH_LONG
