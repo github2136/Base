@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.github2136.util.JsonUtil
 import com.github2136.util.NetworkUtil
 import com.github2136.util.SPUtil
+import com.orhanobut.logger.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -24,6 +25,7 @@ abstract class BaseRepository(context: Context) {
         try {
             block.invoke()
         } catch (e: Exception) {
+            Logger.t("RepositoryException").e("${e.message}")
             if (e is HttpException) {
                 if (e.code() == 401) {
                     return@withContext ResultRepo.Unauthorized(0, "未授权", e)
