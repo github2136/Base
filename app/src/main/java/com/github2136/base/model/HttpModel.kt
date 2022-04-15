@@ -7,9 +7,17 @@ import com.github2136.basemvvm.BaseWebModel
  * Created by yb on 2019/10/7
  */
 class HttpModel private constructor(context: Context) : BaseWebModel(context) {
-    override val baseUrl: String = "http://www.weather.com.cn/"
+    var api: HttpService
 
-    val api by lazy { retrofit.create(HttpService::class.java) }
+    init {
+        baseUrl = "http://www.weather.com.cn/"
+        api = getRetrofit().create(HttpService::class.java)
+    }
+
+    override fun resetBaseUrl(url: String) {
+        super.resetBaseUrl(url)
+        api = getRetrofit().create(HttpService::class.java)
+    }
 
     override fun addHead(): MutableMap<String, String>? = null
     override fun preProcessing(code: Int, body: String?) {

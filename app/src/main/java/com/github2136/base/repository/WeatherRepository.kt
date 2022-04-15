@@ -15,4 +15,7 @@ class WeatherRepository(context: Context) : BaseRepository(context) {
         val weather = httpModel.api.getWeatherFlow("101010100")
         ResultRepo.Success(weather)
     }
+    fun resetBaseUrl() {
+        httpModel.resetBaseUrl("http://www.baidu.com/")
+    }
 }

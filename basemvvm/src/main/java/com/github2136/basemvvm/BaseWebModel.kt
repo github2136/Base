@@ -16,16 +16,9 @@ import java.nio.charset.Charset
  * webModel
  */
 abstract class BaseWebModel(context: Context) {
-    open val baseUrl = ""
+    open var baseUrl = ""
 
-    protected val retrofit by lazy {
-        Retrofit
-            .Builder()
-            .client(client)
-            .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create(mJsonUtil.gson))
-            .build()
-    }
+    private var _retrofit: Retrofit? = null
 
     protected val mJsonUtil by lazy { JsonUtil.instance }
     protected val mSpUtil by lazy { SPUtil.getSharedPreferences(context) }
@@ -75,6 +68,23 @@ abstract class BaseWebModel(context: Context) {
             }
             .addInterceptor(OkHttpInterceptor())
             .build()
+    }
+
+    open fun resetBaseUrl(url: String) {
+        baseUrl = url
+        _retrofit = null
+    }
+
+    fun getRetrofit(): Retrofit {
+        if (_retrofit == null) {
+            _retrofit = Retrofit
+                .Builder()
+                .client(client)
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create(mJsonUtil.gson))
+                .build()
+        }
+        return _retrofit!!
     }
 
     /**

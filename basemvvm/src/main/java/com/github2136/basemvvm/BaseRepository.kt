@@ -9,6 +9,8 @@ import com.orhanobut.logger.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import java.io.PrintWriter
+import java.io.StringWriter
 
 /**
  * Created by YB on 2020/7/3
@@ -25,7 +27,9 @@ abstract class BaseRepository(context: Context) {
         try {
             block.invoke()
         } catch (e: Exception) {
-            Logger.t("RepositoryException").e("${e.message}")
+            val w = StringWriter()
+            e.printStackTrace(PrintWriter(w))
+            Logger.t("RepositoryException").e("$w")
             if (e is HttpException) {
                 if (e.code() == 401) {
                     return@withContext ResultRepo.Unauthorized(0, "未授权", e)
