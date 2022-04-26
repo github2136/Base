@@ -28,8 +28,12 @@ abstract class BaseWebModel(context: Context) {
                 val original = chain.request()
                 val requestBuild = original.newBuilder()
                 addHead()?.run {
+                    val temp = requestBuild.build()
+                    val headNames = temp.headers.names()
                     for (entry in this) {
-                        requestBuild.addHeader(entry.key, entry.value)
+                        if (!headNames.contains(entry.key)) {
+                            requestBuild.addHeader(entry.key, entry.value)
+                        }
                     }
                 }
 
