@@ -1,6 +1,7 @@
 package com.github2136.basemvvm
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -53,7 +54,7 @@ abstract class BaseRecyclerVMAdapter<T, B : ViewDataBinding>(var list: MutableLi
 
     protected var itemClickListener: ((Int) -> Unit)? = null
     protected var itemLongClickListener: ((Int) -> Unit)? = null
-    protected var viewClickListener: ((position: Int, id: Int) -> Unit)? = null
+    protected var viewClickListener: ((position: Int, id: Int, view: View) -> Unit)? = null
 
     fun setOnItemClickListener(itemClickListener: (position: Int) -> Unit) {
         this.itemClickListener = itemClickListener
@@ -63,7 +64,7 @@ abstract class BaseRecyclerVMAdapter<T, B : ViewDataBinding>(var list: MutableLi
         this.itemLongClickListener = itemLongClickListener
     }
 
-    fun setOnViewClickListener(viewClickListener: (position: Int, id: Int) -> Unit) {
+    fun setOnViewClickListener(viewClickListener: (position: Int, id: Int, view: View) -> Unit) {
         this.viewClickListener = viewClickListener
     }
 
