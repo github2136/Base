@@ -244,7 +244,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
         }
     }
 
-    protected fun handleMessage(msg: Message) {}
+    protected open fun handleMessage(msg: Message) {}
 
     //布局ID
     protected abstract fun getLayoutId(): Int
