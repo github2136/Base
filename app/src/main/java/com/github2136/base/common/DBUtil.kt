@@ -2,6 +2,9 @@ package com.github2136.base.common
 
 import android.content.res.Resources
 import android.util.TypedValue
+import android.view.View
+import android.widget.AdapterView
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseMethod
@@ -86,6 +89,26 @@ object DBUtil {
         view.text = value?.let {
             BigDecimal(it.toString()).toPlainString()
         }
+    }
+
+    /**
+     * Spinner
+     */
+    @JvmStatic
+    @BindingAdapter("android:item_selected")
+    fun spinnerItemSelected(spinner: Spinner, l: OnItemSelected?) {
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                l?.onItemSelected(spinner, parent, view, position, id)
+            }
+        }
+    }
+
+    interface OnItemSelected {
+        fun onItemSelected(spinner: Spinner, parent: AdapterView<*>?, view: View?, position: Int, id: Long)
     }
 }
 
