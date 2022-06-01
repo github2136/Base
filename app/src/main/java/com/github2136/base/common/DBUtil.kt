@@ -90,26 +90,6 @@ object DBUtil {
             BigDecimal(it.toString()).toPlainString()
         }
     }
-
-    /**
-     * Spinner
-     */
-    @JvmStatic
-    @BindingAdapter("android:item_selected")
-    fun spinnerItemSelected(spinner: Spinner, l: OnItemSelected?) {
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                l?.onItemSelected(spinner, parent, view, position, id)
-            }
-        }
-    }
-
-    interface OnItemSelected {
-        fun onItemSelected(spinner: Spinner, parent: AdapterView<*>?, view: View?, position: Int, id: Long)
-    }
 }
 
 /**
