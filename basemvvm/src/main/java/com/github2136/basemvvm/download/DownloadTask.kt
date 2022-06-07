@@ -143,13 +143,15 @@ class DownloadTask(
                 }
             } catch (e: Exception) {
                 //下载失败
-                val w = StringWriter()
-                e.printStackTrace(PrintWriter(w))
-                fail(w.toString())
+                val sw = StringWriter()
+                e.printStackTrace(PrintWriter(sw))
+                fail(sw.toString())
             }
         } catch (e: Exception) {
             //下载失败
-            fail("start onFailure ${e.message}")
+            val sw = StringWriter()
+            e.printStackTrace(PrintWriter(sw))
+            fail("start onFailure $sw")
         }
     }
 
@@ -310,7 +312,9 @@ class DownloadTask(
                         }
                     } catch (e: Exception) {
                         //下载失败
-                        fail("download onFailure ${e.stackTrace}")
+                        val sw = StringWriter()
+                        e.printStackTrace(PrintWriter(sw))
+                        fail("download onFailure $sw")
                     } finally {
                         inputStream?.close()
                         randomFile?.close()
