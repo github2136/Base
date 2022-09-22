@@ -16,7 +16,7 @@ import java.util.*
  * Created by YB on 2020/4/16
  * 时间日期选择器
  */
-class DateTimePickerDialog() : DialogFragment() {
+class DateTimePickerDialog private constructor() : DialogFragment() {
     val className by lazy { javaClass.simpleName }
     private var title: String? = null
     private var year: Int? = null
