@@ -15,11 +15,11 @@ import com.github2136.basemvvm.R
  */
 abstract class BaseLoadMoreFragment<V : BaseLoadMoreVM<T>, B : ViewDataBinding, T> : BaseFragment<V, B>() {
     open var autoInit = true
-
+    protected val rvList by lazy { bind.root.findViewById<RecyclerView>(R.id.rvList)}
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bind.root.findViewById<SwipeRefreshLayout>(R.id.srlList)?.setColorSchemeResources(R.color.colorPrimary)
-        bind.root.findViewById<RecyclerView>(R.id.rvList).let {
+        rvList.let {
             val lm = it.layoutManager
             if (lm is GridLayoutManager) {
                 lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -38,6 +38,15 @@ abstract class BaseLoadMoreFragment<V : BaseLoadMoreVM<T>, B : ViewDataBinding, 
         if (autoInit) {
             vm.baseInitData()
         }
+    }
+
+
+    /**
+     * 刷新数据，直接使用baseInitData()会出现不滚动顶部情况
+     */
+    fun refreshData() {
+        rvList.adapter = vm.adapter
+        vm.baseInitData()
     }
 
     open fun onRefreshListener() {

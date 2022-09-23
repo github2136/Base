@@ -18,7 +18,7 @@ class LoadMoreVM(app: Application) : BaseLoadMoreVM<User>(app) {
     override fun initData() {
         launch {
             adapter.pageIndex = 1
-            adapter.pageCount = 5
+            adapter.pageCount = 25
             val resultRepo = userRepository.getUserFlow(adapter.pageIndex, adapter.pageCount)
             when (resultRepo) {
                 is ResultRepo.Success -> setData(resultRepo.data)

@@ -14,10 +14,11 @@ import com.github2136.basemvvm.R
  */
 abstract class BaseLoadMoreActivity<V : BaseLoadMoreVM<T>, B : ViewDataBinding, T> : BaseActivity<V, B>() {
     open var autoInit = true
+    protected val rvList by lazy { findViewById<RecyclerView>(R.id.rvList) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         findViewById<SwipeRefreshLayout>(R.id.srlList).setColorSchemeResources(R.color.colorPrimary)
-        findViewById<RecyclerView>(R.id.rvList).let {
+        rvList.let {
             val lm = it.layoutManager
             if (lm is GridLayoutManager) {
                 lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -36,6 +37,14 @@ abstract class BaseLoadMoreActivity<V : BaseLoadMoreVM<T>, B : ViewDataBinding, 
         if (autoInit) {
             vm.baseInitData()
         }
+    }
+
+    /**
+     * 刷新数据，直接使用baseInitData()会出现不滚动顶部情况
+     */
+    fun refreshData() {
+        rvList.adapter = vm.adapter
+        vm.baseInitData()
     }
 
     open fun onRefreshListener() {

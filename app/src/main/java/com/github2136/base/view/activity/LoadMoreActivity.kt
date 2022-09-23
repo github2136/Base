@@ -2,6 +2,7 @@ package com.github2136.base.view.activity
 
 import android.graphics.Paint
 import android.os.Bundle
+import android.view.View
 import com.github2136.base.R
 import com.github2136.base.databinding.ActivityLoadMoreBinding
 import com.github2136.base.divider.Divider
@@ -22,5 +23,13 @@ class LoadMoreActivity : BaseLoadMoreActivity<LoadMoreVM, ActivityLoadMoreBindin
         val d = Divider(this)
         d.align = Paint.Align.RIGHT
         bind.rvList.addItemDecoration(d)
+    }
+
+    fun onClick(view: View) {
+        when (view.id) {
+            R.id.btnRefresh -> {
+                refreshData()
+            }
+        }
     }
 }
