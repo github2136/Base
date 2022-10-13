@@ -60,22 +60,30 @@ class OkHttpInterceptor : Interceptor {
                     }
                 }
             }
+            // val responseHeaderSb = StringBuilder()
+            // responseHeads.forEach {
+            //     responseHeaderSb.append(it.first + ":" + it.second + "\n")
+            // }
+            // |${if (responseHeaderSb.isNotEmpty()) "Header\n$responseHeaderSb" else ""}
             responseLog = """Code $code
                 |Response Body 
                 |$body
                 """.trimIndent()
-            // |${if (responseHeads.size > 0) "Header\n$responseHeads" else ""}
             return response
         } catch (e: Exception) {
             responseLog = "$e"
             throw e
         } finally {
+            val requestHeaderSb = StringBuilder()
+            requestHeads.forEach {
+                requestHeaderSb.append(it.first + ":" + it.second + "\n")
+            }
             Logger.t("HTTP")
                 .d(
                     """
                     |$method $requestUrl
                     |Header
-                    |${requestHeads}Request Body:${requestBody.utf8()}
+                    |${requestHeaderSb}Request Body:${requestBody.utf8()}
                     |┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
                     |$responseLog""".trimMargin()
                 )
