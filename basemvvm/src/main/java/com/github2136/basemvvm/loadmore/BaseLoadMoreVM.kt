@@ -59,11 +59,17 @@ abstract class BaseLoadMoreVM<T>(app: Application) : BaseVM(app) {
         }
     }
 
+    /**
+     * 页面启动加载数据
+     */
     fun baseInitData() {
         adapter.refresh()
         initData()
     }
 
+    /**
+     * 加载失败点击刷新调用
+     */
     fun baseLoadMoreData() {
         adapter.loading.value = true
         loadMoreData()
