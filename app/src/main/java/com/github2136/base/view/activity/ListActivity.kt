@@ -12,6 +12,14 @@ class ListActivity : BaseActivity<ListVM, ActivityListBinding>() {
     override fun initData(savedInstanceState: Bundle?) {
         bind.vm = vm
         bind.view = this
+
         vm.setData()
+    }
+
+    override fun onBackPressed() {
+        // super.onBackPressed()
+        vm.adapter.setOnItemClickListener {
+            showToast("11")
+        }
     }
 }

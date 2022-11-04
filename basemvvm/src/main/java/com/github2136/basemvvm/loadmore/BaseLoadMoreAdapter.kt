@@ -30,6 +30,11 @@ abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding> : BaseRecyclerVMAdapt
     //加载更多
     lateinit var loadMore: () -> Unit
 
+    /**
+     * 通过类型获取布局id
+     */
+    abstract fun getLayoutIdByList(viewType: Int): Int
+
     override fun getLayoutId(viewType: Int): Int {
         return when (viewType) {
             TYPE_EMPTY     -> R.layout.item_util_empty
@@ -114,8 +119,6 @@ abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding> : BaseRecyclerVMAdapt
         refreshing.value = true
         complete = false
     }
-
-    abstract fun getLayoutIdByList(viewType: Int): Int
 
     companion object {
         const val TYPE_EMPTY = -1//空数据

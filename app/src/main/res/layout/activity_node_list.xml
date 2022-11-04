@@ -7,14 +7,15 @@
 
         <variable
             name="vm"
-            type="com.github2136.base.vm.activity.ListVM" />
+            type="com.github2136.base.vm.activity.NodeListVM" />
 
         <variable
             name="view"
-            type="com.github2136.base.view.activity.ListActivity" />
+            type="com.github2136.base.view.activity.NodeListActivity" />
     </data>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:adapter="@{vm.adapter}"

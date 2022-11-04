@@ -87,6 +87,14 @@
             android:text="List" />
 
         <Button
+            android:id="@+id/btnNodeList"
+            style="@style/BtnMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{view::onClick}"
+            android:text="Node" />
+
+        <Button
             android:id="@+id/btnClick2"
             style="@style/BtnMedium"
             android:layout_width="match_parent"
@@ -143,6 +151,7 @@
             android:layout_height="wrap_content"
             android:onClick="@{view::onClick}"
             android:text="多文件下载停止" />
+
         <Button
             android:id="@+id/btnDateTimeDialog"
             android:layout_width="match_parent"

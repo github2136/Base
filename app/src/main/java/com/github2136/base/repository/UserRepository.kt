@@ -40,4 +40,14 @@ class UserRepository(context: Context) : BaseRepository(context) {
             ResultRepo.Error(-1, failedStr)
         }
     }
+
+    suspend fun getUserFlow() = launch {
+        val data = mutableListOf<User>()
+
+        for (i in 0 until 20) {
+            data.add(User("pageIndex $i i $i ", "", "中文中"))
+        }
+        delay(500)
+        ResultRepo.Success(data)
+    }
 }

@@ -52,6 +52,9 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
             R.id.btnClick2 -> {
                 startActivity(Intent(this, LoadMoreActivity::class.java))
             }
+            R.id.btnNodeList -> {
+                startActivity(Intent(this, NodeListActivity::class.java))
+            }
             R.id.btnClick3 -> {
                 showProgressDialog("aaaa", true)
                 dismissProgressDialog()
