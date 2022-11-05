@@ -34,6 +34,7 @@ abstract class BaseNodeAdapter(var list: MutableList<BaseNodeItem>? = null) : Re
     override fun getItemViewType(position: Int): Int {
         return getViewType(position)
     }
+
     /**
      * 获得对象
      */
@@ -91,6 +92,7 @@ abstract class BaseNodeAdapter(var list: MutableList<BaseNodeItem>? = null) : Re
     fun setOnItemLeafClickListener(itemLeafClickListener: (position: Int) -> Unit) {
         this.itemLeafClickListener = itemLeafClickListener
     }
+
     /**
      * 叶节点长按
      */
@@ -107,6 +109,7 @@ abstract class BaseNodeAdapter(var list: MutableList<BaseNodeItem>? = null) : Re
     fun setOnViewClickListener(viewClickListener: (position: Int, id: Int, view: View) -> Unit) {
         this.viewClickListener = viewClickListener
     }
+
     /**
      * 展开子项
      */
@@ -129,6 +132,7 @@ abstract class BaseNodeAdapter(var list: MutableList<BaseNodeItem>? = null) : Re
             }
         }
     }
+
     /**
      * 折叠子项
      */
@@ -178,14 +182,7 @@ abstract class BaseNodeAdapter(var list: MutableList<BaseNodeItem>? = null) : Re
 
 
     fun setData(list: MutableList<BaseNodeItem>) {
-        this.list = list
+        this.list = flatData(list)
         notifyDataSetChanged()
-    }
-
-    fun appendData(list: List<BaseNodeItem>) {
-        this.list?.let {
-            it.addAll(list)
-            notifyDataSetChanged()
-        }
     }
 }
