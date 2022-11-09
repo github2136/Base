@@ -16,6 +16,7 @@ class LoadMoreVM(app: Application) : BaseLoadMoreVM<User>(app) {
     override fun initAdapter() = LoadMoreAdapter()
 
     override fun initData() {
+        adapter.showCompleteItem = false
         launch {
             adapter.pageIndex = 1
             adapter.pageCount = 25
@@ -30,10 +31,14 @@ class LoadMoreVM(app: Application) : BaseLoadMoreVM<User>(app) {
 
     override fun loadMoreData() {
         launch {
-            val resultRepo = userRepository.getUserFlow(adapter.pageIndex, adapter.pageCount)
-            when (resultRepo) {
-                is ResultRepo.Success -> appendData(resultRepo.data)
-                is ResultRepo.Error -> failedData()
+            if (adapter.pageIndex < 5) {
+                val resultRepo = userRepository.getUserFlow(adapter.pageIndex, adapter.pageCount)
+                when (resultRepo) {
+                    is ResultRepo.Success -> appendData(resultRepo.data)
+                    is ResultRepo.Error -> failedData()
+                }
+            } else {
+                appendData(mutableListOf())
             }
         }
     }

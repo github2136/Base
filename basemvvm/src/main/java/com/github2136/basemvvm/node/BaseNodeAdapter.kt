@@ -180,7 +180,6 @@ abstract class BaseNodeAdapter(var list: MutableList<BaseNodeItem>? = null) : Re
         return newList
     }
 
-
     fun setData(list: MutableList<BaseNodeItem>) {
         this.list = flatData(list)
         notifyDataSetChanged()
