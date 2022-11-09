@@ -13,24 +13,15 @@ import com.github2136.basemvvm.R
  * viewType -1,-2,-3不能使用
  */
 abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding> : BaseRecyclerVMAdapter<T, B>() {
-    //页码
-    var pageIndex = 1
-    //每页数量
-    var pageCount = 20
-    //刷新状态 true 刷新中 false 刷新完成
-    var refreshing = MutableLiveData<Boolean>()
-    //加载更多 true 获取更多中 false 获取完成
-    var loading = MutableLiveData<Boolean>()
-    //数据获取结果 true 数据获取成功 false 数据获取失败
-    var result = MutableLiveData<Boolean>()
-    //加载所有数据
-    var complete = false
-    //加载完成显示总数
-    var showCompleteItem = true
-    //首页重试
-    lateinit var retryCallback: () -> Unit
-    //加载更多
-    lateinit var loadMore: () -> Unit
+    var pageIndex = 1 //页码
+    var pageCount = 20 //每页数量
+    var refreshing = MutableLiveData<Boolean>() //刷新状态 true 刷新中 false 刷新完成
+    var loading = MutableLiveData<Boolean>() //加载更多 true 获取更多中 false 获取完成
+    var result = MutableLiveData<Boolean>() //数据获取结果 true 数据获取成功 false 数据获取失败
+    var complete = false //加载所有数据
+    var showCompleteItem = true //加载完成显示总数
+    lateinit var retryCallback: () -> Unit //首页重试
+    lateinit var loadMore: () -> Unit //加载更多
 
     /**
      * 通过类型获取布局id
