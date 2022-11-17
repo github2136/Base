@@ -34,8 +34,27 @@ dependencies {
     implementation project(path: ':basemvvm')
 
     implementation lib["kotlin-stdlib"]
+    implementation lib["kotlin-ktx"]
 
-    kapt lib["android-databinding"]
+    implementation lib["logger"]
+
+    implementation lib["okhttp"]
+    implementation lib["okhttp-retrofit"]
+    implementation lib["okhttp-gson"]
+
+    implementation lib["android-appcompat"]
+    implementation lib["android-material"]
+    implementation lib["android-recyclerview"]
+    implementation lib["android-swiperefreshlayout"]
+
+    //协程
+    implementation lib["android-coroutines"]
+    implementation lib["android-viewmodel-ktx"]
+    implementation lib["android-lifecycle-ktx"]
+
+    implementation lib["gson"]
+
+    implementation lib["android-util"]
 
     androidTestImplementation lib["android-test"]
     androidTestImplementation lib["android-test-ext"]

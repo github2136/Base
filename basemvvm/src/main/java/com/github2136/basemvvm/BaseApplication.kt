@@ -3,36 +3,31 @@ package com.github2136.basemvvm
 import android.app.Application
 import android.os.HandlerThread
 import androidx.appcompat.app.AppCompatActivity
-import com.github2136.util.CrashHandler
 import com.github2136.util.FileUtil
 import com.orhanobut.logger.*
 import java.io.File
-import java.util.*
 
 /**
  * Created by yb on 2018/11/2.
  */
 open class BaseApplication : Application() {
     private val mActivitys: ArrayList<AppCompatActivity> = ArrayList()
-
+    open val logEnable = true
+    open val saveFileEnable = false
     override fun onCreate() {
         super.onCreate()
-
         // logcat打印
         val prettyFormatStrategy = ChinesePrettyFormatStrategy
             .newBuilder()
             .tag("MVVM-TAG")
-        Logger.addLogAdapter(AndroidLogAdapter(prettyFormatStrategy.build()))
-
-        CrashHandler.getInstance(this, BuildConfig.DEBUG).setCallback(object : CrashHandler.CrashHandlerCallback {
-            override fun finishAll() {
-                this@BaseApplication.finishAll()
-            }
-
-            override fun submitLog(deviceInfo: Map<String, String>, exception: String) {
-
+        Logger.addLogAdapter(object : AndroidLogAdapter(prettyFormatStrategy.build()) {
+            override fun isLoggable(priority: Int, tag: String?): Boolean {
+                return logEnable
             }
         })
+        if (saveFileEnable) {
+            setFileLog()
+        }
     }
 
     /**

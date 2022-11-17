@@ -40,11 +40,6 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
     protected val mSnackbar by lazy { Snackbar.make(rootView, "", Snackbar.LENGTH_SHORT) }
     protected val mDialog by lazy { ProgressDialog(activity) }
 
-    // protected val mDialog: ProgressDialog by lazy {
-    //     val dialog = ProgressDialog.getInstance(false)
-    //     dialog
-    // }
-
     //是否有应用通知权限
     protected var notificationEnable = false
     protected val notificationManagerCompat by lazy { NotificationManagerCompat.from(mContext) }
@@ -88,6 +83,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
             }
         })
         initObserve()
+        preInitData(savedInstanceState)
         initData(savedInstanceState)
     }
 
@@ -246,13 +242,23 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
 
     protected open fun handleMessage(msg: Message) {}
 
-    //布局ID
+    /**
+     * 布局ID
+     */
     protected abstract fun getLayoutId(): Int
 
-    //初始化
+    /**
+     * 数据初始化前的操作
+     */
+    protected open fun preInitData(savedInstanceState: Bundle?) {}
+    /**
+     * 数据初始化
+     */
     protected abstract fun initData(savedInstanceState: Bundle?)
 
-    //初始化回调
+    /**
+     * 初始化LiveData回调
+     */
     protected open fun initObserve() {}
 
     //取消请求

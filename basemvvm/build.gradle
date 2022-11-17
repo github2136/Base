@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'maven-publish'
 
 def lib = rootProject.ext.dependencies
 def version = rootProject.ext.android
@@ -27,38 +26,51 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    afterEvaluate {
+        publishing {
+            publications {
+                maven(MavenPublication) {
+                    artifact sourceJar // 增加上传源码的 task
+                    afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) } //生成aar包
+                    groupId = 'com.github.github2136.Base'
+                    artifactId = 'basemvvm'
+                    version = '1.0'
+                }
+            }
+        }
+    }
 }
-
+task sourceJar(type: Jar) {
+    from android.sourceSets.main.java.getSrcDirs()
+    archiveClassifier = "sources"
+}
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    api lib["kotlin-stdlib"]
-    api lib["kotlin-ktx"]
+    compileOnly lib["kotlin-stdlib"]
+    compileOnly lib["kotlin-ktx"]
 
-    api lib["logger"]
+    compileOnly lib["logger"]
 
-    api lib["okhttp"]
-    api lib["okhttp-retrofit"]
-    api lib["okhttp-gson"]
+    compileOnly lib["okhttp"]
+    compileOnly lib["okhttp-retrofit"]
+    compileOnly lib["okhttp-gson"]
 
-    api lib["android-appcompat"]
-    api lib["android-material"]
-    api lib["android-recyclerview"]
-    api lib["android-swiperefreshlayout"]
+    compileOnly lib['android-appcompat']
+    compileOnly lib["android-material"]
+    compileOnly lib["android-recyclerview"]
+    compileOnly lib["android-swiperefreshlayout"]
 
     //协程
-    api lib["android-coroutines"]
-    api lib["android-viewmodel-ktx"]
-    api lib["android-lifecycle-ktx"]
+    compileOnly lib["android-coroutines"]
+    compileOnly lib["android-viewmodel-ktx"]
+    compileOnly lib["android-lifecycle-ktx"]
 
-    api lib["gson"]
+    compileOnly lib["gson"]
 
-    api lib["android-util"]
+    compileOnly lib["android-util"]
 
     androidTestImplementation lib["android-test"]
     testImplementation lib["junit"]
     androidTestImplementation lib["espresso"]
-}
-repositories {
-    mavenCentral()
 }

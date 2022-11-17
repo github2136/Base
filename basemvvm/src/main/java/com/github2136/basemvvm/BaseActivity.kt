@@ -71,6 +71,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
             }
         })
         initObserve()
+        preInitData(savedInstanceState)
         initData(savedInstanceState)
     }
 
@@ -228,14 +229,26 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
 
     protected open fun handleMessage(msg: Message) {}
 
-    //布局ID
+    /**
+     * 布局ID
+     */
     protected abstract fun getLayoutId(): Int
 
-    //初始化
+    /**
+     * 数据初始化前的操作
+     */
+    protected open fun preInitData(savedInstanceState: Bundle?) {}
+
+    /**
+     * 数据初始化
+     */
     protected abstract fun initData(savedInstanceState: Bundle?)
 
-    //初始化回调
+    /**
+     * 初始化LiveData回调
+     */
     protected open fun initObserve() {}
+
 
     //取消请求
     protected fun cancelRequest() {
