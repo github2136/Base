@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'maven-publish'
+apply plugin: 'kotlin-kapt'
 
 def lib = rootProject.ext.dependencies
 def version = rootProject.ext.android
@@ -47,28 +48,22 @@ task sourceJar(type: Jar) {
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    compileOnly lib["kotlin-stdlib"]
-    compileOnly lib["kotlin-ktx"]
-
-    compileOnly lib["logger"]
-
-    compileOnly lib["okhttp"]
-    compileOnly lib["okhttp-retrofit"]
-    compileOnly lib["okhttp-gson"]
-
-    compileOnly lib['android-appcompat']
-    compileOnly lib["android-material"]
-    compileOnly lib["android-recyclerview"]
-    compileOnly lib["android-swiperefreshlayout"]
-
+    implementation lib["kotlin-stdlib"]
+    implementation lib["kotlin-ktx"]
+    implementation lib['android-appcompat']
+    implementation lib["android-material"]
+    implementation lib["android-recyclerview"]
+    implementation lib["android-swiperefreshlayout"]
     //协程
     compileOnly lib["android-coroutines"]
     compileOnly lib["android-viewmodel-ktx"]
     compileOnly lib["android-lifecycle-ktx"]
 
+    compileOnly lib["logger"]
+    compileOnly lib["okhttp"]
+    compileOnly lib["okhttp-retrofit"]
+    compileOnly lib["okhttp-gson"]
     compileOnly lib["gson"]
-
     compileOnly lib["android-util"]
 
     androidTestImplementation lib["android-test"]
