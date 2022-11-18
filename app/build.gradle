@@ -35,25 +35,24 @@ dependencies {
 
     implementation lib["kotlin-stdlib"]
     implementation lib["kotlin-ktx"]
-
-    implementation lib["logger"]
-
-    implementation lib["okhttp"]
-    implementation lib["okhttp-retrofit"]
-    implementation lib["okhttp-gson"]
-
+    //Android库
     implementation lib["android-appcompat"]
     implementation lib["android-material"]
     implementation lib["android-recyclerview"]
     implementation lib["android-swiperefreshlayout"]
-
     //协程
     implementation lib["android-coroutines"]
     implementation lib["android-viewmodel-ktx"]
     implementation lib["android-lifecycle-ktx"]
-
+    //logcat日志打印
+    implementation lib["logger"]
+    //okhttp
+    implementation lib["okhttp"]
+    implementation lib["okhttp-retrofit"]
+    implementation lib["okhttp-gson"]
+    //gson
     implementation lib["gson"]
-
+    //工具类
     implementation lib["android-util"]
 
     androidTestImplementation lib["android-test"]

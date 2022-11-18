@@ -41,30 +41,39 @@ android {
             }
         }
     }
+    android.libraryVariants.all { var ->
+        var.outputs.all { output ->
+            outputFileName = "basemvvm-${var.buildType.name}-${defaultConfig.versionName}.aar"
+        }
+    }
 }
 task sourceJar(type: Jar) {
-    from android.sourceSets.main.java.getSrcDirs()
+    from android.sourceSets.main.java.getSrcDirs() // 源码路径
     archiveClassifier = "sources"
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation lib["kotlin-stdlib"]
     implementation lib["kotlin-ktx"]
-    implementation lib['android-appcompat']
+    //Android库
+    implementation lib["android-appcompat"]
     implementation lib["android-material"]
     implementation lib["android-recyclerview"]
     implementation lib["android-swiperefreshlayout"]
     //协程
-    compileOnly lib["android-coroutines"]
-    compileOnly lib["android-viewmodel-ktx"]
-    compileOnly lib["android-lifecycle-ktx"]
-
-    compileOnly lib["logger"]
-    compileOnly lib["okhttp"]
-    compileOnly lib["okhttp-retrofit"]
-    compileOnly lib["okhttp-gson"]
-    compileOnly lib["gson"]
-    compileOnly lib["android-util"]
+    implementation lib["android-coroutines"]
+    implementation lib["android-viewmodel-ktx"]
+    implementation lib["android-lifecycle-ktx"]
+    //logcat日志打印
+    implementation lib["logger"]
+    //okhttp
+    implementation lib["okhttp"]
+    implementation lib["okhttp-retrofit"]
+    implementation lib["okhttp-gson"]
+    //gson
+    implementation lib["gson"]
+    //工具类
+    implementation lib["android-util"]
 
     androidTestImplementation lib["android-test"]
     testImplementation lib["junit"]
