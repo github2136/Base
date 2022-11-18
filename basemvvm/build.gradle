@@ -49,7 +49,10 @@ android {
 }
 task sourceJar(type: Jar) {
     from android.sourceSets.main.java.getSrcDirs() // 源码路径
-    archiveClassifier = "sources"
+    archiveClassifier = "sources-${android.defaultConfig.versionName}"
+}
+artifacts {
+    archives sourceJar
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
