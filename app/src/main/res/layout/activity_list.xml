@@ -7,11 +7,11 @@
 
         <variable
             name="vm"
-            type="com.github2136.base.vm.activity.ListVM" />
+            type="com.github2136.base.view.activity.list.ListVM" />
 
         <variable
             name="view"
-            type="com.github2136.base.view.activity.ListActivity" />
+            type="com.github2136.base.view.activity.list.ListActivity" />
     </data>
 
     <androidx.recyclerview.widget.RecyclerView

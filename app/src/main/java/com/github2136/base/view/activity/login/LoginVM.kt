@@ -1,4 +1,4 @@
-package com.github2136.base.vm.activity
+package com.github2136.base.view.activity.login
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData

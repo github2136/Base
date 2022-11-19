@@ -6,11 +6,11 @@
 
         <variable
             name="view"
-            type="com.github2136.base.view.activity.LoadMoreActivity" />
+            type="com.github2136.base.view.activity.loadmore.LoadMoreActivity" />
 
         <variable
             name="vm"
-            type="com.github2136.base.vm.activity.LoadMoreVM" />
+            type="com.github2136.base.view.activity.loadmore.LoadMoreVM" />
     </data>
 
     <RelativeLayout

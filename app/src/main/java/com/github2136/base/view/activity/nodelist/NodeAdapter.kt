@@ -1,4 +1,4 @@
-package com.github2136.base.view.adapter
+package com.github2136.base.view.activity.nodelist
 
 import androidx.databinding.ViewDataBinding
 import com.github2136.base.R

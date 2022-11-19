@@ -251,6 +251,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
      * 数据初始化前的操作
      */
     protected open fun preInitData(savedInstanceState: Bundle?) {}
+
     /**
      * 数据初始化
      */

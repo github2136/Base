@@ -1,20 +1,22 @@
-package com.github2136.base.view.activity
+package com.github2136.base.view.activity.main
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.github2136.base.R
+import com.github2136.base.base.AppBaseActivity
 import com.github2136.base.databinding.ActivityMainBinding
+import com.github2136.base.view.activity.list.ListActivity
+import com.github2136.base.view.activity.loadmore.LoadMoreActivity
+import com.github2136.base.view.activity.nodelist.NodeListActivity
 import com.github2136.base.view.dialog.DateTimePickerDialog
-import com.github2136.base.vm.activity.MainVM
-import com.github2136.basemvvm.BaseActivity
 import com.github2136.basemvvm.download.DownloadUtil
 import com.github2136.util.FileUtil
 import java.io.File
 import java.util.*
 
-class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
+class MainActivity : AppBaseActivity<MainVM, ActivityMainBinding>() {
     override fun getLayoutId() = R.layout.activity_main
     val downloadUtil by lazy { DownloadUtil.getInstance(application) }
     val filePath by lazy { FileUtil.getExternalStorageProjectPath(this) }
@@ -27,7 +29,8 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>() {
     }
 
     // val url = "http://223.83.128.251:48092/UploadFiles/System/app/20211018/259dc425-045f-42c6-865c-34f8efa6a50f.apk"
-    val url = "http://t6.tianditu.gov.cn/img_c/wmts?service=wmts&request=gettile&version=1.0.0&layer=img&format=tiles&STYLE=default&tilematrixset=c&tilecol=6729&tilerow=1400&tilematrix=13&tk=b77baf477f61aff4eb65003969b17809"
+    val url =
+        "http://t6.tianditu.gov.cn/img_c/wmts?service=wmts&request=gettile&version=1.0.0&layer=img&format=tiles&STYLE=default&tilematrixset=c&tilecol=6729&tilerow=1400&tilematrix=13&tk=b77baf477f61aff4eb65003969b17809"
 
     // val url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk"
     var multipleId = ""

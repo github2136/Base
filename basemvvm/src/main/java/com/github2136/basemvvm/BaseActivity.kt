@@ -249,7 +249,6 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
      */
     protected open fun initObserve() {}
 
-
     //取消请求
     protected fun cancelRequest() {
         vm.cancelRequest()

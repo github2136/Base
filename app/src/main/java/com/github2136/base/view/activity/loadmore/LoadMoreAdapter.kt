@@ -1,4 +1,4 @@
-package com.github2136.base.view.adapter
+package com.github2136.base.view.activity.loadmore
 
 import com.github2136.base.R
 import com.github2136.base.ViewHolderRecyclerView

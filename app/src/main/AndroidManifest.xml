@@ -14,9 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".view.activity.ListActivity"></activity>
-        <activity android:name=".view.activity.LoadMoreActivity" />
-        <activity android:name=".view.activity.LoginActivity">
+        <activity android:name=".view.activity.list.ListActivity"/>
+        <activity android:name=".view.activity.loadmore.LoadMoreActivity" />
+        <activity android:name=".view.activity.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -24,8 +24,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.activity.MainActivity" />
-        <activity android:name=".view.activity.NodeListActivity" />
+        <activity android:name=".view.activity.main.MainActivity" />
+        <activity android:name=".view.activity.nodelist.NodeListActivity" />
 
         <meta-data
             android:name="util_sp_name"
