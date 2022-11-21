@@ -1,19 +1,18 @@
-package com.github2136.base.view.activity
+package com.github2136.base.view.activity.loadmore
 
 import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
 import com.github2136.base.R
+import com.github2136.base.base.AppBaseLoadMoreActivity
 import com.github2136.base.databinding.ActivityLoadMoreBinding
 import com.github2136.base.divider.Divider
 import com.github2136.base.model.entity.User
-import com.github2136.base.vm.activity.LoadMoreVM
-import com.github2136.basemvvm.loadmore.BaseLoadMoreActivity
 
 /**
  * Created by YB on 2019/9/20
  */
-class LoadMoreActivity : BaseLoadMoreActivity<LoadMoreVM, ActivityLoadMoreBinding, User>() {
+class LoadMoreActivity : AppBaseLoadMoreActivity<LoadMoreVM, ActivityLoadMoreBinding, User>() {
 
     override fun getLayoutId() = R.layout.activity_load_more
 

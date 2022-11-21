@@ -1,10 +1,9 @@
-package com.github2136.base.vm.activity
+package com.github2136.base.view.activity.nodelist
 
 import android.app.Application
 import com.github2136.base.model.entity.FirstNodeData
 import com.github2136.base.model.entity.LeafData
 import com.github2136.base.model.entity.SecondNodeData
-import com.github2136.base.view.adapter.NodeAdapter
 import com.github2136.basemvvm.BaseVM
 import com.github2136.basemvvm.node.BaseNodeItem
 

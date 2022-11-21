@@ -1,9 +1,8 @@
-package com.github2136.base.vm.activity
+package com.github2136.base.view.activity.loadmore
 
 import android.app.Application
 import com.github2136.base.model.entity.User
 import com.github2136.base.repository.UserRepository
-import com.github2136.base.view.adapter.LoadMoreAdapter
 import com.github2136.basemvvm.ResultRepo
 import com.github2136.basemvvm.loadmore.BaseLoadMoreVM
 
