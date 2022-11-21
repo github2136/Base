@@ -6,7 +6,7 @@ import com.github2136.basemvvm.BaseActivity
 import com.github2136.basemvvm.BaseVM
 
 /**
- *
+ * 基础类
  */
 abstract class AppBaseActivity<V : BaseVM, B : ViewDataBinding> : BaseActivity<V, B>() {
     override fun preInitData(savedInstanceState: Bundle?) {
