@@ -11,7 +11,7 @@ import java.io.File
  * Created by yb on 2018/11/2.
  */
 open class BaseApplication : Application() {
-    private val mActivitys: ArrayList<AppCompatActivity> = ArrayList()
+    val activitys: ArrayList<AppCompatActivity> = ArrayList()
     open val logEnable = true
     open val saveFileEnable = false
     override fun onCreate() {
@@ -50,17 +50,17 @@ open class BaseApplication : Application() {
     }
 
     fun addActivity(act: AppCompatActivity) {
-        this.mActivitys.add(act)
+        this.activitys.add(act)
     }
 
     fun removeActivity(act: AppCompatActivity) {
-        if (mActivitys.contains(act)) {
-            mActivitys.remove(act)
+        if (activitys.contains(act)) {
+            activitys.remove(act)
         }
     }
 
     fun finishAll() {
-        val acts = mActivitys.iterator()
+        val acts = activitys.iterator()
         while (acts.hasNext()) {
             val act = acts.next()
             if (!act.isFinishing) {

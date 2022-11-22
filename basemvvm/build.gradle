@@ -43,42 +43,44 @@ android {
     }
     android.libraryVariants.all { var ->
         var.outputs.all { output ->
-            outputFileName = "basemvvm-${var.buildType.name}-${defaultConfig.versionName}.aar"
+            outputFileName = "basemvvm-${var.buildType.name}-${defaultConfig.versionName}-${releaseTime()}.aar"
         }
     }
 }
 task sourceJar(type: Jar) {
     from android.sourceSets.main.java.getSrcDirs() // 源码路径
-    archiveClassifier = "sources-${android.defaultConfig.versionName}"
+    archiveClassifier = "sources-${android.defaultConfig.versionName}-${releaseTime()}"
 }
 artifacts {
     archives sourceJar
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation lib["kotlin-stdlib"]
-    implementation lib["kotlin-ktx"]
+
     //Android库
     implementation lib["android-appcompat"]
-    implementation lib["android-material"]
     implementation lib["android-recyclerview"]
-    implementation lib["android-swiperefreshlayout"]
+    implementation lib["android-material"]
+    compileOnly lib["android-swiperefreshlayout"]
+    compileOnly lib["core-ktx"]
+    compileOnly lib["android-viewmodel-ktx"]
     //协程
     implementation lib["android-coroutines"]
-    implementation lib["android-viewmodel-ktx"]
-    implementation lib["android-lifecycle-ktx"]
-    //logcat日志打印
-    implementation lib["logger"]
-    //okhttp
-    implementation lib["okhttp"]
-    implementation lib["okhttp-retrofit"]
-    implementation lib["okhttp-gson"]
     //gson
-    implementation lib["gson"]
+    compileOnly lib['gson']
     //工具类
-    implementation lib["android-util"]
+    compileOnly lib["android-util"]
+    //logcat日志打印
+    compileOnly lib["logger"]
+    //okhttp
+    compileOnly lib["okhttp"]
+    compileOnly lib["okhttp-retrofit"]
+    compileOnly lib["okhttp-gson"]
 
     androidTestImplementation lib["android-test"]
     testImplementation lib["junit"]
     androidTestImplementation lib["espresso"]
+}
+static def releaseTime() {
+    return new Date().format("MMdd", TimeZone.getTimeZone("GMT+08"))
 }

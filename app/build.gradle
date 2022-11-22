@@ -33,27 +33,24 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':basemvvm')
 
-    implementation lib["kotlin-stdlib"]
-    implementation lib["kotlin-ktx"]
-    //Android库
     implementation lib["android-appcompat"]
-    implementation lib["android-material"]
     implementation lib["android-recyclerview"]
+    implementation lib["android-material"]
     implementation lib["android-swiperefreshlayout"]
+    implementation lib["core-ktx"]
+    implementation lib["android-viewmodel-ktx"]
     //协程
     implementation lib["android-coroutines"]
-    implementation lib["android-viewmodel-ktx"]
-    implementation lib["android-lifecycle-ktx"]
+    //gson
+    implementation lib['gson']
+    //工具类
+    implementation lib["android-util"]
     //logcat日志打印
     implementation lib["logger"]
     //okhttp
     implementation lib["okhttp"]
     implementation lib["okhttp-retrofit"]
     implementation lib["okhttp-gson"]
-    //gson
-    implementation lib["gson"]
-    //工具类
-    implementation lib["android-util"]
 
     androidTestImplementation lib["android-test"]
     androidTestImplementation lib["android-test-ext"]
