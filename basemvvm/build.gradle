@@ -64,6 +64,7 @@ dependencies {
     compileOnly lib["android-swiperefreshlayout"]
     compileOnly lib["core-ktx"]
     compileOnly lib["android-viewmodel-ktx"]
+    compileOnly lib["android-lifecycle-ktx"]
     //协程
     implementation lib["android-coroutines"]
     //gson

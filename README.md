@@ -10,6 +10,7 @@ implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 implementation "com.google.android.material:material:1.4.0"
 implementation "androidx.core:core-ktx:1.5.0"
 implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
+implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.1"
 //协程
 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3"
 //gson
