@@ -10,6 +10,8 @@ import okio.buffer
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.nio.charset.Charset
+import javax.net.ssl.HostnameVerifier
+import javax.net.ssl.SSLSession
 
 /**
  * Created by yb on 2018/11/2.
@@ -17,13 +19,12 @@ import java.nio.charset.Charset
  */
 abstract class BaseWebModel(context: Context) {
     open var baseUrl = ""
-
     private var _retrofit: Retrofit? = null
 
     protected val mJsonUtil by lazy { JsonUtil.instance }
     protected val mSpUtil by lazy { SPUtil.getSharedPreferences(context) }
     protected val client by lazy {
-        OkHttpClient().newBuilder()
+        val client = OkHttpClient().newBuilder()
             .addInterceptor { chain ->
                 val original = chain.request()
                 val requestBuild = original.newBuilder()
@@ -71,7 +72,12 @@ abstract class BaseWebModel(context: Context) {
                 return@addInterceptor response
             }
             .addInterceptor(OkHttpInterceptor())
-            .build()
+        getSSlObj()?.apply {
+            client
+                .sslSocketFactory(this.socketFactory, this.trustManager)
+                .hostnameVerifier(HostnameVerifier { hostname, session -> hostnameVerifier(hostname, session) })
+        }
+        client.build()
     }
 
     open fun resetBaseUrl(url: String) {
@@ -95,6 +101,17 @@ abstract class BaseWebModel(context: Context) {
      * 添加Head
      */
     open fun addHead(): MutableMap<String, String>? = null
+
+    /**
+     * ssl验证对象
+     */
+    open fun getSSlObj(): SSlObj? = null
+
+    /**
+     * 域名验证
+     * @return Boolean
+     */
+    open fun hostnameVerifier(hostname: String, session: SSLSession): Boolean = true
 
     /**
      * 前置通用处理
