@@ -62,8 +62,8 @@ class DownloadTask(
             }
         }
 
-        val call = okHttpManager.call(url)
         try {
+            val call = okHttpManager.call(url)
             val response = call.execute()
             try {
                 if (response.isSuccessful) {

@@ -4,7 +4,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Call
 import okhttp3.Request
 
-
 /**
  * Created by YB on 2019/6/11
  */
@@ -21,7 +20,6 @@ class OkHttpManager private constructor() {
             .build()
         return client.newCall(request)
     }
-
 
     fun call(url: String, start: Long, end: Long): Call {
         val request = Request.Builder()
