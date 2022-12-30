@@ -32,6 +32,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
     protected val TAG = this.javaClass.name
     protected val mApp by lazy { application as BaseApplication }
     protected val mHandler by lazy { Handler(this) }
+    protected val activity by lazy { this }
 
     //根视图用于Snackbar
     protected val rootView by lazy { window.decorView.findViewById<ViewGroup>(android.R.id.content) }
