@@ -3,9 +3,11 @@ package com.github2136.basemvvm
 import android.app.Application
 import android.os.HandlerThread
 import androidx.appcompat.app.AppCompatActivity
-import com.github2136.util.FileUtil
+import com.github2136.util.DateUtil
+import com.github2136.util.str
 import com.orhanobut.logger.*
 import java.io.File
+import java.util.*
 
 /**
  * Created by yb on 2018/11/2.
@@ -36,7 +38,7 @@ open class BaseApplication : Application() {
     fun setFileLog() {
         //log日志本地保存
         val MAX_BYTES = 500 * 1024
-        val folder = FileUtil.getExternalStorageProjectPath(this) + File.separator + "Log"
+        val folder = filesDir.absolutePath + File.separator + "Log" + File.separator + Date().str(DateUtil.DATE_PATTERN_YMD)
         val ht = HandlerThread("AndroidFileLogger.$folder")
         ht.start()
         val handler = DiskLog.WriteHandler(ht.looper, folder, MAX_BYTES)
