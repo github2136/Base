@@ -26,7 +26,7 @@ import java.lang.reflect.ParameterizedType
  * Created by yb on 2018/11/2.
  * 基础Fragment
  */
-abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBaseView {
+abstract class BaseFragment<V : BaseVM, B : ViewDataBinding>(val iBaseFragment: IBaseFragment? = null) : Fragment(), IBaseView {
     protected val TAG = this.javaClass.name
     protected lateinit var vm: V
     protected lateinit var bind: B
@@ -46,21 +46,20 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        attach(context)
-    }
-
-    private fun attach(context: Context) {
         mContext = context
         notificationEnable = notificationManagerCompat.areNotificationsEnabled()
+        iBaseFragment?.onAttach(context)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        iBaseFragment?.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         bind = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
         bind.lifecycleOwner = this
+        iBaseFragment?.onCreateView(inflater, container, savedInstanceState)
         return bind.root
     }
 
@@ -70,21 +69,26 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
 
         getVM(type[0] as Class<V>)
 
-        vm.dialogLD.observe(this, Observer { dialog ->
+        vm.dialogLD.observe(viewLifecycleOwner, Observer { dialog ->
             if (dialog != null) {
                 showProgressDialog(dialog.msg, dialog.cancelable, dialog.canceledOnTouchOutside)
             } else {
                 dismissProgressDialog()
             }
         })
-        vm.toastLD.observe(this, Observer { str ->
+        vm.toastLD.observe(viewLifecycleOwner, Observer { str ->
             if (!TextUtils.isEmpty(str)) {
                 showToast(str)
             }
         })
         initObserve()
-        preInitData(savedInstanceState)
+        iBaseFragment?.onViewCreated(view, savedInstanceState)
         initData(savedInstanceState)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        iBaseFragment?.onStart()
     }
 
     override fun onResume() {
@@ -94,8 +98,18 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
             firstVisible()
             firstVisible = true
         }
+        iBaseFragment?.onResume()
     }
 
+    override fun onPause() {
+        iBaseFragment?.onPause()
+        super.onPause()
+    }
+
+    override fun onStop() {
+        iBaseFragment?.onStop()
+        super.onStop()
+    }
     /**
      * 首次展示
      */
@@ -115,8 +129,19 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
     }
 
     override fun onDestroyView() {
+        iBaseFragment?.onDestroyView()
         cancelRequest()
         super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        iBaseFragment?.onDestroy()
+        super.onDestroy()
+    }
+
+    override fun onDetach() {
+        iBaseFragment?.onDetach()
+        super.onDetach()
     }
 
     fun showSnackbar(msg: String) {

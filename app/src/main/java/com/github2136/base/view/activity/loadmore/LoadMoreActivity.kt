@@ -4,15 +4,16 @@ import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
 import com.github2136.base.R
-import com.github2136.base.base.AppBaseLoadMoreActivity
+import com.github2136.base.base.IBaseActivityImpl
 import com.github2136.base.databinding.ActivityLoadMoreBinding
 import com.github2136.base.divider.Divider
 import com.github2136.base.model.entity.User
+import com.github2136.basemvvm.loadmore.BaseLoadMoreActivity
 
 /**
  * Created by YB on 2019/9/20
  */
-class LoadMoreActivity : AppBaseLoadMoreActivity<LoadMoreVM, ActivityLoadMoreBinding, User>() {
+class LoadMoreActivity : BaseLoadMoreActivity<LoadMoreVM, ActivityLoadMoreBinding, User>(IBaseActivityImpl()) {
 
     override fun getLayoutId() = R.layout.activity_load_more
 

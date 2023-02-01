@@ -9,13 +9,14 @@ import android.widget.Toast
 import androidx.collection.ArrayMap
 import androidx.lifecycle.Observer
 import com.github2136.base.R
-import com.github2136.base.base.AppBaseActivity
+import com.github2136.base.base.IBaseActivityImpl
 import com.github2136.base.databinding.ActivityLoginBinding
 import com.github2136.base.model.entity.User
 import com.github2136.base.view.activity.main.MainActivity
+import com.github2136.basemvvm.BaseActivity
 import com.github2136.util.PermissionUtil
 
-class LoginActivity : AppBaseActivity<LoginVM, ActivityLoginBinding>() {
+class LoginActivity : BaseActivity<LoginVM, ActivityLoginBinding>(IBaseActivityImpl()) {
     override fun getLayoutId() = R.layout.activity_login
     private val permissionUtil by lazy { PermissionUtil(this) }
     override fun initData(savedInstanceState: Bundle?) {
