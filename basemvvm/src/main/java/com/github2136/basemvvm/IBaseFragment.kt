@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 
 /**
  * Created by YB on 2023/1/31
  */
 interface IBaseFragment {
+    var fragment: Fragment
     fun onAttach(context: Context)
     fun onCreate(savedInstanceState: Bundle?)
     fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)

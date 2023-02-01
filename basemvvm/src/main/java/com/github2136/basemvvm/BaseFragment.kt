@@ -48,6 +48,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding>(val iBaseFragment: 
         super.onAttach(context)
         mContext = context
         notificationEnable = notificationManagerCompat.areNotificationsEnabled()
+        iBaseFragment?.fragment = this
         iBaseFragment?.onAttach(context)
     }
 

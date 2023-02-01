@@ -15,35 +15,39 @@ abstract class BaseLoadMoreVM<T>(app: Application) : BaseVM(app) {
     }
 
     /**
-     * 设置首页数据
+     * 首页页码
+     */
+    open val pageFirstIndex = 1
+
+    /**
+     * 每页数量
+     */
+    open val pageCount = 20
+
+    /**
+     * 设置数据
      */
     fun setData(list: MutableList<T>) {
         handle.post {
-            adapter.pageCount = adapter.pageCount
-            adapter.pageIndex = adapter.pageIndex + 1
-            adapter.refreshing.value = false
-            adapter.result.value = true
-            if (list.size != adapter.pageCount) {
-                //加载完成
-                adapter.complete = true
+            if (adapter.pageIndex == pageFirstIndex) {
+                adapter.pageIndex = adapter.pageIndex + 1
+                adapter.refreshing.value = false
+                adapter.result.value = true
+                if (list.size != adapter.pageCount) {
+                    //加载完成
+                    adapter.complete = true
+                }
+                adapter.setData(list)
+            } else {
+                adapter.pageIndex = adapter.pageIndex + 1
+                adapter.loading.value = false
+                adapter.result.value = true
+                if (list.size != adapter.pageCount) {
+                    //加载完成
+                    adapter.complete = true
+                }
+                adapter.appendData(list)
             }
-            adapter.setData(list)
-        }
-    }
-
-    /**
-     * 加载更多数据
-     */
-    fun appendData(list: MutableList<T>) {
-        handle.post {
-            adapter.pageIndex = adapter.pageIndex + 1
-            adapter.loading.value = false
-            adapter.result.value = true
-            if (list.size != adapter.pageCount) {
-                //加载完成
-                adapter.complete = true
-            }
-            adapter.appendData(list)
         }
     }
 
@@ -64,6 +68,8 @@ abstract class BaseLoadMoreVM<T>(app: Application) : BaseVM(app) {
      */
     fun baseInitData() {
         adapter.refresh()
+        adapter.pageIndex = pageFirstIndex
+        adapter.pageCount = pageCount
         initData()
     }
 

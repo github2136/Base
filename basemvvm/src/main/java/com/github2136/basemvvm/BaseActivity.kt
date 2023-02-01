@@ -72,6 +72,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding>(val iBaseActivity: 
             }
         })
         initObserve()
+        iBaseActivity?.activity = this
         iBaseActivity?.onCreate(savedInstanceState)
         initData(savedInstanceState)
     }

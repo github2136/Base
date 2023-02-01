@@ -12,13 +12,12 @@ import com.github2136.basemvvm.loadmore.BaseLoadMoreVM
 class LoadMoreVM(app: Application) : BaseLoadMoreVM<User>(app) {
     val userRepository by lazy { UserRepository(app) }
 
-    override fun initAdapter() = LoadMoreAdapter()
+    override val pageFirstIndex = 1
+    override val pageCount = 25
 
     override fun initData() {
         adapter.showCompleteItem = false
         launch {
-            adapter.pageIndex = 1
-            adapter.pageCount = 25
             val resultRepo = userRepository.getUserFlow(adapter.pageIndex, adapter.pageCount)
             when (resultRepo) {
                 is ResultRepo.Success -> setData(resultRepo.data)
@@ -27,18 +26,19 @@ class LoadMoreVM(app: Application) : BaseLoadMoreVM<User>(app) {
         }
     }
 
-
     override fun loadMoreData() {
         launch {
             if (adapter.pageIndex < 5) {
                 val resultRepo = userRepository.getUserFlow(adapter.pageIndex, adapter.pageCount)
                 when (resultRepo) {
-                    is ResultRepo.Success -> appendData(resultRepo.data)
+                    is ResultRepo.Success -> setData(resultRepo.data)
                     is ResultRepo.Error -> failedData()
                 }
             } else {
-                appendData(mutableListOf())
+                setData(mutableListOf())
             }
         }
     }
+
+    override fun initAdapter() = LoadMoreAdapter()
 }
