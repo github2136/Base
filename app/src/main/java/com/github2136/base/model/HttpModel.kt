@@ -15,8 +15,10 @@ class HttpModel private constructor(context: Context) : BaseWebModel(context) {
     }
 
     override fun resetBaseUrl(url: String) {
-        super.resetBaseUrl(url)
-        api = getRetrofit().create(HttpService::class.java)
+        if (url.startsWith("http") || url.startsWith("https")) {
+            super.resetBaseUrl(url)
+            api = getRetrofit().create(HttpService::class.java)
+        }
     }
 
     override fun addHead(): MutableMap<String, String>? = null
