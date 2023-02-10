@@ -1,6 +1,7 @@
 package com.github2136.basemvvm
 
 import android.app.ProgressDialog
+import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
@@ -222,17 +223,18 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding>(val iBaseActivity: 
         }
     }
 
-    open fun showProgressDialog(@StringRes resId: Int, cancelable: Boolean = false, canceledOnTouchOutside: Boolean = false) {
-        showProgressDialog(resources.getString(resId), cancelable, canceledOnTouchOutside)
+    open fun showProgressDialog(@StringRes resId: Int, cancelable: Boolean = false, canceledOnTouchOutside: Boolean = false, onCancel: ((dialog: DialogInterface) -> Unit)? = null) {
+        showProgressDialog(resources.getString(resId), cancelable, canceledOnTouchOutside, onCancel)
     }
 
-    open fun showProgressDialog(msg: String? = null, cancelable: Boolean = false, canceledOnTouchOutside: Boolean = false) {
+    open fun showProgressDialog(msg: String? = null, cancelable: Boolean = false, canceledOnTouchOutside: Boolean = false, onCancel: ((dialog: DialogInterface) -> Unit)? = null) {
         if (msg == null) {
             mDialog.setMessage(vm.loadingStr)
         } else {
             mDialog.setMessage(msg)
         }
         mDialog.setCancelable(cancelable)
+        mDialog.setOnCancelListener(onCancel)
         mDialog.setCanceledOnTouchOutside(canceledOnTouchOutside)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             if (!(isDestroyed || isFinishing) && !mDialog.isShowing) {
