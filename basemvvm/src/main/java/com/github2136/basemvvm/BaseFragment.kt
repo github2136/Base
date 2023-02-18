@@ -85,6 +85,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding>(val iBaseFragment: 
         })
         initObserve()
         iBaseFragment?.onViewCreated(view, savedInstanceState)
+        preInitData(savedInstanceState)
         initData(savedInstanceState)
     }
 

@@ -75,6 +75,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding>(val iBaseActivity: 
         initObserve()
         iBaseActivity?.activity = this
         iBaseActivity?.onCreate(savedInstanceState)
+        preInitData(savedInstanceState)
         initData(savedInstanceState)
     }
 
@@ -259,6 +260,11 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding>(val iBaseActivity: 
      * 布局ID
      */
     protected abstract fun getLayoutId(): Int
+
+    /**
+     * 初始化前操作
+     */
+    protected open fun preInitData(savedInstanceState: Bundle?) {}
 
     /**
      * 数据初始化
