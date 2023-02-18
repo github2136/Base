@@ -10,7 +10,6 @@ import com.github2136.base.databinding.ActivityMainBinding
 import com.github2136.base.view.activity.list.ListActivity
 import com.github2136.base.view.activity.loadmore.LoadMoreActivity
 import com.github2136.base.view.activity.nodelist.NodeListActivity
-import com.github2136.base.view.dialog.DateTimePickerDialog
 import com.github2136.basemvvm.BaseActivity
 import com.github2136.basemvvm.download.DownloadUtil
 import com.github2136.util.FileUtil
@@ -35,18 +34,6 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>(IBaseActivityImpl
 
     // val url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk"
     var multipleId = ""
-    val calendar = Calendar.getInstance()
-    val dateTimePickerDialog by lazy {
-        DateTimePickerDialog(
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH),
-            calendar.get(Calendar.HOUR_OF_DAY),
-            calendar.get(Calendar.MINUTE)
-        ) { year, monthOfYear, dayOfMonth, hourOfDay, minute ->
-            calendar.set(year, monthOfYear, dayOfMonth, hourOfDay, minute)
-        }
-    }
 
     fun onClick(view: View) {
         when (view.id) {
@@ -149,16 +136,6 @@ class MainActivity : BaseActivity<MainVM, ActivityMainBinding>(IBaseActivityImpl
                     vm.doubleLD.value = Double.MAX_VALUE
                 } catch (e: Exception) {
                 }
-            }
-            R.id.btnDateTimeDialog -> {
-                dateTimePickerDialog.set(
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH),
-                    calendar.get(Calendar.HOUR_OF_DAY),
-                    calendar.get(Calendar.MINUTE)
-                )
-                dateTimePickerDialog.show(supportFragmentManager)
             }
         }
     }
