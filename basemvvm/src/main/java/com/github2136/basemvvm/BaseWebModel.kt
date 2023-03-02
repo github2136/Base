@@ -21,8 +21,8 @@ abstract class BaseWebModel(context: Context) {
     open var baseUrl = ""
     private var _retrofit: Retrofit? = null
 
-    protected val mJsonUtil by lazy { JsonUtil.instance }
-    protected val mSpUtil by lazy { SPUtil.getSharedPreferences(context) }
+    protected val jsonUtil by lazy { JsonUtil.instance }
+    protected val spUtil by lazy { SPUtil.getSharedPreferences(context) }
     protected val client by lazy {
         val client = OkHttpClient().newBuilder()
             .addInterceptor { chain ->
@@ -91,7 +91,7 @@ abstract class BaseWebModel(context: Context) {
                 .Builder()
                 .client(client)
                 .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create(mJsonUtil.gson))
+                .addConverterFactory(GsonConverterFactory.create(jsonUtil.gson))
                 .build()
         }
         return _retrofit!!

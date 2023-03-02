@@ -31,15 +31,15 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding>(val iBaseActivity: 
     protected lateinit var vm: V
     protected lateinit var bind: B
     protected val TAG = this.javaClass.name
-    protected val mApp by lazy { application as BaseApplication }
-    protected val mHandler by lazy { Handler(this) }
+    protected val app by lazy { application as BaseApplication }
+    protected val handler by lazy { Handler(this) }
     protected val activity by lazy { this }
 
     //根视图用于Snackbar
     protected val rootView by lazy { window.decorView.findViewById<ViewGroup>(android.R.id.content) }
-    protected val mToast by lazy { Toast.makeText(this, "", Toast.LENGTH_SHORT) }
-    protected val mSnackbar by lazy { Snackbar.make(rootView, "", Snackbar.LENGTH_SHORT) }
-    protected val mDialog by lazy { ProgressDialog(this) }
+    protected val toast by lazy { Toast.makeText(this, "", Toast.LENGTH_SHORT) }
+    protected val snackbar by lazy { Snackbar.make(rootView, "", Snackbar.LENGTH_SHORT) }
+    protected val dialog by lazy { ProgressDialog(this) }
 
     //状态栏高度
     val statusBarHeight by lazy { resources.getDimensionPixelSize(resources.getIdentifier("status_bar_height", "dimen", "android")) }
@@ -54,7 +54,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding>(val iBaseActivity: 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         notificationEnable = notificationManagerCompat.areNotificationsEnabled()
-        mApp.addActivity(this)
+        app.addActivity(this)
         bind = DataBindingUtil.setContentView(this, getLayoutId())
         bind.lifecycleOwner = this
 
@@ -108,7 +108,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding>(val iBaseActivity: 
     override fun onDestroy() {
         iBaseActivity?.onDestroy()
         cancelRequest()
-        mApp.removeActivity(this)
+        app.removeActivity(this)
         super.onDestroy()
     }
 
@@ -142,7 +142,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding>(val iBaseActivity: 
     }
 
     fun showSnackbar(msg: String) {
-        mSnackbar.let {
+        snackbar.let {
             it.setText(msg)
             it.duration = Snackbar.LENGTH_SHORT
             it.show()
@@ -151,7 +151,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding>(val iBaseActivity: 
 
     fun showSnackbar(@StringRes resId: Int) {
         CommonUtil.closeKeybord(this)
-        mSnackbar.let {
+        snackbar.let {
             it.setText(resId)
             it.duration = Snackbar.LENGTH_SHORT
             it.show()
@@ -160,7 +160,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding>(val iBaseActivity: 
 
     fun showSnackbarLong(msg: String) {
         CommonUtil.closeKeybord(this)
-        mSnackbar.let {
+        snackbar.let {
             it.setText(msg)
             it.duration = Snackbar.LENGTH_LONG
             it.show()
@@ -169,7 +169,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding>(val iBaseActivity: 
 
     fun showSnackbarLong(@StringRes resId: Int) {
         CommonUtil.closeKeybord(this)
-        mSnackbar.let {
+        snackbar.let {
             it.setText(resId)
             it.duration = Snackbar.LENGTH_LONG
             it.show()
@@ -178,7 +178,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding>(val iBaseActivity: 
 
     fun showToast(msg: String) {
         if (notificationEnable) {
-            mToast.let {
+            toast.let {
                 it.setText(msg)
                 it.duration = Toast.LENGTH_SHORT
                 it.show()
@@ -190,7 +190,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding>(val iBaseActivity: 
 
     fun showToast(@StringRes resId: Int) {
         if (notificationEnable) {
-            mToast.let {
+            toast.let {
                 it.setText(resId)
                 it.duration = Toast.LENGTH_SHORT
                 it.show()
@@ -202,7 +202,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding>(val iBaseActivity: 
 
     fun showToastLong(msg: String) {
         if (notificationEnable) {
-            mToast.let {
+            toast.let {
                 it.setText(msg)
                 it.duration = Toast.LENGTH_LONG
                 it.show()
@@ -214,7 +214,7 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding>(val iBaseActivity: 
 
     fun showToastLong(@StringRes resId: Int) {
         if (notificationEnable) {
-            mToast.let {
+            toast.let {
                 it.setText(resId)
                 it.duration = Toast.LENGTH_LONG
                 it.show()
@@ -230,27 +230,27 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding>(val iBaseActivity: 
 
     open fun showProgressDialog(msg: String? = null, cancelable: Boolean = false, canceledOnTouchOutside: Boolean = false, onCancel: ((dialog: DialogInterface) -> Unit)? = null) {
         if (msg == null) {
-            mDialog.setMessage(vm.loadingStr)
+            dialog.setMessage(vm.loadingStr)
         } else {
-            mDialog.setMessage(msg)
+            dialog.setMessage(msg)
         }
-        mDialog.setCancelable(cancelable)
-        mDialog.setOnCancelListener(onCancel)
-        mDialog.setCanceledOnTouchOutside(canceledOnTouchOutside)
+        dialog.setCancelable(cancelable)
+        dialog.setOnCancelListener(onCancel)
+        dialog.setCanceledOnTouchOutside(canceledOnTouchOutside)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            if (!(isDestroyed || isFinishing) && !mDialog.isShowing) {
-                mDialog.show()
+            if (!(isDestroyed || isFinishing) && !dialog.isShowing) {
+                dialog.show()
             }
         } else {
-            if (!isFinishing && !mDialog.isShowing) {
-                mDialog.show()
+            if (!isFinishing && !dialog.isShowing) {
+                dialog.show()
             }
         }
     }
 
     open fun dismissProgressDialog() {
-        if (mDialog.isShowing) {
-            mDialog.dismiss()
+        if (dialog.isShowing) {
+            dialog.dismiss()
         }
     }
 

@@ -33,7 +33,7 @@ abstract class BaseLoadMoreFragment<V : BaseLoadMoreVM<T>, B : ViewDataBinding, 
                     }
                 }
             } else {
-                it.addItemDecoration(DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL))
+                it.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             }
         }
         if (autoInit) {

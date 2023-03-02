@@ -20,8 +20,8 @@ abstract class BaseRepository(context: Context) {
     val failedStr = "无法连接服务器"
 
     val networkUtil by lazy { NetworkUtil.getInstance(context) }
-    val mJsonUtil by lazy { JsonUtil.instance }
-    val mSpUtil: SharedPreferences = SPUtil.getSharedPreferences(context)
+    val jsonUtil by lazy { JsonUtil.instance }
+    val spUtil by lazy { SPUtil.getSharedPreferences(context) }
 
     suspend fun <T> launch(block: suspend () -> ResultRepo<T>) = withContext(Dispatchers.IO) {
         try {
