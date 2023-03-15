@@ -13,7 +13,7 @@ import com.github2136.basemvvm.R
 /**
  * Created by YB on 2019/9/20
  */
-abstract class BaseLoadMoreActivity<V : BaseLoadMoreVM<T>, B : ViewDataBinding, T>(iBaseActivity: IBaseActivity? = null) : BaseActivity<V, B>(iBaseActivity) {
+abstract class BaseLoadMoreActivity<V : BaseLoadMoreVM<*>, B : ViewDataBinding>(iBaseActivity: IBaseActivity? = null) : BaseActivity<V, B>(iBaseActivity) {
     open var autoInit = true
     protected val rvList by lazy { findViewById<RecyclerView>(R.id.rvList) }
     override fun onCreate(savedInstanceState: Bundle?) {
