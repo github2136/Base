@@ -31,23 +31,21 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding>(val iBaseFragment: 
     protected val TAG = this.javaClass.name
     protected lateinit var vm: V
     protected lateinit var bind: B
-    protected lateinit var mContext: Context
     protected var firstVisible = false //是否已经显示过
-    protected val mHandler by lazy { Handler(this) }
+    protected val handler by lazy { Handler(this) }
 
     //根视图用于Snackbar
     protected val rootView by lazy { activity?.window?.decorView?.findViewById<ViewGroup>(android.R.id.content)!! }
-    protected val mToast by lazy { Toast.makeText(mContext, "", Toast.LENGTH_SHORT) }
-    protected val mSnackbar by lazy { Snackbar.make(rootView, "", Snackbar.LENGTH_SHORT) }
-    protected val mDialog by lazy { ProgressDialog(activity) }
+    protected val toast by lazy { Toast.makeText(context, "", Toast.LENGTH_SHORT) }
+    protected val snackbar by lazy { Snackbar.make(rootView, "", Snackbar.LENGTH_SHORT) }
+    protected val dialog by lazy { ProgressDialog(activity) }
 
     //是否有应用通知权限
     protected var notificationEnable = false
-    protected val notificationManagerCompat by lazy { NotificationManagerCompat.from(mContext) }
+    protected val notificationManagerCompat by lazy { NotificationManagerCompat.from(requireContext()) }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mContext = context
         notificationEnable = notificationManagerCompat.areNotificationsEnabled()
         iBaseFragment?.fragment = this
         iBaseFragment?.onAttach(context)
@@ -148,7 +146,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding>(val iBaseFragment: 
     }
 
     fun showSnackbar(msg: String) {
-        mSnackbar.let {
+        snackbar.let {
             it.setText(msg)
             it.duration = Snackbar.LENGTH_SHORT
             it.show()
@@ -157,7 +155,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding>(val iBaseFragment: 
 
     fun showSnackbar(@StringRes resId: Int) {
         CommonUtil.closeKeybord(requireActivity())
-        mSnackbar.let {
+        snackbar.let {
             it.setText(resId)
             it.duration = Snackbar.LENGTH_SHORT
             it.show()
@@ -166,7 +164,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding>(val iBaseFragment: 
 
     fun showSnackbarLong(msg: String) {
         CommonUtil.closeKeybord(requireActivity())
-        mSnackbar.let {
+        snackbar.let {
             it.setText(msg)
             it.duration = Snackbar.LENGTH_LONG
             it.show()
@@ -175,7 +173,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding>(val iBaseFragment: 
 
     fun showSnackbarLong(@StringRes resId: Int) {
         CommonUtil.closeKeybord(requireActivity())
-        mSnackbar.let {
+        snackbar.let {
             it.setText(resId)
             it.duration = Snackbar.LENGTH_LONG
             it.show()
@@ -184,7 +182,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding>(val iBaseFragment: 
 
     fun showToast(msg: String) {
         if (notificationEnable) {
-            mToast.let {
+            toast.let {
                 it.setText(msg)
                 it.duration = Toast.LENGTH_SHORT
                 it.show()
@@ -196,7 +194,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding>(val iBaseFragment: 
 
     fun showToast(@StringRes resId: Int) {
         if (notificationEnable) {
-            mToast.let {
+            toast.let {
                 it.setText(resId)
                 it.duration = Toast.LENGTH_SHORT
                 it.show()
@@ -208,7 +206,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding>(val iBaseFragment: 
 
     fun showToastLong(msg: String) {
         if (notificationEnable) {
-            mToast.let {
+            toast.let {
                 it.setText(msg)
                 it.duration = Toast.LENGTH_LONG
                 it.show()
@@ -220,7 +218,7 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding>(val iBaseFragment: 
 
     fun showToastLong(@StringRes resId: Int) {
         if (notificationEnable) {
-            mToast.let {
+            toast.let {
                 it.setText(resId)
                 it.duration = Toast.LENGTH_LONG
                 it.show()
@@ -236,23 +234,23 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding>(val iBaseFragment: 
 
     open fun showProgressDialog(msg: String? = null, cancelable: Boolean = false, canceledOnTouchOutside: Boolean = false, onCancel: ((dialog: DialogInterface) -> Unit)? = null) {
         if (msg == null) {
-            mDialog.setMessage(vm.loadingStr)
+            dialog.setMessage(vm.loadingStr)
         } else {
-            mDialog.setMessage(msg)
+            dialog.setMessage(msg)
         }
-        mDialog.setCancelable(cancelable)
-        mDialog.setOnCancelListener(onCancel)
-        mDialog.setCanceledOnTouchOutside(canceledOnTouchOutside)
-        if (isAdded && !isDetached && !mDialog.isShowing) {
+        dialog.setCancelable(cancelable)
+        dialog.setOnCancelListener(onCancel)
+        dialog.setCanceledOnTouchOutside(canceledOnTouchOutside)
+        if (isAdded && !isDetached && !dialog.isShowing) {
             activity?.apply {
-                mDialog.show()
+                dialog.show()
             }
         }
     }
 
     open fun dismissProgressDialog() {
-        if (mDialog.isShowing) {
-            mDialog.dismiss()
+        if (dialog.isShowing) {
+            dialog.dismiss()
         }
     }
 

@@ -13,7 +13,7 @@ import com.github2136.basemvvm.loadmore.BaseLoadMoreActivity
 /**
  * Created by YB on 2019/9/20
  */
-class LoadMoreActivity : BaseLoadMoreActivity<LoadMoreVM, ActivityLoadMoreBinding, User>(IBaseActivityImpl()) {
+class LoadMoreActivity : BaseLoadMoreActivity<LoadMoreVM, ActivityLoadMoreBinding>(IBaseActivityImpl()) {
     override fun getLayoutId() = R.layout.activity_load_more
 
     override fun initData(savedInstanceState: Bundle?) {

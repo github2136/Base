@@ -17,7 +17,7 @@ class UserRepository(context: Context) : BaseRepository(context) {
     suspend fun loginFlow(user: String, password: String) = launch {
         delay(2000)
         if (user == "admin" && password == "admin") {
-            mSpUtil.edit {
+            spUtil.edit {
                 putString("username", user)
                 putString("password", password)
             }

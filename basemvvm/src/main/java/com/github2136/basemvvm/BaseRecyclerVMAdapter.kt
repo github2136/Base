@@ -13,7 +13,7 @@ import com.github2136.base.ViewHolderRecyclerView
  * 一种类型的Adapter
  */
 abstract class BaseRecyclerVMAdapter<T, B : ViewDataBinding>(var list: MutableList<T>? = null) : RecyclerView.Adapter<ViewHolderRecyclerView>() {
-    protected lateinit var mLayoutInflater: LayoutInflater
+    protected lateinit var layoutInflater: LayoutInflater
 
     /**
      * 通过类型获得布局ID
@@ -34,10 +34,10 @@ abstract class BaseRecyclerVMAdapter<T, B : ViewDataBinding>(var list: MutableLi
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderRecyclerView {
-        if (!::mLayoutInflater.isInitialized) {
-            mLayoutInflater = LayoutInflater.from(parent.context)
+        if (!::layoutInflater.isInitialized) {
+            layoutInflater = LayoutInflater.from(parent.context)
         }
-        val bind = DataBindingUtil.inflate<B>(mLayoutInflater, getLayoutId(viewType), parent, false)
+        val bind = DataBindingUtil.inflate<B>(layoutInflater, getLayoutId(viewType), parent, false)
         return ViewHolderRecyclerView(bind.root, itemClickListener, itemLongClickListener)
     }
 

@@ -13,7 +13,7 @@ import com.github2136.base.ViewHolderRecyclerView
  * 折叠节点Adapter
  */
 abstract class BaseNodeAdapter(var list: MutableList<BaseNodeItem>? = null) : RecyclerView.Adapter<ViewHolderRecyclerView>() {
-    protected lateinit var mLayoutInflater: LayoutInflater
+    protected lateinit var layoutInflater: LayoutInflater
 
     /**
      * 通过下标获取类型
@@ -43,10 +43,10 @@ abstract class BaseNodeAdapter(var list: MutableList<BaseNodeItem>? = null) : Re
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderRecyclerView {
-        if (!::mLayoutInflater.isInitialized) {
-            mLayoutInflater = LayoutInflater.from(parent.context)
+        if (!::layoutInflater.isInitialized) {
+            layoutInflater = LayoutInflater.from(parent.context)
         }
-        val bind = DataBindingUtil.inflate<ViewDataBinding>(mLayoutInflater, getLayoutId(viewType), parent, false)
+        val bind = DataBindingUtil.inflate<ViewDataBinding>(layoutInflater, getLayoutId(viewType), parent, false)
         return ViewHolderRecyclerView(bind.root, ::itemClickListener, ::itemLongClickListener)
     }
 

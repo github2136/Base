@@ -14,7 +14,7 @@ import com.github2136.basemvvm.R
 /**
  * Created by YB on 2020/7/28
  */
-abstract class BaseLoadMoreFragment<V : BaseLoadMoreVM<T>, B : ViewDataBinding, T>(iBaseFragment: IBaseFragment? = null) : BaseFragment<V, B>(iBaseFragment) {
+abstract class BaseLoadMoreFragment<V : BaseLoadMoreVM<*>, B : ViewDataBinding>(iBaseFragment: IBaseFragment? = null) : BaseFragment<V, B>(iBaseFragment) {
     open var autoInit = true
     protected val rvList by lazy { bind.root.findViewById<RecyclerView>(R.id.rvList) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,7 +33,7 @@ abstract class BaseLoadMoreFragment<V : BaseLoadMoreVM<T>, B : ViewDataBinding, 
                     }
                 }
             } else {
-                it.addItemDecoration(DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL))
+                it.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             }
         }
         if (autoInit) {

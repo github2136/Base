@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
  */
 abstract class BaseVM(app: Application) : AndroidViewModel(app) {
     protected val TAG = this.javaClass.name
-    val mJsonUtil by lazy { JsonUtil.instance }
+    val jsonUtil by lazy { JsonUtil.instance }
 
     // protected val jobs = mutableMapOf<UUID, Job>()
     val loadingStr = "请稍后……"
