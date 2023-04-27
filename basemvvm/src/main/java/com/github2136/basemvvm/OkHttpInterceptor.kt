@@ -4,8 +4,10 @@ import com.orhanobut.logger.Logger
 import okhttp3.Interceptor
 import okhttp3.Response
 import okio.*
+import retrofit2.Invocation
 import java.io.IOException
 import java.nio.charset.Charset
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by YB on 2019/5/5
@@ -14,7 +16,10 @@ import java.nio.charset.Charset
 class OkHttpInterceptor : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
+        val startTime = System.currentTimeMillis()
         val request = chain.request()
+        val m = request.tag(Invocation::class.java)?.method()
+        val dynamicTimeout = m?.getAnnotation(DynamicTimeout::class.java)
         val requestUrl = request.url
         val method = request.method
         val requestHeads = request.headers
@@ -31,6 +36,13 @@ class OkHttpInterceptor : Interceptor {
         val response: Response
         var responseLog = ""
         try {
+            dynamicTimeout?.apply {
+                if (this.timeout > 0) {
+                    chain.withConnectTimeout(dynamicTimeout.timeout, TimeUnit.SECONDS)
+                        .withReadTimeout(dynamicTimeout.timeout, TimeUnit.SECONDS)
+                        .withWriteTimeout(dynamicTimeout.timeout, TimeUnit.SECONDS)
+                }
+            }
             response = chain.proceed(request)
             val code = response.code
             val responseHeads = response.headers
@@ -66,7 +78,7 @@ class OkHttpInterceptor : Interceptor {
             // }
             // |${if (responseHeaderSb.isNotEmpty()) "Header\n$responseHeaderSb" else ""}
             responseLog = """Code $code
-                |Response Body 
+                |Response Body time:%time
                 |$body
                 """.trimIndent()
             return response
@@ -78,6 +90,7 @@ class OkHttpInterceptor : Interceptor {
             requestHeads.forEach {
                 requestHeaderSb.append(it.first + ":" + it.second + "\n")
             }
+            val endTime = System.currentTimeMillis()
             Logger.t("HTTP")
                 .d(
                     """
@@ -85,7 +98,7 @@ class OkHttpInterceptor : Interceptor {
                     |Header
                     |${requestHeaderSb}Request Body:${requestBody.utf8()}
                     |┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
-                    |$responseLog""".trimMargin()
+                    |${responseLog.replace("%time", (endTime - startTime).toString())}""".trimMargin()
                 )
         }
     }

@@ -10,6 +10,7 @@ import okio.buffer
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.nio.charset.Charset
+import java.util.concurrent.TimeUnit
 import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLSession
 
@@ -20,11 +21,16 @@ import javax.net.ssl.SSLSession
 abstract class BaseWebModel(context: Context) {
     open var baseUrl = ""
     private var _retrofit: Retrofit? = null
-
+    open val connectTimeout = 10L
+    open val readTimeout = 10L
+    open val writeTimeout = 10L
     protected val jsonUtil by lazy { JsonUtil.instance }
     protected val spUtil by lazy { SPUtil.getSharedPreferences(context) }
     protected val client by lazy {
         val client = OkHttpClient().newBuilder()
+            .connectTimeout(connectTimeout, TimeUnit.SECONDS)
+            .readTimeout(readTimeout, TimeUnit.SECONDS)
+            .writeTimeout(writeTimeout, TimeUnit.SECONDS)
             .addInterceptor { chain ->
                 val original = chain.request()
                 val requestBuild = original.newBuilder()
