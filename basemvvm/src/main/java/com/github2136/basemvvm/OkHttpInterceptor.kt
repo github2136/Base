@@ -77,13 +77,16 @@ class OkHttpInterceptor : Interceptor {
             //     responseHeaderSb.append(it.first + ":" + it.second + "\n")
             // }
             // |${if (responseHeaderSb.isNotEmpty()) "Header\n$responseHeaderSb" else ""}
-            responseLog = """Code $code
-                |Response Body time:%time
+            responseLog = """Timing %time
+                |Code $code
+                |Response Body
                 |$body
                 """.trimIndent()
             return response
         } catch (e: Exception) {
-            responseLog = "$e"
+            responseLog = """Timing %time
+                |Exception $e
+            """.trimIndent()
             throw e
         } finally {
             val requestHeaderSb = StringBuilder()
