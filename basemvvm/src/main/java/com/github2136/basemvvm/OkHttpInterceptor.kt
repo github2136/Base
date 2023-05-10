@@ -36,14 +36,14 @@ class OkHttpInterceptor : Interceptor {
         val response: Response
         var responseLog = ""
         try {
-            dynamicTimeout?.apply {
-                if (this.timeout > 0) {
-                    chain.withConnectTimeout(dynamicTimeout.timeout, TimeUnit.SECONDS)
-                        .withReadTimeout(dynamicTimeout.timeout, TimeUnit.SECONDS)
-                        .withWriteTimeout(dynamicTimeout.timeout, TimeUnit.SECONDS)
-                }
+            response = if (dynamicTimeout != null && dynamicTimeout.timeout > 0) {
+                chain.withConnectTimeout(dynamicTimeout.timeout, TimeUnit.SECONDS)
+                    .withReadTimeout(dynamicTimeout.timeout, TimeUnit.SECONDS)
+                    .withWriteTimeout(dynamicTimeout.timeout, TimeUnit.SECONDS)
+                    .proceed(request)
+            } else {
+                chain.proceed(request)
             }
-            response = chain.proceed(request)
             val code = response.code
             val responseHeads = response.headers
             val responseBody = response.body
