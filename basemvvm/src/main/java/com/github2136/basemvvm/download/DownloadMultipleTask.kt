@@ -131,9 +131,15 @@ class DownloadMultipleTask(
                 if (successCount.get() + failCount.get() == fileCount) {
                     if (failCount.get() == 0) {
                         //全部下载完成
+                        if (DownloadUtil.LOG_ENABLE) {
+                            Log.d(DownloadUtil.TAG, "全部下载完成")
+                        }
                         callback?.invoke(DownloadUtil.STATE_SUCCESS, p, successCount.get(), fileCount, "", "", "")
                     } else {
                         //全部下载完成，部分失败
+                        if (DownloadUtil.LOG_ENABLE) {
+                            Log.d(DownloadUtil.TAG, "部分下载完成")
+                        }
                         callback?.invoke(DownloadUtil.STATE_FAIL, p, successCount.get(), fileCount, "", "", "")
                     }
                 }
@@ -147,6 +153,9 @@ class DownloadMultipleTask(
                 }
                 if (successCount.get() + failCount.get() == fileCount) {
                     //全部下载完成，部分失败
+                    if (DownloadUtil.LOG_ENABLE) {
+                        Log.d(DownloadUtil.TAG, "部分下载完成")
+                    }
                     callback?.invoke(DownloadUtil.STATE_FAIL, p, successCount.get(), fileCount, "", "", "")
                 }
             }
