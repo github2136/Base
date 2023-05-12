@@ -125,16 +125,19 @@ class DownloadTask(
                             else -> 5
                         }
                         if (DownloadUtil.LOG_ENABLE) {
-                            Log.d(DownloadUtil.TAG, "URL:$url Size:$length BlockSize:${threadSize}")
+                            Log.d(DownloadUtil.TAG, "URL:$url 大小:$length 块数:${threadSize}")
                         }
                         download(downloadFile!!.id, threadSize, url, length)
                     } else {
                         if (DownloadUtil.LOG_ENABLE) {
-                            Log.d(DownloadUtil.TAG, "URL:$url Size:$length")
+                            Log.d(DownloadUtil.TAG, "URL:$url 大小:$length")
                         }
                         download(downloadFile!!.id, 1, url, length)
                     }
                 } else {
+                    if (DownloadUtil.LOG_ENABLE) {
+                        Log.d(DownloadUtil.TAG, "URL:$url request code ${response.code}")
+                    }
                     fail("request code ${response.code}")
                     //下载失败
                     response.body?.apply {
@@ -143,15 +146,21 @@ class DownloadTask(
                 }
             } catch (e: Exception) {
                 //下载失败
+                if (DownloadUtil.LOG_ENABLE) {
+                    Log.e(DownloadUtil.TAG, "URL:$url $e")
+                }
                 val sw = StringWriter()
                 e.printStackTrace(PrintWriter(sw))
                 fail(sw.toString())
             }
         } catch (e: Exception) {
             //下载失败
+            if (DownloadUtil.LOG_ENABLE) {
+                Log.e(DownloadUtil.TAG, "URL:$url $e")
+            }
             val sw = StringWriter()
             e.printStackTrace(PrintWriter(sw))
-            fail("start onFailure $sw")
+            fail(sw.toString())
         }
     }
 
@@ -299,22 +308,28 @@ class DownloadTask(
                                             }
                                         } else {
                                             if (DownloadUtil.LOG_ENABLE) {
-                                                Log.d(DownloadUtil.TAG, "URL:$url 文件被删除")
+                                                Log.e(DownloadUtil.TAG, "URL:$url 文件被删除")
                                             }
-                                            fail("File miss")
+                                            fail("文件被删除")
                                         }
                                     }
                                 }
                             }
                         } else {
                             //下载失败
+                            if (DownloadUtil.LOG_ENABLE) {
+                                Log.e(DownloadUtil.TAG, "URL:$url request code ${response.code}")
+                            }
                             fail("request code ${response.code}")
                         }
                     } catch (e: Exception) {
                         //下载失败
+                        if (DownloadUtil.LOG_ENABLE) {
+                            Log.e(DownloadUtil.TAG, "URL:$url $e")
+                        }
                         val sw = StringWriter()
                         e.printStackTrace(PrintWriter(sw))
-                        fail("download onFailure $sw")
+                        fail(sw.toString())
                     } finally {
                         inputStream?.close()
                         randomFile?.close()

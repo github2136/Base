@@ -74,10 +74,17 @@ class DownloadMultipleTask(
                     //已下载
                     callback?.invoke(DownloadUtil.STATE_BLOCK_SUCCESS, p, successCount.get(), fileCount, entry.key, path, null)
                     if (successCount.get() + failCount.get() == fileCount) {
-                        if (DownloadUtil.LOG_ENABLE) {
-                            Log.d(DownloadUtil.TAG, "多文件全部已存在")
+                        if (failCount.get() == 0) {
+                            if (DownloadUtil.LOG_ENABLE) {
+                                Log.d(DownloadUtil.TAG, "多文件下载结束")
+                            }
+                            callback?.invoke(DownloadUtil.STATE_SUCCESS, p, successCount.get(), fileCount, entry.key, path, null)
+                        } else {
+                            if (DownloadUtil.LOG_ENABLE) {
+                                Log.d(DownloadUtil.TAG, "多文件下载结束，部分失败")
+                            }
+                            callback?.invoke(DownloadUtil.STATE_FAIL, p, successCount.get(), fileCount, entry.key, path, null)
                         }
-                        callback?.invoke(DownloadUtil.STATE_SUCCESS, p, successCount.get(), fileCount, entry.key, path, null)
                     }
                 }
             }
@@ -89,7 +96,9 @@ class DownloadMultipleTask(
         stop = true
         downloadChannel.close()
         for (downloadTask in progressTask) {
-            Log.d(DownloadUtil.TAG, "文件停止 ${downloadTask?.url}")
+            if (DownloadUtil.LOG_ENABLE) {
+                Log.d(DownloadUtil.TAG, "多文件下载停止 ${downloadTask?.url}")
+            }
             downloadTask?.stop()
         }
         callback?.invoke(DownloadUtil.STATE_STOP, getProgress(), successCount.get(), fileCount, "", "", null)
@@ -125,20 +134,17 @@ class DownloadMultipleTask(
                 val p = getProgress()
                 callback?.invoke(DownloadUtil.STATE_BLOCK_SUCCESS, p, successCount.get(), fileCount, url, path, error)
                 callback?.invoke(DownloadUtil.STATE_BLOCK_PROGRESS, p, successCount.get(), fileCount, url, path, error)
-                if (DownloadUtil.LOG_ENABLE) {
-                    Log.d(DownloadUtil.TAG, "多文件下载完成:${url}")
-                }
                 if (successCount.get() + failCount.get() == fileCount) {
                     if (failCount.get() == 0) {
                         //全部下载完成
                         if (DownloadUtil.LOG_ENABLE) {
-                            Log.d(DownloadUtil.TAG, "全部下载完成")
+                            Log.d(DownloadUtil.TAG, "多文件下载结束")
                         }
                         callback?.invoke(DownloadUtil.STATE_SUCCESS, p, successCount.get(), fileCount, "", "", "")
                     } else {
                         //全部下载完成，部分失败
                         if (DownloadUtil.LOG_ENABLE) {
-                            Log.d(DownloadUtil.TAG, "部分下载完成")
+                            Log.d(DownloadUtil.TAG, "多文件下载结束，部分失败")
                         }
                         callback?.invoke(DownloadUtil.STATE_FAIL, p, successCount.get(), fileCount, "", "", "")
                     }
@@ -148,13 +154,10 @@ class DownloadMultipleTask(
                 failCount.incrementAndGet()
                 val p = getProgress()
                 callback?.invoke(DownloadUtil.STATE_BLOCK_FAIL, p, successCount.get(), fileCount, url, path, error)
-                if (DownloadUtil.LOG_ENABLE) {
-                    Log.d(DownloadUtil.TAG, "多文件下载失败:${url} ${error}")
-                }
                 if (successCount.get() + failCount.get() == fileCount) {
                     //全部下载完成，部分失败
                     if (DownloadUtil.LOG_ENABLE) {
-                        Log.d(DownloadUtil.TAG, "部分下载完成")
+                        Log.d(DownloadUtil.TAG, "多文件下载结束，部分失败")
                     }
                     callback?.invoke(DownloadUtil.STATE_FAIL, p, successCount.get(), fileCount, "", "", "")
                 }
