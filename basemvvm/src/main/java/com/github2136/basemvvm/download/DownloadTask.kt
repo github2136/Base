@@ -136,7 +136,7 @@ class DownloadTask(
                     }
                 } else {
                     if (DownloadUtil.LOG_ENABLE) {
-                        Log.d(DownloadUtil.TAG, "URL:$url request code ${response.code}")
+                        Log.e(DownloadUtil.TAG, "URL:$url request code ${response.code}")
                     }
                     fail("request code ${response.code}")
                     //下载失败
