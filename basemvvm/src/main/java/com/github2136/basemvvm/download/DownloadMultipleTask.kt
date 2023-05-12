@@ -73,7 +73,7 @@ class DownloadMultipleTask(
                     }
                     //已下载
                     callback?.invoke(DownloadUtil.STATE_BLOCK_SUCCESS, p, successCount.get(), fileCount, entry.key, path, null)
-                    if (successCount.get() == fileCount) {
+                    if (successCount.get() + failCount.get() == fileCount) {
                         if (DownloadUtil.LOG_ENABLE) {
                             Log.d(DownloadUtil.TAG, "多文件全部已存在")
                         }
