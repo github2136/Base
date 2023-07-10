@@ -84,7 +84,10 @@ abstract class BaseRecyclerVMAdapter<T, B : ViewDataBinding>(var list: MutableLi
         notifyDataSetChanged()
     }
 
-    fun appendData(list: List<T>) {
+    fun appendData(list: MutableList<T>) {
+        if (this.list == null) {
+            this.list = list
+        }
         this.list?.let {
             it.addAll(list)
             notifyDataSetChanged()
