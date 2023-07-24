@@ -27,7 +27,7 @@ import java.lang.reflect.ParameterizedType
  * Created by YB on 2019/8/29
  * 基础Activity
  */
-abstract class BaseActivity<V : BaseVM, B : ViewDataBinding>(val iBaseActivity: IBaseActivity? = null) : AppCompatActivity(), IBaseView {
+abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity(), IBaseView {
     protected lateinit var vm: V
     protected lateinit var bind: B
     protected val TAG = this.javaClass.name
@@ -73,40 +73,16 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding>(val iBaseActivity: 
             }
         })
         initObserve()
-        iBaseActivity?.activity = this
-        iBaseActivity?.onCreate(savedInstanceState)
         preInitData(savedInstanceState)
         initData(savedInstanceState)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        iBaseActivity?.onStart()
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        iBaseActivity?.onRestart()
     }
 
     override fun onResume() {
         super.onResume()
         notificationEnable = notificationManagerCompat.areNotificationsEnabled()
-        iBaseActivity?.onResume()
-    }
-
-    override fun onPause() {
-        iBaseActivity?.onPause()
-        super.onPause()
-    }
-
-    override fun onStop() {
-        iBaseActivity?.onStop()
-        super.onStop()
     }
 
     override fun onDestroy() {
-        iBaseActivity?.onDestroy()
         cancelRequest()
         app.removeActivity(this)
         super.onDestroy()

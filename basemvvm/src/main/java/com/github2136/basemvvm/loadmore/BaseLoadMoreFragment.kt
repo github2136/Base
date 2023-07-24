@@ -8,13 +8,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.github2136.basemvvm.BaseFragment
-import com.github2136.basemvvm.IBaseFragment
 import com.github2136.basemvvm.R
 
 /**
  * Created by YB on 2020/7/28
  */
-abstract class BaseLoadMoreFragment<V : BaseLoadMoreVM<*>, B : ViewDataBinding>(iBaseFragment: IBaseFragment? = null) : BaseFragment<V, B>(iBaseFragment) {
+abstract class BaseLoadMoreFragment<V : BaseLoadMoreVM<*>, B : ViewDataBinding> : BaseFragment<V, B>() {
     open var autoInit = true
     protected val rvList by lazy { bind.root.findViewById<RecyclerView>(R.id.rvList) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

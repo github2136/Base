@@ -4,12 +4,11 @@ import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.github2136.base.R
-import com.github2136.base.base.IBaseActivityImpl
+import com.github2136.base.base.AppBaseActivity
 import com.github2136.base.databinding.ActivityNodeListBinding
 import com.github2136.base.model.entity.LeafData
-import com.github2136.basemvvm.BaseActivity
 
-class NodeListActivity : BaseActivity<NodeListVM, ActivityNodeListBinding>(IBaseActivityImpl()) {
+class NodeListActivity : AppBaseActivity<NodeListVM, ActivityNodeListBinding>() {
     override fun getLayoutId() = R.layout.activity_node_list
 
     override fun initData(savedInstanceState: Bundle?) {

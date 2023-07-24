@@ -7,13 +7,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.github2136.basemvvm.BaseActivity
-import com.github2136.basemvvm.IBaseActivity
 import com.github2136.basemvvm.R
 
 /**
  * Created by YB on 2019/9/20
  */
-abstract class BaseLoadMoreActivity<V : BaseLoadMoreVM<*>, B : ViewDataBinding>(iBaseActivity: IBaseActivity? = null) : BaseActivity<V, B>(iBaseActivity) {
+abstract class BaseLoadMoreActivity<V : BaseLoadMoreVM<*>, B : ViewDataBinding>: BaseActivity<V, B>() {
     open var autoInit = true
     protected val rvList by lazy { findViewById<RecyclerView>(R.id.rvList) }
     override fun onCreate(savedInstanceState: Bundle?) {

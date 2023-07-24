@@ -5,18 +5,16 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.github2136.base.R
-import com.github2136.base.base.IBaseActivityImpl
+import com.github2136.base.base.AppBaseActivity
 import com.github2136.base.databinding.ActivityMainBinding
 import com.github2136.base.view.activity.list.ListActivity
 import com.github2136.base.view.activity.loadmore.LoadMoreActivity
 import com.github2136.base.view.activity.nodelist.NodeListActivity
-import com.github2136.basemvvm.BaseActivity
 import com.github2136.basemvvm.download.DownloadUtil
 import com.github2136.util.FileUtil
 import java.io.File
-import java.util.*
 
-class MainActivity : BaseActivity<MainVM, ActivityMainBinding>(IBaseActivityImpl()) {
+class MainActivity : AppBaseActivity<MainVM, ActivityMainBinding>() {
     override fun getLayoutId() = R.layout.activity_main
     val downloadUtil by lazy { DownloadUtil.getInstance(application) }
     val filePath by lazy { FileUtil.getExternalStorageProjectPath(this) }
