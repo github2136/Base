@@ -27,9 +27,9 @@ class MainActivity : AppBaseActivity<MainVM, ActivityMainBinding>() {
     }
 
     // val url = "http://223.83.128.251:48092/UploadFiles/System/app/20211018/259dc425-045f-42c6-865c-34f8efa6a50f.apk"
-    val url =
-        "http://t6.tianditu.gov.cn/img_c/wmts?service=wmts&request=gettile&version=1.0.0&layer=img&format=tiles&STYLE=default&tilematrixset=c&tilecol=6729&tilerow=1400&tilematrix=13&tk=b77baf477f61aff4eb65003969b17809"
-
+    // val url =
+    //     "http://t6.tianditu.gov.cn/img_c/wmts?service=wmts&request=gettile&version=1.0.0&layer=img&format=tiles&STYLE=default&tilematrixset=c&tilecol=6729&tilerow=1400&tilematrix=13&tk=dd8fc4bb72a30c015bb12b65ee2778c8"
+    val url = "https://t6.tianditu.gov.cn/img_c/wmts?service=wmts&request=gettile&version=1.0.0&layer=img&format=tiles&STYLE=default&tilematrixset=c&tilecol=6729&tilerow=1400&tilematrix=13&tk=dd8fc4bb72a30c015bb12b65ee2778c8";
     // val url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/Android_8.2.7.4395.apk"
     var multipleId = ""
 
@@ -93,7 +93,7 @@ class MainActivity : AppBaseActivity<MainVM, ActivityMainBinding>() {
                     "https://dldir1.qq.com/weixin/android/weixin7013android1640.apk" to "$filePath/3.exe",
                     "https://dldir1.qq.com/weixin/Windows/WeChatSetup.exe" to "$filePath/4.exe",
                     "https://d1.music.126.net/dmusic/cloudmusicsetup2.7.1.198242.exe" to "$filePath/6.exe",
-                    "http://t6.tianditu.gov.cn/img_c/wmts?service=wmts&request=gettile&version=1.0.0&layer=img&format=tiles&STYLE=default&tilematrixset=c&tilecol=6729&tilerow=1400&tilematrix=13&tk=b77baf477f61aff4eb65003969b17809" to "$filePath/x.png"
+                    "http://t6.tianditu.gov.cn/img_c/wmts?service=wmts&request=gettile&version=1.0.0&layer=img&format=tiles&STYLE=default&tilematrixset=c&tilecol=6729&tilerow=1400&tilematrix=13&tk=dd8fc4bb72a30c015bb12b65ee2778c8" to "$filePath/x.png"
                 )
                 multipleId = downloadUtil.downloadMultiple(m, "xx") { state, progress, successCount, fileCount, url, path, error ->
                     when (state) {
