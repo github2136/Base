@@ -4,6 +4,7 @@ import com.github2136.base.model.entity.Weather
 import com.github2136.basemvvm.DynamicTimeout
 import com.github2136.basemvvm.HttpCache
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.Path
 
 /**
@@ -12,6 +13,7 @@ import retrofit2.http.Path
 interface HttpService {
     @HttpCache
     @DynamicTimeout(3)
+    @Headers("Cache-Control: public, max-age=" + 24 * 3600)
     @GET("adat/sk/{cityId}.html")
     suspend fun getWeatherFlow(@Path("cityId") cityId: String): Weather
 }

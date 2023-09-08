@@ -35,7 +35,14 @@ abstract class BaseWebModel(context: Context) {
     open val writeTimeout = 10L
     protected val jsonUtil by lazy { JsonUtil.instance }
     protected val spUtil by lazy { SPUtil.getSharedPreferences(context) }
+    protected val networkUtil by lazy { NetworkUtil.getInstance(context) }
 
+    protected val cacheBuilder by lazy {
+        val cacheBuilder = CacheControl.Builder()
+        cacheBuilder.maxAge(0, TimeUnit.SECONDS)
+        cacheBuilder.maxStale(365, TimeUnit.DAYS)
+        cacheBuilder
+    }
     //请求缓存地址
     private val cache by lazy { Cache(File(context.cacheDir, "http"), 10 * 1024 * 1024) }
 
@@ -92,7 +99,7 @@ abstract class BaseWebModel(context: Context) {
                 preProcessing(responseCode, body)
                 return@addInterceptor response
             }
-            .addInterceptor(cacheInterceptor)
+            // .addInterceptor(cacheInterceptor)
             .addInterceptor(OkHttpInterceptor())
         getSSlObj()?.apply {
             client
@@ -124,18 +131,11 @@ abstract class BaseWebModel(context: Context) {
             @Throws(IOException::class)
             override fun intercept(chain: Interceptor.Chain): Response {
                 var request = chain.request()
-                val m = request.tag(Invocation::class.java)?.method()
-                val httpCache = m?.getAnnotation(HttpCache::class.java)
-
-                val cacheBuilder = CacheControl.Builder()
-                cacheBuilder.maxAge(0, TimeUnit.SECONDS) //缓存
-                cacheBuilder.maxStale(365, TimeUnit.DAYS)
+                val httpCache = request.tag(Invocation::class.java)?.method()?.getAnnotation(HttpCache::class.java)
                 val cacheControl: CacheControl = cacheBuilder.build()
-
                 if (httpCache == null) {
                     return chain.proceed(request)
                 } else {
-                    val networkUtil = NetworkUtil.getInstance(context)
                     if (!networkUtil.isNetworkAvailable()) {
                         request = request.newBuilder()
                             .cacheControl(cacheControl)
