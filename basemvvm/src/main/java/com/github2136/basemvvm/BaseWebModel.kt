@@ -99,7 +99,7 @@ abstract class BaseWebModel(context: Context) {
                 preProcessing(responseCode, body)
                 return@addInterceptor response
             }
-            // .addInterceptor(cacheInterceptor)
+            .addInterceptor(cacheInterceptor)
             .addInterceptor(OkHttpInterceptor())
         getSSlObj()?.apply {
             client
