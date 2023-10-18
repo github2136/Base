@@ -15,7 +15,6 @@ import com.github2136.util.FileUtil
 import java.io.File
 
 class MainActivity : AppBaseActivity<MainVM, ActivityMainBinding>() {
-    override fun getLayoutId() = R.layout.activity_main
     val downloadUtil by lazy { DownloadUtil.getInstance(application) }
     val filePath by lazy { FileUtil.getExternalStorageProjectPath(this) }
     lateinit var urlAndPath: Map<String, String>

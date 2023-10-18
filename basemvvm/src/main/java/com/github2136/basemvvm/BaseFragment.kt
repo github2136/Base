@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationManagerCompat
-import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -50,7 +49,10 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        bind = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
+        val type = (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments
+        val dbType = type[1] as Class<B>
+        val dbInflate = dbType.getDeclaredMethod("inflate", LayoutInflater::class.java, ViewGroup::class.java, Boolean::class.java)
+        bind = dbInflate.invoke(null, inflater, container, false) as B
         bind.lifecycleOwner = this
         return bind.root
     }
@@ -232,11 +234,6 @@ abstract class BaseFragment<V : BaseVM, B : ViewDataBinding> : Fragment(), IBase
     }
 
     protected open fun handleMessage(msg: Message) {}
-
-    /**
-     * 布局ID
-     */
-    protected abstract fun getLayoutId(): Int
 
     /**
      * 数据初始化前的操作

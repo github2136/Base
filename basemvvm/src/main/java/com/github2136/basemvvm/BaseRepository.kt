@@ -30,11 +30,6 @@ abstract class BaseRepository(context: Context) {
             val w = StringWriter()
             e.printStackTrace(PrintWriter(w))
             Logger.t("RepositoryException").e("$w")
-            if (e is HttpException) {
-                if (e.code() == 401) {
-                    return@withContext ResultRepo.Unauthorized(0, "未授权", e)
-                }
-            }
             return@withContext ResultRepo.Error(0, failedStr, e)
         }
     }

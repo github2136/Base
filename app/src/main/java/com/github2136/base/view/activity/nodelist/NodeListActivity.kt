@@ -9,7 +9,6 @@ import com.github2136.base.databinding.ActivityNodeListBinding
 import com.github2136.base.model.entity.LeafData
 
 class NodeListActivity : AppBaseActivity<NodeListVM, ActivityNodeListBinding>() {
-    override fun getLayoutId() = R.layout.activity_node_list
 
     override fun initData(savedInstanceState: Bundle?) {
         bind.vm = vm

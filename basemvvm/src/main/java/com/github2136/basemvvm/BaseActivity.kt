@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -55,11 +56,16 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
         super.onCreate(savedInstanceState)
         notificationEnable = notificationManagerCompat.areNotificationsEnabled()
         app.addActivity(this)
-        bind = DataBindingUtil.setContentView(this, getLayoutId())
-        bind.lifecycleOwner = this
 
         val type = (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments
         getVM(type[0] as Class<V>)
+
+        val dbType = type[1] as Class<B>
+        val dbInflate = dbType.getDeclaredMethod("inflate", LayoutInflater::class.java)
+
+        bind = dbInflate.invoke(null, layoutInflater) as B
+        setContentView(bind.root)
+        bind.lifecycleOwner = this
         vm.dialogLD.observe(this, Observer { dialog ->
             if (dialog != null) {
                 showProgressDialog(dialog.msg, dialog.cancelable, dialog.canceledOnTouchOutside)
@@ -231,11 +237,6 @@ abstract class BaseActivity<V : BaseVM, B : ViewDataBinding> : AppCompatActivity
     }
 
     protected open fun handleMessage(msg: Message) {}
-
-    /**
-     * 布局ID
-     */
-    protected abstract fun getLayoutId(): Int
 
     /**
      * 初始化前操作

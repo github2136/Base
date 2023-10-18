@@ -6,7 +6,6 @@ import com.github2136.base.base.AppBaseActivity
 import com.github2136.base.databinding.ActivityListBinding
 
 class ListActivity : AppBaseActivity<ListVM, ActivityListBinding>() {
-    override fun getLayoutId() = R.layout.activity_list
 
     override fun initData(savedInstanceState: Bundle?) {
         bind.vm = vm

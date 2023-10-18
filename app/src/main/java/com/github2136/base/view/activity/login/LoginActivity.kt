@@ -16,7 +16,6 @@ import com.github2136.base.view.activity.main.MainActivity
 import com.github2136.util.PermissionUtil
 
 class LoginActivity : AppBaseActivity<LoginVM, ActivityLoginBinding>() {
-    override fun getLayoutId() = R.layout.activity_login
     private val permissionUtil by lazy { PermissionUtil(this) }
     override fun initData(savedInstanceState: Bundle?) {
         bind.view = this

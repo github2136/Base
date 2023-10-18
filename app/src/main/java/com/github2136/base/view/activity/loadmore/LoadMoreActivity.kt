@@ -12,7 +12,6 @@ import com.github2136.base.divider.Divider
  * Created by YB on 2019/9/20
  */
 class LoadMoreActivity : AppBaseLoadMoreActivity<LoadMoreVM, ActivityLoadMoreBinding>() {
-    override fun getLayoutId() = R.layout.activity_load_more
 
     override fun initData(savedInstanceState: Bundle?) {
         bind.view = this
