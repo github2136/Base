@@ -2,6 +2,6 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorRipple">#17FFFFFF</color>
-    <color name="colorButton">#00574B</color>
-    <color name="colorButtonDisable">#909090</color>
+    <color name="colorBaseButton">#00574B</color>
+    <color name="colorBaseButtonDisable">#909090</color>
 </resources>

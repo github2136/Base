@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="BtnSmall" parent="Base.TextAppearance.AppCompat.Widget.Button.Inverse">
-        <item name="android:minHeight">36dp</item>
-        <item name="android:minWidth">36dp</item>
-        <item name="android:padding">6dp</item>
+        <item name="android:minHeight">24dp</item>
+        <item name="android:minWidth">32dp</item>
+        <item name="android:paddingLeft">6dp</item>
+        <item name="android:paddingRight">6dp</item>
         <item name="android:background">@drawable/btn_small_ripple_bg</item>
         <item name="android:textSize">10sp</item>
         <item name="android:textColor">@android:color/white</item>
@@ -11,7 +13,10 @@
     </style>
 
     <style name="BtnMedium" parent="Base.TextAppearance.AppCompat.Widget.Button.Inverse">
-        <item name="android:padding">8dp</item>
+        <item name="android:minHeight">32dp</item>
+        <item name="android:minWidth">32dp</item>
+        <item name="android:paddingLeft">6dp</item>
+        <item name="android:paddingRight">6dp</item>
         <item name="android:background">@drawable/btn_medium_ripple_bg</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@android:color/white</item>

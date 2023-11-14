@@ -12,12 +12,32 @@ import com.github2136.basemvvm.R
 /**
  * Created by YB on 2019/9/20
  */
-abstract class BaseLoadMoreActivity<V : BaseLoadMoreVM<*>, B : ViewDataBinding>: BaseActivity<V, B>() {
+abstract class BaseLoadMoreActivity<V : BaseLoadMoreVM<*>, B : ViewDataBinding> : BaseActivity<V, B>() {
     open var autoInit = true
     protected val rvList by lazy { findViewById<RecyclerView>(R.id.rvList) }
+    protected val srlList by lazy { findViewById<SwipeRefreshLayout>(R.id.srlList) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        findViewById<SwipeRefreshLayout>(R.id.srlList).setColorSchemeResources(R.color.colorPrimary)
+        loadMoreView()
+        if (autoInit) {
+            vm.baseInitData()
+        }
+    }
+
+    /**
+     * 刷新数据，直接使用baseInitData()会出现不滚动顶部情况
+     */
+    fun refreshData() {
+        rvList.adapter = vm.adapter
+        vm.baseInitData()
+    }
+
+    open fun onRefreshListener() {
+        vm.baseInitData()
+    }
+
+    open fun loadMoreView() {
+        srlList.setColorSchemeResources(R.color.colorPrimary)
         rvList.let {
             val lm = it.layoutManager
             if (lm is GridLayoutManager) {
@@ -34,20 +54,5 @@ abstract class BaseLoadMoreActivity<V : BaseLoadMoreVM<*>, B : ViewDataBinding>:
                 it.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
             }
         }
-        if (autoInit) {
-            vm.baseInitData()
-        }
-    }
-
-    /**
-     * 刷新数据，直接使用baseInitData()会出现不滚动顶部情况
-     */
-    fun refreshData() {
-        rvList.adapter = vm.adapter
-        vm.baseInitData()
-    }
-
-    open fun onRefreshListener() {
-        vm.baseInitData()
     }
 }
