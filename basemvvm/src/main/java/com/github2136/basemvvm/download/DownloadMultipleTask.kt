@@ -18,7 +18,8 @@ import java.util.concurrent.atomic.AtomicInteger
 class DownloadMultipleTask(
     private val context: Context,
     private val urlAndPath: Map<String, String>,
-    private val replay: Boolean
+    private val replay: Boolean,
+    private val header: Map<String, String>?
 ) {
     /**
      * 下载状态，下载进度百分比，已下载文件数量，总文件大小，本地路径，网络路径，错误信息
@@ -62,7 +63,7 @@ class DownloadMultipleTask(
                 if (path == null || replay) {
                     //下载文件
                     if (!downloadChannel.isClosedForSend) {
-                        downloadChannel.send(DownloadTask(context, entry.key, entry.value, true, ::callback))
+                        downloadChannel.send(DownloadTask(context, entry.key, entry.value, header, true, ::callback))
                     }
                 } else {
                     successCount.incrementAndGet()

@@ -1,6 +1,7 @@
 package com.github2136.basemvvm.download
 
 import okhttp3.Call
+import okhttp3.Headers
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -15,20 +16,24 @@ import okhttp3.Request
  */
 class OkHttpManager(private val client: OkHttpClient) {
 
-    fun call(url: String): Call {
-        val request = Request.Builder()
+    fun call(url: String, header: Map<String, String>?): Call {
+        val builder = Request.Builder()
             .url(url)
             .addHeader("Accept-Encoding", "identity")
-            .build()
-        return client.newCall(request)
+        header?.forEach {
+            builder.addHeader(it.key, it.value)
+        }
+        return client.newCall(builder.build())
     }
 
-    fun call(url: String, start: Long, end: Long): Call {
-        val request = Request.Builder()
+    fun call(url: String, start: Long, end: Long, header: Map<String, String>?): Call {
+        val builder = Request.Builder()
             .url(url)
             .header("RANGE", "bytes=$start-$end")
-            .build()
-        return client.newCall(request)
+        header?.forEach {
+            builder.addHeader(it.key, it.value)
+        }
+        return client.newCall(builder.build())
     }
 
     companion object {

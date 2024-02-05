@@ -116,14 +116,14 @@ class DownloadBlockDao(context: Context) {
 
     companion object {
         const val TAB_NAME = "DownloadBlock"
-        const val COL_ID = "id"
-        const val COL_FILE_ID = "fileId"
-        const val COL_START = "start"
-        const val COL_END = "end"
-        const val COL_FILE_URL = "fileUrl"
-        const val COL_FILE_PATH = "filePath"
-        const val COL_FILE_SIZE = "fileSize"
-        const val COL_COMPLETE = "complete"
+        const val COL_ID = "'id'"
+        const val COL_FILE_ID = "'fileId'"
+        const val COL_START = "'start'"
+        const val COL_END = "'end'"
+        const val COL_FILE_URL = "'fileUrl'"
+        const val COL_FILE_PATH = "'filePath'"
+        const val COL_FILE_SIZE = "'fileSize'"
+        const val COL_COMPLETE = "'complete'"
         val COLS = arrayOf(COL_ID, COL_FILE_ID, COL_START, COL_END, COL_FILE_URL, COL_FILE_PATH, COL_FILE_SIZE, COL_COMPLETE)
     }
 }

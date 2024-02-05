@@ -7,6 +7,7 @@ import com.github2136.basemvvm.download.dao.DownloadBlockDao
 import com.github2136.basemvvm.download.dao.DownloadFileDao
 import com.github2136.basemvvm.download.entity.DownloadBlock
 import com.github2136.basemvvm.download.entity.DownloadFile
+import com.github2136.util.JsonUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
@@ -22,12 +23,14 @@ class DownloadTask(
     private val context: Context,
     val url: String,
     private var filePath: String,
+    header: Map<String, String>?,
     private val replay: Boolean,
     /**
      * 下载状态，下载进度百分比，已下载大小，总大小，本地路径，网络路径，错误信息
      */
     var callback: (state: Int, progress: Int, size: Long, contentLength: Long, path: String, url: String, error: String?) -> Unit
 ) {
+    private val jsonutil by lazy { JsonUtil.newInstance() }
     //下载时临时文件名下载完成后需要修改文件名
     private val downloadPath by lazy { "$filePath.basetemp" }
     private val downLoadFileDao by lazy { DownloadFileDao(context) }
@@ -44,7 +47,11 @@ class DownloadTask(
     //是否停止
     private var stop = false
     private var downloadFile: DownloadFile? = null
+    private var _header: Map<String, String>? = null
 
+    init {
+        _header = header
+    }
     /**
      * 开始下载
      */
@@ -59,11 +66,15 @@ class DownloadTask(
                 downLoadFileDao.delete(url)
                 downLoadBlockDao.delete(url)
                 downloadFile = null
+                _header = null
+            } else {
+                fileHeader = jsonutil.toJson(_header)
+                downLoadFileDao.update(this)
             }
         }
 
         try {
-            val call = okHttpManager.call(url)
+            val call = okHttpManager.call(url, _header)
             val response = call.execute()
             try {
                 if (response.isSuccessful) {
@@ -92,7 +103,7 @@ class DownloadTask(
                     }
                     if (downloadFile == null) {
                         //未下载过
-                        downloadFile = DownloadFile(0, url, downloadPath, 0, length, false)
+                        downloadFile = DownloadFile(0, url, jsonutil.toJson(_header), downloadPath, 0, length, false)
                         val fileId = downLoadFileDao.install(downloadFile!!)
                         downloadFile?.id = fileId
                     } else {
@@ -100,7 +111,7 @@ class DownloadTask(
                             //文件大小不一致，删除记录重新下载
                             downLoadFileDao.delete(url)
                             downLoadBlockDao.delete(url)
-                            downloadFile = DownloadFile(0, url, downloadPath, 0, length, false)
+                            downloadFile = DownloadFile(0, url, jsonutil.toJson(_header), downloadPath, 0, length, false)
                             val fileId = downLoadFileDao.install(downloadFile!!)
                             downloadFile?.id = fileId
                         }
@@ -206,7 +217,7 @@ class DownloadTask(
                     if (DownloadUtil.LOG_ENABLE) {
                         Log.d(DownloadUtil.TAG, "URL:$url 第${i}块开始下载")
                     }
-                    val call = okHttpManager.call(url, fileBlock.start + fileBlock.fileSize, fileBlock.end)
+                    val call = okHttpManager.call(url, fileBlock.start + fileBlock.fileSize, fileBlock.end, _header)
                     var inputStream: InputStream? = null
                     var randomFile: RandomAccessFile? = null
                     try {

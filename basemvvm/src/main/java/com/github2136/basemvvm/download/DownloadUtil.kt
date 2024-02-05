@@ -45,7 +45,7 @@ class DownloadUtil private constructor(val context: Context) {
     /**
      * 单文件下载
      */
-    fun download(url: String, filePath: String, replay: Boolean = false, callback: (state: Int, progress: Int, size: Long, contentLength: Long, path: String, url: String, error: String?) -> Unit) {
+    fun download(url: String, filePath: String, header: Map<String, String>? = null, replay: Boolean = false, callback: (state: Int, progress: Int, size: Long, contentLength: Long, path: String, url: String, error: String?) -> Unit) {
         if (LOG_ENABLE) {
             Log.d(TAG, "开始单文件下载，URL:$url path:$filePath")
         }
@@ -54,7 +54,7 @@ class DownloadUtil private constructor(val context: Context) {
                 if (LOG_ENABLE) {
                     Log.d(TAG, "新建下载对象，URL:$url path:$filePath")
                 }
-                val task = DownloadTask(context, url, filePath, replay) { state, progress, size, contentLength, path, url, error ->
+                val task = DownloadTask(context, url, filePath, header, replay) { state, progress, size, contentLength, path, url, error ->
                     if (state != STATE_PROGRESS) {
                         downloadTask.remove(url)
                     }
@@ -86,11 +86,11 @@ class DownloadUtil private constructor(val context: Context) {
     /**
      * 多文件下载
      */
-    fun downloadMultiple(urlAndPath: Map<String, String>, id: String? = null, replay: Boolean = false, callback: (state: Int, progress: Int, successCount: Int, fileCount: Int, url: String, path: String, error: String?) -> Unit): String {
+    fun downloadMultiple(urlAndPath: Map<String, String>, id: String? = null, replay: Boolean = false, header: Map<String, String>? = null, callback: (state: Int, progress: Int, successCount: Int, fileCount: Int, url: String, path: String, error: String?) -> Unit): String {
         if (LOG_ENABLE) {
             Log.d(TAG, "开始多单文件下载，共${urlAndPath.size}个")
         }
-        val multipleTask = DownloadMultipleTask(context, urlAndPath, replay)
+        val multipleTask = DownloadMultipleTask(context, urlAndPath, replay, header)
         val taskId = id ?: multipleTask.hashCode().toString()
         if (LOG_ENABLE) {
             Log.d(TAG, "开始多单文件下载，taskId:$taskId")

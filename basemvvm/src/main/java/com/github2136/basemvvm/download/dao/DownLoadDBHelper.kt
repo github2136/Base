@@ -7,13 +7,14 @@ import android.database.sqlite.SQLiteOpenHelper
 /**
  * Created by YB on 2019/6/6
  */
-class DownLoadDBHelper private constructor(context: Context) : SQLiteOpenHelper(context, "DownloadDB.db", null, 1) {
+class DownLoadDBHelper private constructor(context: Context) : SQLiteOpenHelper(context, "DownloadDB.db", null, 2) {
     override fun onCreate(db: SQLiteDatabase?) {
         db?.apply {
             execSQL("CREATE TABLE IF NOT EXISTS " +
                         "${DownloadFileDao.TAB_NAME} (" +
                         "${DownloadFileDao.COL_ID} INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "${DownloadFileDao.COL_FILE_URL} VARCHAR," +
+                        "${DownloadFileDao.COL_FILE_HEADER} VARCHAR," +
                         "${DownloadFileDao.COL_FILE_PATH} VARCHAR," +
                         "${DownloadFileDao.COL_FILE_SIZE} LONG," +
                         "${DownloadFileDao.COL_FILE_TOTAL} LONG," +
