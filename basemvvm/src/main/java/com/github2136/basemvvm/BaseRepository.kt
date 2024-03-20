@@ -1,7 +1,6 @@
 package com.github2136.basemvvm
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.github2136.util.JsonUtil
 import com.github2136.util.NetworkUtil
 import com.github2136.util.SPUtil
@@ -30,7 +29,11 @@ abstract class BaseRepository(context: Context) {
             val w = StringWriter()
             e.printStackTrace(PrintWriter(w))
             Logger.t("RepositoryException").e("$w")
-            return@withContext ResultRepo.Error(0, failedStr, e)
+            return@withContext if (e is HttpException) {
+                ResultRepo.Error(e.code(), failedStr, e)
+            } else {
+                ResultRepo.Error(0, failedStr, e)
+            }
         }
     }
 }

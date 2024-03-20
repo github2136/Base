@@ -34,6 +34,21 @@ class LoginVM(app: Application) : BaseVM(app) {
         }
     }
 
+    fun getWeather2() {
+        launch {
+            val resultRepo = weatherRepository.getWeather2()
+            when (resultRepo) {
+                is ResultRepo.Success -> {
+                }
+                is ResultRepo.Error -> {
+                    if (resultRepo.code == 404) {
+                        toastLD.value = "404"
+                    }
+                }
+            }
+        }
+    }
+
     fun login() {
         launch {
             dialogLD.value = DialogData(loadingStr)

@@ -27,6 +27,7 @@ class LoginActivity : AppBaseActivity<LoginVM, ActivityLoginBinding>() {
         permission[Manifest.permission.WRITE_EXTERNAL_STORAGE] = "文件写入"
         permissionUtil.getPermission(permission) {
             vm.getWeather()
+            vm.getWeather2()
         }
         vm.titleTextLD.value = "登录"
     }

@@ -15,5 +15,8 @@ interface HttpService {
     @DynamicTimeout(3)
     @Headers("Cache-Control: public, max-age=" + 24 * 3600)
     @GET("adat/sk/{cityId}.html")
-    suspend fun getWeatherFlow(@Path("cityId") cityId: String): Weather
+    suspend fun getWeather(@Path("cityId") cityId: String): Weather
+
+    @GET("https://www.baidu.com/sdfs")
+    suspend fun getWeather2(): Weather
 }

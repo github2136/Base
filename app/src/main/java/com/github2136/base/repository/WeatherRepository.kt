@@ -12,7 +12,11 @@ class WeatherRepository(context: Context) : BaseRepository(context) {
     private val httpModel by lazy { HttpModel.getInstance(context) }
 
     suspend fun getWeather() = launch {
-        val weather = httpModel.api.getWeatherFlow("101010100")
+        val weather = httpModel.api.getWeather("101010100")
+        ResultRepo.Success(weather)
+    }
+    suspend fun getWeather2() = launch {
+        val weather = httpModel.api.getWeather2()
         ResultRepo.Success(weather)
     }
     fun resetBaseUrl() {
