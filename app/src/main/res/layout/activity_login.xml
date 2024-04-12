@@ -47,19 +47,29 @@
             android:onClick="@{view::onClick}"
             android:text="登录" />
 
-        <Button
-            style="@style/BtnMedium"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="0" />
+            android:layout_margin="4dp"
+            android:orientation="horizontal">
 
+            <Button
+                style="@style/BtnLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="large" />
 
-        <Button
-            style="@style/BtnSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="0" />
+            <Button
+                style="@style/BtnMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="medium" />
+
+            <Button
+                style="@style/BtnSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="small" />
+        </LinearLayout>
     </LinearLayout>
 </layout>

@@ -4,9 +4,9 @@
     <style name="BtnSmall" parent="Base.TextAppearance.AppCompat.Widget.Button.Inverse">
         <item name="android:minHeight">24dp</item>
         <item name="android:minWidth">32dp</item>
-        <item name="android:paddingLeft">6dp</item>
-        <item name="android:paddingRight">6dp</item>
-        <item name="android:background">@drawable/btn_small_ripple_bg</item>
+        <item name="android:paddingLeft">7dp</item>
+        <item name="android:paddingRight">7dp</item>
+        <item name="android:background">@drawable/btn_ripple_bg</item>
         <item name="android:textSize">10sp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textAllCaps">false</item>
@@ -14,11 +14,22 @@
 
     <style name="BtnMedium" parent="Base.TextAppearance.AppCompat.Widget.Button.Inverse">
         <item name="android:minHeight">32dp</item>
-        <item name="android:minWidth">32dp</item>
-        <item name="android:paddingLeft">6dp</item>
-        <item name="android:paddingRight">6dp</item>
-        <item name="android:background">@drawable/btn_medium_ripple_bg</item>
+        <item name="android:minWidth">42dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:background">@drawable/btn_ripple_bg</item>
         <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="BtnLarge" parent="Base.TextAppearance.AppCompat.Widget.Button.Inverse">
+        <item name="android:minHeight">40dp</item>
+        <item name="android:minWidth">53dp</item>
+        <item name="android:paddingLeft">11dp</item>
+        <item name="android:paddingRight">11dp</item>
+        <item name="android:background">@drawable/btn_ripple_bg</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textAllCaps">false</item>
     </style>
