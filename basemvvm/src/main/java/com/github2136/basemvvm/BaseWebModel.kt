@@ -8,6 +8,7 @@ import okhttp3.Cache
 import okhttp3.CacheControl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.Response
 import okio.BufferedSource
 import okio.GzipSource
@@ -96,7 +97,7 @@ abstract class BaseWebModel(context: Context) {
                         }
                     }
                 }
-                preProcessing(responseCode, body)
+                preProcessing(responseCode, request, response, body)
                 return@addInterceptor response
             }
             .addInterceptor(cacheInterceptor)
@@ -179,5 +180,5 @@ abstract class BaseWebModel(context: Context) {
     /**
      * 前置通用处理
      */
-    abstract fun preProcessing(code: Int, body: String?)
+    abstract fun preProcessing(code: Int, request: Request, response: Response, body: String?)
 }

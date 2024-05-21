@@ -1,7 +1,10 @@
 package com.github2136.base.model
 
 import android.content.Context
+import android.util.Log
 import com.github2136.basemvvm.BaseWebModel
+import okhttp3.Request
+import okhttp3.Response
 
 /**
  * Created by yb on 2019/10/7
@@ -22,7 +25,7 @@ class HttpModel private constructor(context: Context) : BaseWebModel(context) {
     }
 
     override fun addHead(): MutableMap<String, String>? = null
-    override fun preProcessing(code: Int, body: String?) {
+    override fun preProcessing(code: Int, request: Request, response: Response, body: String?) {
     }
 
     companion object {
