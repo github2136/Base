@@ -312,6 +312,7 @@ class DownloadTask(
                                             file.renameTo(newFile)
                                             downloadFile?.run {
                                                 filePath = newFile.absolutePath
+                                                complete = true
                                                 downLoadFileDao.update(this)
                                             }
                                             withContext(Dispatchers.Main) {

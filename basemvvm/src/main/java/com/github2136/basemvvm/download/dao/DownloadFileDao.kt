@@ -110,13 +110,13 @@ class DownloadFileDao(context: Context) {
 
     companion object {
         const val TAB_NAME = "DownloadFile"
-        const val COL_ID = "'id'"
-        const val COL_FILE_URL = "'fileUrl'"
-        const val COL_FILE_HEADER = "'fileHeader'"
-        const val COL_FILE_PATH = "'filePath'"
-        const val COL_FILE_SIZE = "'fileSize'"
-        const val COL_FILE_TOTAL = "'fileTotal'"
-        const val COL_COMPLETE = "'complete'"
+        const val COL_ID = "id"
+        const val COL_FILE_URL = "fileUrl"
+        const val COL_FILE_HEADER = "fileHeader"
+        const val COL_FILE_PATH = "filePath"
+        const val COL_FILE_SIZE = "fileSize"
+        const val COL_FILE_TOTAL = "fileTotal"
+        const val COL_COMPLETE = "complete"
         val COLS = arrayOf(COL_ID, COL_FILE_URL, COL_FILE_HEADER, COL_FILE_PATH, COL_FILE_SIZE, COL_FILE_TOTAL, COL_COMPLETE)
     }
 }
