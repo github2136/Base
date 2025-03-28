@@ -22,7 +22,11 @@ class MainActivity : AppBaseActivity<MainVM, ActivityMainBinding>() {
         bind.view = this
         bind.vm = vm
         vm.titleTextLD.value = "主页"
-        vm.rightBtnLD.value = "xxx"
+        //标题左右两个按钮，同时设置文字和图片优先展示文字
+        vm.leftBtnLD.value = "左"
+        vm.rightBtnLD.value = "右"
+        vm.leftImgBtnLD.value = R.drawable.ic_add
+        vm.rightImgBtnLD.value = R.drawable.ic_arrow_back
     }
 
     // val url = "http://223.83.128.251:48092/UploadFiles/System/app/20211018/259dc425-045f-42c6-865c-34f8efa6a50f.apk"

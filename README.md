@@ -14,9 +14,9 @@ implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.1"
 //协程
 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3"
 //gson
-implementation "com.google.code.gson:gson:2.8.5"
+implementation "com.google.code.gson:gson:2.10.1"
 //工具类
-implementation "com.github.github2136:Android-utils:1.1.6"
+implementation "com.github.github2136:Android-utils:1.3.0"
 //logcat日志打印
 implementation "com.orhanobut:logger:2.2.0"
 //okhttp

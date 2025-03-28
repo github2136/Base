@@ -4,6 +4,7 @@ import android.content.res.Resources
 import android.util.TypedValue
 import android.view.View
 import android.widget.AdapterView
+import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -15,6 +16,13 @@ import java.math.BigDecimal
  * DataBindingUtil
  */
 object DBUtil {
+    //加载drawable图片
+    @BindingAdapter("android:src")
+    @JvmStatic
+    fun loadImage(view: ImageView, src: Int) {
+        view.setImageResource(src)
+    }
+    
     @InverseMethod("str2int")
     @JvmStatic
     fun int2str(value: Int?): String? {

@@ -24,7 +24,10 @@ abstract class BaseVM(app: Application) : AndroidViewModel(app) {
     val dialogLD = MutableLiveData<DialogData>()
     val toastLD = MutableLiveData<String>()
     val titleTextLD = MutableLiveData<String>()
+    val leftBtnLD = MutableLiveData<String>()
+    val leftImgBtnLD = MutableLiveData<Int>()
     val rightBtnLD = MutableLiveData<String>()
+    val rightImgBtnLD = MutableLiveData<Int>()
     val handle = Handler(Looper.getMainLooper())
 
     fun launch(block: suspend (coroutine: CoroutineScope) -> Unit) {

@@ -1,8 +1,10 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'maven-publish'
-apply plugin: 'kotlin-kapt'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'maven-publish'
+    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+}
 
 def lib = rootProject.ext.dependencies
 def version = rootProject.ext.android
@@ -16,8 +18,8 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        dataBinding = true
     }
     buildTypes {
         release {
@@ -55,28 +57,27 @@ artifacts {
     archives sourceJar
 }
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    api fileTree(dir: 'libs', include: ['*.jar'])
     //Android库
-    implementation lib["android-appcompat"]
-    implementation lib["android-recyclerview"]
-    implementation lib["android-material"]
-    compileOnly lib["android-swiperefreshlayout"]
-    compileOnly lib["core-ktx"]
-    compileOnly lib["android-viewmodel-ktx"]
-    compileOnly lib["android-lifecycle-ktx"]
+    api lib["android-appcompat"]
+    api lib["android-recyclerview"]
+    api lib["android-material"]
+    api lib["android-swiperefreshlayout"]
+    api lib["core-ktx"]
+    api lib["android-viewmodel-ktx"]
+    api lib["android-lifecycle-ktx"]
     //协程
-    implementation lib["android-coroutines"]
+    api lib["android-coroutines"]
     //gson
-    compileOnly lib['gson']
+    api lib['gson']
     //工具类
-    compileOnly lib["android-util"]
+    api lib["android-util"]
     //logcat日志打印
-    compileOnly lib["logger"]
+    api lib["logger"]
     //okhttp
-    compileOnly lib["okhttp"]
-    compileOnly lib["okhttp-retrofit"]
-    compileOnly lib["okhttp-gson"]
+    api lib["okhttp"]
+    api lib["okhttp-retrofit"]
+    api lib["okhttp-gson"]
 
     androidTestImplementation lib["android-test"]
     testImplementation lib["junit"]
