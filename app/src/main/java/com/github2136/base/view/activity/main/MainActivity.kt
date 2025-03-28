@@ -22,7 +22,7 @@ class MainActivity : AppBaseActivity<MainVM, ActivityMainBinding>() {
         bind.view = this
         bind.vm = vm
         vm.titleTextLD.value = "主页"
-        //标题左右两个按钮，同时设置文字和图片优先展示文字
+        //标题左右两个按钮
         vm.leftBtnLD.value = "左"
         vm.rightBtnLD.value = "右"
         vm.leftImgBtnLD.value = R.drawable.ic_add

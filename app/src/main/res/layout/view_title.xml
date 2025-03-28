@@ -24,22 +24,6 @@
         android:background="@color/colorPrimary"
         android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/ibLeft"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:background="?attr/selectableItemBackground"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:onClick="@{(v)->view.leftBtnClick(v)}"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:src="@{vm.leftImgBtnLD ?? R.drawable.ic_arrow_back}"
-            android:visibility="@{vm.leftBtnLD != null ? View.GONE : View.VISIBLE}"
-            app:tint="@android:color/white"
-            tools:src="@drawable/ic_arrow_back" />
-
         <Button
             android:id="@+id/btnLeft"
             android:layout_width="wrap_content"
@@ -53,8 +37,26 @@
             android:text="@{vm.leftBtnLD}"
             android:textColor="@android:color/white"
             android:textSize="18sp"
-            android:visibility="@{vm.leftBtnLD == null ? View.GONE : View.VISIBLE}"
-            tools:text="返回" />
+            android:visibility="@{(vm.leftBtnLD != null &amp;&amp; vm.leftImgBtnLD == null) ? View.VISIBLE : View.GONE}"
+            tools:text="返回"
+            tools:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/ibLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackground"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:onClick="@{(v)->view.leftBtnClick(v)}"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:src="@{vm.leftImgBtnLD ?? R.drawable.ic_arrow_back}"
+            android:visibility="@{(vm.leftImgBtnLD != null || vm.leftBtnLD == null ) ? View.VISIBLE : View.GONE}"
+            app:tint="@android:color/white"
+            tools:src="@drawable/ic_arrow_back"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/tvTitle"
@@ -80,9 +82,9 @@
             android:text="@{vm.rightBtnLD}"
             android:textColor="@android:color/white"
             android:textSize="18sp"
-            android:visibility="@{vm.rightBtnLD == null ? View.GONE : View.VISIBLE}"
+            android:visibility="@{vm.rightImgBtnLD == null &amp;&amp; vm.rightBtnLD != null ? View.VISIBLE : View.GONE}"
             tools:text="操作"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
         <ImageButton
             android:id="@+id/ibRight"
@@ -97,7 +99,7 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:src="@{vm.rightImgBtnLD}"
-            android:visibility="@{vm.rightBtnLD != null ? View.GONE : View.VISIBLE}"
+            android:visibility="@{vm.rightImgBtnLD != null ? View.VISIBLE : View.GONE}"
             app:tint="@android:color/white"
             tools:src="@drawable/ic_add"
             tools:visibility="visible" />
