@@ -25,7 +25,7 @@ abstract class BaseVM(app: Application) : AndroidViewModel(app) {
     val toastLD = MutableLiveData<String>()
     val titleTextLD = MutableLiveData<String>()
     val leftBtnLD = MutableLiveData<String>()
-    val leftImgBtnLD = MutableLiveData<Int>()
+    val leftImgBtnLD = MutableLiveData<Int>(0)
     val rightBtnLD = MutableLiveData<String>()
     val rightImgBtnLD = MutableLiveData<Int>()
     val handle = Handler(Looper.getMainLooper())

@@ -52,8 +52,8 @@
             android:onClick="@{(v)->view.leftBtnClick(v)}"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:src="@{vm.leftImgBtnLD ?? R.drawable.ic_arrow_back}"
-            android:visibility="@{(vm.leftImgBtnLD != null || vm.leftBtnLD == null ) ? View.VISIBLE : View.GONE}"
+            android:src="@{vm.leftImgBtnLD == 0 ? R.drawable.ic_arrow_back : vm.leftImgBtnLD}"
+            android:visibility="@{(vm.leftImgBtnLD == null) ? View.GONE : View.VISIBLE}"
             app:tint="@android:color/white"
             tools:src="@drawable/ic_arrow_back"
             tools:visibility="visible" />
@@ -63,9 +63,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_marginLeft="56dp"
+            android:layout_marginRight="56dp"
+            android:ellipsize="middle"
+            android:maxLines="1"
             android:text="@{vm.titleTextLD}"
             android:textColor="@android:color/white"
-            android:textSize="18sp"
+            android:textSize="16sp"
             tools:text="标题" />
 
         <Button

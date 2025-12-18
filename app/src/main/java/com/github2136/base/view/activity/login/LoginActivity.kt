@@ -30,6 +30,7 @@ class LoginActivity : AppBaseActivity<LoginVM, ActivityLoginBinding>() {
             vm.getWeather2()
         }
         vm.titleTextLD.value = "登录"
+
     }
 
     fun onClick(view: View) {
