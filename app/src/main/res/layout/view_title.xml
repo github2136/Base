@@ -37,7 +37,7 @@
             android:text="@{vm.leftBtnLD}"
             android:textColor="@android:color/white"
             android:textSize="18sp"
-            android:visibility="@{(vm.leftBtnLD != null &amp;&amp; vm.leftImgBtnLD == null) ? View.VISIBLE : View.GONE}"
+            android:visibility="@{(vm.leftBtnLD != null &amp;&amp; (vm.leftImgBtnLD == null || vm.leftImgBtnLD == 0)) ? View.VISIBLE : View.GONE}"
             tools:text="返回"
             tools:visibility="gone" />
 
