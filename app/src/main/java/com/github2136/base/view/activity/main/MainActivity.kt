@@ -62,7 +62,7 @@ class MainActivity : AppBaseActivity<MainVM, ActivityMainBinding>() {
                 downloadUtil.download(
                     url,
                     File(FileUtil.getExternalStorageProjectPath(this), "xx.exe").absolutePath, header = mapOf("ddd" to "dfdf")
-                ) { state, progress, size, contentLength, path, url, error ->
+                ) { state, progress, size, contentLength, url, path, error ->
                     when (state) {
                         DownloadUtil.STATE_PROGRESS -> {
                             if (contentLength == -1L) {
@@ -75,6 +75,8 @@ class MainActivity : AppBaseActivity<MainVM, ActivityMainBinding>() {
                         DownloadUtil.STATE_SUCCESS -> {
                             val end = System.currentTimeMillis()
                             Log.e("download", "耗时${end - start}")
+                            Log.e("download", "url $url")
+                            Log.e("download", "path $path")
                         }
                         DownloadUtil.STATE_FAIL -> {
                             Log.e("download", "下载失败$error")
@@ -102,14 +104,20 @@ class MainActivity : AppBaseActivity<MainVM, ActivityMainBinding>() {
                 multipleId = downloadUtil.downloadMultiple(m, "xx", header = mapOf("ddd" to "dfdf")) { state, progress, successCount, fileCount, url, path, error ->
                     when (state) {
                         DownloadUtil.STATE_PROGRESS -> {
+                            Log.e("multipleDownload", "url $url")
+                            Log.e("multipleDownload", "path $path")
                             Log.e("multipleDownload", "progress $successCount/$fileCount($progress)")
                             vm.downloadMultipleLD.postValue(progress)
                         }
                         DownloadUtil.STATE_BLOCK_SUCCESS -> {
+                            Log.e("multipleDownload", "url $url")
+                            Log.e("multipleDownload", "path $path")
                             Log.e("multipleDownload", "blockSuccess $successCount/$fileCount($progress)")
                             vm.downloadMultipleLD.postValue(progress)
                         }
                         DownloadUtil.STATE_BLOCK_FAIL -> {
+                            Log.e("multipleDownload", "url $url")
+                            Log.e("multipleDownload", "path $path")
                             Log.e("multipleDownload", "blockFail")
                         }
                         DownloadUtil.STATE_SUCCESS -> {

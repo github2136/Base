@@ -28,7 +28,7 @@ class DownloadTask(
     /**
      * 下载状态，下载进度百分比，已下载大小，总大小，本地路径，网络路径，错误信息
      */
-    var callback: (state: Int, progress: Int, size: Long, contentLength: Long, path: String, url: String, error: String?) -> Unit
+    var callback: (state: Int, progress: Int, size: Long, contentLength: Long, url: String, path: String, error: String?) -> Unit
 ) {
     private val jsonutil by lazy { JsonUtil.newInstance() }
     //下载时临时文件名下载完成后需要修改文件名
@@ -272,7 +272,7 @@ class DownloadTask(
                                         //停止
                                         state = DownloadUtil.STATE_STOP
                                         withContext(Dispatchers.Main) {
-                                            callback.invoke(DownloadUtil.STATE_STOP, 0, progressArray.reduce { acc, l -> acc + l }, length, "", url, null)
+                                            callback.invoke(DownloadUtil.STATE_STOP, 0, progressArray.reduce { acc, l -> acc + l }, length, url, "", null)
                                         }
                                     } else {
                                         //下载完成
@@ -316,7 +316,7 @@ class DownloadTask(
                                                 downLoadFileDao.update(this)
                                             }
                                             withContext(Dispatchers.Main) {
-                                                callback.invoke(DownloadUtil.STATE_SUCCESS, 100, progressArray.reduce { acc, l -> acc + l }, length, newFile.absolutePath, url, null)
+                                                callback.invoke(DownloadUtil.STATE_SUCCESS, 100, progressArray.reduce { acc, l -> acc + l }, length, url, newFile.absolutePath, null)
                                             }
                                         } else {
                                             if (DownloadUtil.LOG_ENABLE) {
@@ -367,9 +367,9 @@ class DownloadTask(
             withContext(Dispatchers.Main) {
                 if (length == -1L) {
                     //未获取到文件大小
-                    callback.invoke(state, -1, progressArray.reduce { acc, l -> acc + l }, length, "", url, null)
+                    callback.invoke(state, -1, progressArray.reduce { acc, l -> acc + l }, length, url, "", null)
                 } else {
-                    callback.invoke(state, tempProgress, progressArray.reduce { acc, l -> acc + l }, length, "", url, null)
+                    callback.invoke(state, tempProgress, progressArray.reduce { acc, l -> acc + l }, length, url, "", null)
                 }
             }
             totalProgress = tempProgress
@@ -385,7 +385,7 @@ class DownloadTask(
             state = DownloadUtil.STATE_FAIL
             stop = true
             withContext(Dispatchers.Main) {
-                callback.invoke(DownloadUtil.STATE_FAIL, 0, progressArray.reduce { acc, l -> acc + l }, length, "", url, error)
+                callback.invoke(DownloadUtil.STATE_FAIL, 0, progressArray.reduce { acc, l -> acc + l }, length, url, "", error)
             }
         }
     }

@@ -122,7 +122,7 @@ class DownloadMultipleTask(
         return null
     }
 
-    fun callback(state: Int, progress: Int, size: Long, contentLength: Long, path: String, url: String, error: String?) {
+    fun callback(state: Int, progress: Int, size: Long, contentLength: Long, url: String, path: String, error: String?) {
         when (state) {
             DownloadUtil.STATE_PROGRESS -> {
                 progresss[url] = progress

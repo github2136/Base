@@ -45,7 +45,7 @@ class DownloadUtil private constructor(val context: Context) {
     /**
      * 单文件下载
      */
-    fun download(url: String, filePath: String, header: Map<String, String>? = null, replay: Boolean = false, callback: (state: Int, progress: Int, size: Long, contentLength: Long, path: String, url: String, error: String?) -> Unit) {
+    fun download(url: String, filePath: String, header: Map<String, String>? = null, replay: Boolean = false, callback: (state: Int, progress: Int, size: Long, contentLength: Long, url: String, path: String, error: String?) -> Unit) {
         if (LOG_ENABLE) {
             Log.d(TAG, "开始单文件下载，URL:$url path:$filePath")
         }
@@ -54,11 +54,11 @@ class DownloadUtil private constructor(val context: Context) {
                 if (LOG_ENABLE) {
                     Log.d(TAG, "新建下载对象，URL:$url path:$filePath")
                 }
-                val task = DownloadTask(context, url, filePath, header, replay) { state, progress, size, contentLength, path, url, error ->
+                val task = DownloadTask(context, url, filePath, header, replay) { state, progress, size, contentLength, url, path, error ->
                     if (state != STATE_PROGRESS) {
                         downloadTask.remove(url)
                     }
-                    callback(state, progress, size, contentLength, path, url, error)
+                    callback(state, progress, size, contentLength, url, path, error)
                 }
                 downloadTask[url] = task
                 task.start()
@@ -68,11 +68,11 @@ class DownloadUtil private constructor(val context: Context) {
                 }
                 val task = downloadTask[url]
                 task?.apply {
-                    this.callback = { state, progress, size, contentLength, path, url, error ->
+                    this.callback = { state, progress, size, contentLength, url, path, error ->
                         if (state != STATE_PROGRESS) {
                             downloadTask.remove(url)
                         }
-                        callback(state, progress, size, contentLength, path, url, error)
+                        callback(state, progress, size, contentLength, url, path, error)
                     }
                     if (state != STATE_PROGRESS) {
                         //非下载中则下载
