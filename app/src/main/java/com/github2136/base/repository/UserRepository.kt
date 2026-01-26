@@ -33,7 +33,7 @@ class UserRepository(context: Context) : BaseRepository(context) {
         for (i in 0 until pageSize) {
             data.add(User("pageIndex $pageIndex i $i $r", "", "中文中"))
         }
-        delay(500)
+        delay(2000)
         if (Random().nextBoolean()) {
             ResultRepo.Success(data)
         } else {
