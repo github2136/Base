@@ -3,8 +3,12 @@ package com.github2136.base.model
 import com.github2136.base.model.entity.Weather
 import com.github2136.basemvvm.DynamicTimeout
 import com.github2136.basemvvm.HttpCache
+import okhttp3.ResponseBody
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Headers
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 /**
@@ -19,4 +23,8 @@ interface HttpService {
 
     @GET("https://www.baidu.com/sdfs")
     suspend fun getWeather2(): Weather
+
+    @FormUrlEncoded
+    @POST("http://www.iotniat.com.cn:8089/LOGIN2")
+    suspend fun login(@Field("user") user: String, @Field("pass") pass: String): ResponseBody
 }

@@ -52,7 +52,7 @@ class LoginVM(app: Application) : BaseVM(app) {
     fun login() {
         launch {
             dialogLD.value = DialogData(loadingStr)
-            val resultRepo = userRepository.loginFlow(userNameLD.value!!, passWordLD.value!!)
+            val resultRepo = userRepository.login()
             dialogLD.value = null
             when (resultRepo) {
                 is ResultRepo.Success -> userInfoLD.value = resultRepo.data
