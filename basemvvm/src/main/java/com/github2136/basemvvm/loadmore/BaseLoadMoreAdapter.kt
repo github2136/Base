@@ -82,8 +82,9 @@ abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding> : BaseRecyclerVMAdapt
                 else -> 0
             }
         } else {
-            val size = if (complete) if (showCompleteItem) 1
-            else 0
+            val size = if (complete)
+                if (showCompleteItem) 1
+                else 0
             else 1
             val isLoadMoreIndex = position + size == itemCount
             if (isLoadMoreIndex) {
@@ -95,8 +96,9 @@ abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding> : BaseRecyclerVMAdapt
     }
 
     override fun getItem(position: Int): T? {
-        val size = if (complete) if (showCompleteItem) 1
-        else 0
+        val size = if (complete)
+            if (showCompleteItem) 1
+            else 0
         else 1
         val isLoadMoreIndex = position + size == itemCount
         return if (isLoadMoreIndex) {
@@ -109,7 +111,7 @@ abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding> : BaseRecyclerVMAdapt
     override fun getItemCount(): Int {
         val size = if (result.value != null)
             if (complete)
-                if (showCompleteItem || list?.isEmpty() == true) 1
+                if (showCompleteItem || list == null || list?.isEmpty() == true) 1
                 else 0
             else 1
         else 0
