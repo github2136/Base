@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.github2136.base.ViewHolderRecyclerView
 import com.github2136.basemvvm.BaseRecyclerVMAdapter
 import com.github2136.basemvvm.R
+import java.util.Collections
 
 /**
  * Created by YB on 2019/9/23
@@ -75,7 +76,7 @@ abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding> : BaseRecyclerVMAdapt
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (itemCount == 1 && showCompleteItem) {
+        return if (itemCount == 1 && (list == null || list?.isEmpty() == true)) {
             when (result.value) {
                 true -> TYPE_EMPTY
                 false -> TYPE_ERROR
