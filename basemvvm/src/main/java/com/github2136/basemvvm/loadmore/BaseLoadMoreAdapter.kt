@@ -60,7 +60,7 @@ abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding> : BaseRecyclerVMAdapt
             TYPE_ERROR -> (holder as BastLoadMoreViewHolder)
             TYPE_LOAD_ITEM -> {
                 if (complete) {
-                    (holder as BastLoadMoreViewHolder).bindTo(1,list?.size)
+                    (holder as BastLoadMoreViewHolder).bindTo(1, list?.size)
                 } else {
                     if (loading.value == true) {
                         (holder as BastLoadMoreViewHolder).bindTo(2)
@@ -76,7 +76,7 @@ abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding> : BaseRecyclerVMAdapt
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (itemCount == 1) {
+        return if (itemCount == 1 && showCompleteItem) {
             when (result.value) {
                 true -> TYPE_EMPTY
                 false -> TYPE_ERROR
