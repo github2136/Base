@@ -16,7 +16,7 @@ class LoadMoreVM(app: Application) : BaseLoadMoreVM<User>(app) {
     override val pageCount = 25
 
     override fun initData() {
-        adapter.showCompleteItem = false
+        // adapter.showCompleteItem = false
         launch {
             val resultRepo = userRepository.getUserFlow(adapter.pageIndex, adapter.pageCount)
             when (resultRepo) {

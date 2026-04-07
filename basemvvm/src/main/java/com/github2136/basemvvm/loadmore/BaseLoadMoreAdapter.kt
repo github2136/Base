@@ -19,7 +19,8 @@ abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding> : BaseRecyclerVMAdapt
     var loading = MutableLiveData<Boolean>() //加载更多 true 获取更多中 false 获取完成
     var result = MutableLiveData<Boolean>() //数据获取结果 true 数据获取成功 false 数据获取失败
     var complete = false //加载所有数据
-    var showCompleteItem = true //加载完成显示总数
+    var showCompleteItem = true //显示加载完成项
+    var showCompleteCount = true //加载完成显示总数
     lateinit var retryCallback: () -> Unit //首页重试
     lateinit var loadMore: () -> Unit //加载更多
 
@@ -39,9 +40,9 @@ abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding> : BaseRecyclerVMAdapt
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderRecyclerView {
         return when (viewType) {
-            TYPE_EMPTY -> BastLoadMoreViewHolder.create(parent, R.layout.item_util_empty, null)
-            TYPE_ERROR -> BastLoadMoreViewHolder.create(parent, R.layout.item_util_error, retryCallback)
-            TYPE_LOAD_ITEM -> BastLoadMoreViewHolder.create(parent, R.layout.item_util_load_more, this::adapterLoadMore)
+            TYPE_EMPTY -> BastLoadMoreViewHolder.create(parent, R.layout.item_util_empty, showCompleteCount, null)
+            TYPE_ERROR -> BastLoadMoreViewHolder.create(parent, R.layout.item_util_error, showCompleteCount, retryCallback)
+            TYPE_LOAD_ITEM -> BastLoadMoreViewHolder.create(parent, R.layout.item_util_load_more, showCompleteCount, this::adapterLoadMore)
             else -> super.onCreateViewHolder(parent, viewType)
         }
     }
@@ -59,7 +60,7 @@ abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding> : BaseRecyclerVMAdapt
             TYPE_ERROR -> (holder as BastLoadMoreViewHolder)
             TYPE_LOAD_ITEM -> {
                 if (complete) {
-                    (holder as BastLoadMoreViewHolder).bindTo(1)
+                    (holder as BastLoadMoreViewHolder).bindTo(1,list?.size)
                 } else {
                     if (loading.value == true) {
                         (holder as BastLoadMoreViewHolder).bindTo(2)

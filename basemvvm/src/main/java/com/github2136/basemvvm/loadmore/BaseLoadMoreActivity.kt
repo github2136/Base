@@ -14,6 +14,7 @@ import com.github2136.basemvvm.R
  */
 abstract class BaseLoadMoreActivity<V : BaseLoadMoreVM<*>, B : ViewDataBinding> : BaseActivity<V, B>() {
     open var autoInit = true
+    open var showDivider = true
     protected val rvList by lazy { findViewById<RecyclerView>(R.id.rvList) }
     protected val srlList by lazy { findViewById<SwipeRefreshLayout>(R.id.srlList) }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +52,9 @@ abstract class BaseLoadMoreActivity<V : BaseLoadMoreVM<*>, B : ViewDataBinding> 
                     }
                 }
             } else {
-                it.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+                if (showDivider) {
+                    it.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+                }
             }
         }
     }

@@ -17,7 +17,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="加载中……" />
+            android:text="加载中……"
+            android:textColor="#8c8c8c" />
 
         <ProgressBar
             android:id="@+id/pb_load_more"

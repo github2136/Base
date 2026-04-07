@@ -15,6 +15,7 @@ import com.github2136.basemvvm.R
  */
 abstract class BaseLoadMoreFragment<V : BaseLoadMoreVM<*>, B : ViewDataBinding> : BaseFragment<V, B>() {
     open var autoInit = true
+    open var showDivider = true
     protected val rvList by lazy { bind.root.findViewById<RecyclerView>(R.id.rvList) }
     protected val srlList by lazy { bind.root.findViewById<SwipeRefreshLayout>(R.id.srlList) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,7 +53,9 @@ abstract class BaseLoadMoreFragment<V : BaseLoadMoreVM<*>, B : ViewDataBinding> 
                     }
                 }
             } else {
-                it.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+                if (showDivider) {
+                    it.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+                }
             }
         }
     }
