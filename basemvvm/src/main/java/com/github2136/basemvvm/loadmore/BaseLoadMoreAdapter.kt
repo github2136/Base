@@ -48,8 +48,7 @@ abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding> : BaseRecyclerVMAdapt
     }
 
     override fun onBindViewHolder(holder: ViewHolderRecyclerView, position: Int) {
-        if (!complete && refreshing.value != true && loading.value != true && result.value == true) {
-            //提前半页触发加载更多
+        if (!complete && refreshing.value != true && loading.value != true && result.value == true) { //提前半页触发加载更多
             val trigger = itemCount - pageCount / 2
             if (trigger in 1 until position) {
                 loadMore.invoke()
@@ -83,11 +82,9 @@ abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding> : BaseRecyclerVMAdapt
                 else -> 0
             }
         } else {
-            val size =
-                if (complete)
-                    if (showCompleteItem) 1
-                    else 0
-                else 1
+            val size = if (complete) if (showCompleteItem) 1
+            else 0
+            else 1
             val isLoadMoreIndex = position + size == itemCount
             if (isLoadMoreIndex) {
                 TYPE_LOAD_ITEM
@@ -98,11 +95,9 @@ abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding> : BaseRecyclerVMAdapt
     }
 
     override fun getItem(position: Int): T? {
-        val size =
-            if (complete)
-                if (showCompleteItem) 1
-                else 0
-            else 1
+        val size = if (complete) if (showCompleteItem) 1
+        else 0
+        else 1
         val isLoadMoreIndex = position + size == itemCount
         return if (isLoadMoreIndex) {
             null
@@ -112,13 +107,12 @@ abstract class BaseLoadMoreAdapter<T, B : ViewDataBinding> : BaseRecyclerVMAdapt
     }
 
     override fun getItemCount(): Int {
-        val size =
-            if (result.value != null)
-                if (complete)
-                    if (showCompleteItem) 1
-                    else 0
-                else 1
-            else 0
+        val size = if (result.value != null)
+            if (complete)
+                if (showCompleteItem || list?.isEmpty() == true) 1
+                else 0
+            else 1
+        else 0
         return super.getItemCount() + size
     }
 
