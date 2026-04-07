@@ -2,6 +2,7 @@ package com.github2136.base.repository
 
 import android.content.Context
 import androidx.core.content.edit
+import com.github2136.base.model.HttpModel
 import com.github2136.base.model.entity.User
 import com.github2136.basemvvm.BaseRepository
 import com.github2136.basemvvm.ResultRepo
@@ -13,7 +14,7 @@ import java.util.*
  * 用户信息
  */
 class UserRepository(context: Context) : BaseRepository(context) {
-
+    private val httpModel by lazy { HttpModel.getInstance(context) }
     suspend fun loginFlow(user: String, password: String) = launch {
         delay(2000)
         if (user == "admin" && password == "admin") {
@@ -39,6 +40,11 @@ class UserRepository(context: Context) : BaseRepository(context) {
         } else {
             ResultRepo.Error(-1, failedStr)
         }
+    }
+
+    suspend fun login() = launch {
+        val weather = httpModel.api.login("ddd", "ddf")
+        ResultRepo.Success(weather)
     }
 
     suspend fun getUserFlow() = launch {

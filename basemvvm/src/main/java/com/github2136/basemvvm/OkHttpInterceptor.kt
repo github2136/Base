@@ -1,7 +1,9 @@
 package com.github2136.basemvvm
 
+import android.text.TextUtils
 import com.orhanobut.logger.Logger
 import okhttp3.Interceptor
+import okhttp3.MediaType
 import okhttp3.Response
 import okio.*
 import retrofit2.Invocation
@@ -25,12 +27,19 @@ class OkHttpInterceptor : Interceptor {
         val requestHeads = request.headers
 
         var requestBody: ByteString = ByteString.EMPTY
+        var contentTypeStr: String? = ""
         request.body?.apply {
-            val contentType = contentType()
-            if (contentType?.subtype == "json" || contentType?.type == "text") {
-                val requestBuffer = Buffer()
-                request.body?.writeTo(requestBuffer)
-                requestBody = requestBuffer.readByteString()
+            contentType()?.apply {
+                contentTypeStr = "$type/$subtype"
+                if (subtype == "json" || type == "text") {
+                    val requestBuffer = Buffer()
+                    request.body?.writeTo(requestBuffer)
+                    requestBody = requestBuffer.readByteString()
+                } else if (subtype == "x-www-form-urlencoded") {
+                    val requestBuffer = Buffer()
+                    request.body?.writeTo(requestBuffer)
+                    requestBody = requestBuffer.readByteString()
+                }
             }
         }
         val response: Response
@@ -92,6 +101,9 @@ class OkHttpInterceptor : Interceptor {
             val requestHeaderSb = StringBuilder()
             requestHeads.forEach {
                 requestHeaderSb.append(it.first + ":" + it.second + "\n")
+            }
+            if (!TextUtils.isEmpty(contentTypeStr)) {
+                requestHeaderSb.append("ContentType:$contentTypeStr\n")
             }
             val endTime = System.currentTimeMillis()
             Logger.t("HTTP")
