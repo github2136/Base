@@ -20,7 +20,6 @@ import java.io.File
 import java.io.IOException
 import java.nio.charset.Charset
 import java.util.concurrent.TimeUnit
-import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLSession
 
 
@@ -66,6 +65,7 @@ abstract class BaseWebModel(context: Context) {
                         }
                     }
                 }
+                preRequest(requestBuild)
 
                 val request = requestBuild.build()
                 val response = chain.proceed(request)
@@ -97,7 +97,7 @@ abstract class BaseWebModel(context: Context) {
                         }
                     }
                 }
-                preProcessing(responseCode, request, response, body)
+                preResponse(responseCode, request, response, body)
                 return@addInterceptor response
             }
             .addInterceptor(cacheInterceptor)
@@ -105,7 +105,7 @@ abstract class BaseWebModel(context: Context) {
         getSSlObj()?.apply {
             client
                 .sslSocketFactory(this.socketFactory, this.trustManager)
-                .hostnameVerifier(HostnameVerifier { hostname, session -> hostnameVerifier(hostname, session) })
+                .hostnameVerifier { hostname, session -> hostnameVerifier(hostname, session) }
         }
         client.build()
     }
@@ -180,5 +180,6 @@ abstract class BaseWebModel(context: Context) {
     /**
      * 前置通用处理
      */
-    abstract fun preProcessing(code: Int, request: Request, response: Response, body: String?)
+    abstract fun preRequest(requestBuild: Request.Builder)
+    abstract fun preResponse(code: Int, request: Request, response: Response, body: String?)
 }
