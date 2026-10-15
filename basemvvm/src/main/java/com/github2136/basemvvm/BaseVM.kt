@@ -47,10 +47,9 @@ abstract class BaseVM(app: Application) : AndroidViewModel(app) {
     //取消请求
     open fun cancelRequest() {
         viewModelScope.launch {
-            for (job in jobs) {
-                job.value.cancelAndJoin()
-            }
+            val snapshot = jobs.values.toList()
             jobs.clear()
+            snapshot.forEach { it.cancelAndJoin() }
         }
     }
 
