@@ -180,6 +180,6 @@ abstract class BaseWebModel(context: Context) {
     /**
      * 前置通用处理
      */
-    abstract fun preRequest(requestBuild: Request.Builder)
-    abstract fun preResponse(code: Int, request: Request, response: Response, body: String?)
+    open fun preRequest(requestBuild: Request.Builder) {}
+    open fun preResponse(code: Int, request: Request, response: Response, body: String?) {}
 }
